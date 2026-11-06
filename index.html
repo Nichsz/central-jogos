@@ -1,0 +1,3824 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <!-- Bloqueia indexação por Google, Bing e outros buscadores -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+  <title>INTRIGAS DA CORTE: Blefe & Influência</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cinzel for Renaissance titles, Inter for clean UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- PeerJS for cross-device P2P Rooms & WebRTC Video/Voice Chat -->
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Cinzel', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            court: {
+              950: '#0b070d',
+              900: '#140d18',
+              800: '#211528',
+              700: '#33203d',
+              gold: '#d4af37',
+              goldLight: '#f5e19c',
+              crimson: '#991b1b',
+              velvet: '#4a1228',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      background-color: #0b070d;
+      background-image:
+        radial-gradient(circle at 50% 35%, rgba(92, 24, 52, 0.32) 0%, rgba(20, 13, 24, 0.92) 65%, #09050b 100%);
+      color: #f3ece0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+    .font-renaissance {
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.04em;
+    }
+    /* Ornate Gold Borders & Shadows */
+    .gold-border {
+      border: 1px solid rgba(212, 175, 55, 0.42);
+      box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(245, 225, 156, 0.18);
+    }
+    .gold-border-strong {
+      border: 2px solid #d4af37;
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.35), inset 0 0 12px rgba(212, 175, 55, 0.15);
+    }
+    .velvet-table {
+      background:
+        radial-gradient(ellipse at center, #3b1224 0%, #220a15 58%, #13060c 100%);
+      border: 3px solid rgba(212, 175, 55, 0.55);
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.85),
+        inset 0 0 80px rgba(0, 0, 0, 0.75),
+        0 0 0 6px rgba(34, 16, 26, 0.95),
+        0 0 0 8px rgba(212, 175, 55, 0.25);
+    }
+    /* Card Styling & Animations */
+    .influence-card {
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease;
+      transform-style: preserve-3d;
+    }
+    .influence-card:hover {
+      transform: translateY(-5px) scale(1.03);
+    }
+    .card-back-pattern {
+      background:
+        radial-gradient(circle at 50% 50%, #3d1628 0%, #1c0b15 100%);
+      background-size: 16px 16px;
+    }
+    /* Floating Emoji Animation */
+    @keyframes floatEmojiUp {
+      0% {
+        opacity: 0;
+        transform: translateY(15px) scale(0.5) rotate(-8deg);
+      }
+      18% {
+        opacity: 1;
+        transform: translateY(-10px) scale(1.35) rotate(6deg);
+      }
+      80% {
+        opacity: 1;
+        transform: translateY(-65px) scale(1.15) rotate(-4deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-95px) scale(0.8) rotate(8deg);
+      }
+    }
+    .floating-emoji {
+      animation: floatEmojiUp 2.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      pointer-events: none;
+      z-index: 60;
+    }
+    /* Pulse Rings for Active Turn & Speaking */
+    @keyframes turnGlow {
+      0%, 100% {
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.45), 0 0 30px rgba(212, 175, 55, 0.2);
+      }
+      50% {
+        box-shadow: 0 0 28px rgba(245, 225, 156, 0.85), 0 0 52px rgba(212, 175, 55, 0.45);
+      }
+    }
+    .active-turn-seat {
+      animation: turnGlow 2s infinite ease-in-out;
+      border-color: #f5e19c !important;
+    }
+    .speaking-ring {
+      box-shadow: 0 0 0 3px #10b981, 0 0 18px rgba(16, 185, 129, 0.75) !important;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 10, 18, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(212, 175, 55, 0.35);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(212, 175, 55, 0.65);
+    }
+    /* Mirror local webcam video */
+    .mirror-video {
+      transform: scaleX(-1);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
+
+  <!-- =================================================================== -->
+  <!-- VIEW 0: PRIVATE ACCESS GATE (PORTÃO DA SOCIEDADE SECRETA)           -->
+  <!-- =================================================================== -->
+  <div id="accessGateOverlay" class="fixed inset-0 z-50 bg-court-950/98 backdrop-blur-xl flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-court-900 gold-border-strong rounded-3xl p-6 sm:p-8 text-center shadow-2xl relative overflow-hidden">
+      <div class="absolute -top-16 -left-16 w-40 h-40 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-500 via-yellow-600 to-amber-800 flex items-center justify-center shadow-xl border border-amber-300/60">
+        <i class="fa-solid fa-key text-court-950 text-2xl"></i>
+      </div>
+      <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-bold uppercase tracking-widest mb-2">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>Portão da Corte • Acesso Restrito</span>
+      </div>
+      <h2 class="font-renaissance text-2xl sm:text-3xl font-extrabold text-amber-100 mb-2">
+        Intrigas da Corte
+      </h2>
+      <p class="text-xs sm:text-sm text-amber-100/70 mb-6">
+        Mesa privada para amigos. Digite a palavra-passe da galera para abrir os salões ou acesse através de um Link de Convite.
+      </p>
+
+      <form id="accessGateForm" class="space-y-3">
+        <div class="relative">
+          <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-amber-400/70"></i>
+          <input
+            id="accessPinInput"
+            type="password"
+            placeholder="SENHA DA CORTE"
+            autocomplete="off"
+            class="w-full pl-11 pr-4 py-3.5 rounded-xl bg-court-950 border border-amber-500/40 focus:border-amber-400 focus:outline-none text-amber-100 font-mono uppercase tracking-widest text-center text-sm"
+          />
+        </div>
+        <p id="accessGateError" class="hidden text-xs text-rose-400 font-semibold">
+          Palavra-passe incorreta! Peça o link de convite ao anfitrião.
+        </p>
+        <button
+          type="submit"
+          class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-court-950 font-bold text-sm shadow-lg shadow-amber-600/25 transition flex items-center justify-center gap-2"
+        >
+          <i class="fa-solid fa-door-open"></i>
+          <span>Entrar na Corte</span>
+        </button>
+      </form>
+
+      <div class="mt-5 pt-4 border-t border-amber-500/20 text-[11px] text-amber-200/50 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-eye-slash"></i>
+        <span>Página protegida e oculta de mecanismos de busca</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="w-full bg-court-900/95 backdrop-blur-md border-b border-amber-500/25 px-3 sm:px-6 py-2.5 flex items-center justify-between z-40 sticky top-0">
+    <div class="flex items-center gap-2.5 sm:gap-3">
+      <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-500 via-yellow-600 to-amber-800 flex items-center justify-center shadow-lg shadow-amber-900/40 border border-amber-300/50">
+        <i class="fa-solid fa-crown text-court-950 text-lg sm:text-xl"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="font-renaissance text-sm sm:text-lg font-extrabold tracking-wider bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-200 bg-clip-text text-transparent">
+            INTRIGAS DA CORTE
+          </h1>
+          <span class="hidden md:inline-block text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">
+            Blefe & Influência
+          </span>
+        </div>
+        <p id="headerStatusText" class="text-[11px] text-amber-200/60 hidden sm:block">
+          Mesa Privada P2P • Vídeo & Voz em Tempo Real
+        </p>
+      </div>
+    </div>
+
+    <!-- Room Badge (Visible when inside a room) -->
+    <div id="roomHeaderBadge" class="hidden items-center gap-1.5 sm:gap-2 bg-court-800/90 border border-amber-500/40 rounded-xl px-2.5 py-1.5">
+      <span class="text-xs text-amber-200/70 hidden sm:inline">Sala:</span>
+      <span id="roomCodeDisplay" class="font-mono font-bold text-sm sm:text-base text-amber-300 tracking-widest">-----</span>
+      <button id="copyRoomCodeBtn" title="Copiar Código da Sala" class="text-xs bg-amber-500/20 hover:bg-amber-500/35 text-amber-200 px-2 py-1 rounded-lg transition flex items-center gap-1">
+        <i class="fa-regular fa-copy"></i>
+        <span class="hidden md:inline">Código</span>
+      </button>
+      <button id="copyInviteLinkHeaderBtn" title="Copiar Link Direto com Senha" class="text-xs bg-emerald-500/20 hover:bg-emerald-500/35 border border-emerald-400/40 text-emerald-200 px-2 py-1 rounded-lg transition flex items-center gap-1 font-semibold">
+        <i class="fa-solid fa-link"></i>
+        <span class="hidden md:inline">Link Convite</span>
+      </button>
+    </div>
+
+    <!-- Right Controls: Media, Sound, Rules, Chat Drawer, Lock, Leave -->
+    <div class="flex items-center gap-1.5 sm:gap-2">
+      <!-- Camera Toggle -->
+      <button id="toggleCamBtn" title="Ligar/Desligar Câmera" class="hidden px-2.5 py-2 rounded-xl bg-court-800 hover:bg-court-700 border border-amber-500/30 text-amber-100 transition items-center gap-1.5 text-xs sm:text-sm">
+        <i id="camIcon" class="fa-solid fa-video-slash text-rose-400"></i>
+        <span class="hidden lg:inline" id="camBtnLabel">Câmera</span>
+      </button>
+
+      <!-- Mic Toggle -->
+      <button id="toggleMicBtn" title="Ligar/Desligar Microfone" class="hidden px-2.5 py-2 rounded-xl bg-court-800 hover:bg-court-700 border border-amber-500/30 text-amber-100 transition items-center gap-1.5 text-xs sm:text-sm">
+        <i id="micIcon" class="fa-solid fa-microphone-slash text-rose-400"></i>
+        <span class="hidden lg:inline" id="micBtnLabel">Voz</span>
+      </button>
+
+      <!-- Sound Effects Toggle -->
+      <button id="toggleSfxBtn" title="Efeitos Sonoros" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-court-800 hover:bg-court-700 border border-amber-500/30 text-amber-200 transition text-xs sm:text-sm">
+        <i id="sfxIcon" class="fa-solid fa-volume-high"></i>
+      </button>
+
+      <!-- How to Play with Friends Button -->
+      <button id="openInviteModalBtn" class="px-2.5 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-200 transition flex items-center gap-1.5 text-xs sm:text-sm font-medium">
+        <i class="fa-solid fa-user-group text-emerald-400"></i>
+        <span class="hidden sm:inline">Convite</span>
+      </button>
+
+      <!-- Rules Cheat Sheet Button -->
+      <button id="openRulesModalBtn" class="px-2.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/30 border border-amber-400/40 text-amber-200 transition flex items-center gap-1.5 text-xs sm:text-sm font-medium">
+        <i class="fa-solid fa-scroll text-amber-400"></i>
+        <span class="hidden sm:inline">Cartas & Regras</span>
+      </button>
+
+      <!-- Lock Gate Button -->
+      <button id="lockGateBtn" title="Trancar Portão de Acesso" class="p-2 rounded-xl bg-court-800 hover:bg-court-700 border border-amber-500/30 text-amber-300/80 hover:text-amber-200 transition text-xs sm:text-sm">
+        <i class="fa-solid fa-lock"></i>
+      </button>
+
+      <!-- Mobile Chat/Log Toggle -->
+      <button id="toggleMobileSidebarBtn" class="lg:hidden relative p-2 rounded-xl bg-court-800 hover:bg-court-700 border border-amber-500/30 text-amber-200 transition text-xs sm:text-sm">
+        <i class="fa-solid fa-comments"></i>
+        <span id="unreadChatBadge" class="hidden absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-600 text-[10px] font-bold flex items-center justify-center text-white">!</span>
+      </button>
+
+      <!-- Leave Room Button -->
+      <button id="leaveRoomBtn" title="Sair da Sala" class="hidden p-2 sm:px-3 sm:py-2 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-500/40 text-rose-200 transition text-xs sm:text-sm items-center gap-1.5">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span class="hidden md:inline">Sair</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-none w-11/12 max-w-md"></div>
+
+  <!-- =================================================================== -->
+  <!-- VIEW 1: LOBBY / HOME SCREEN                                         -->
+  <!-- =================================================================== -->
+  <main id="lobbyView" class="flex-1 flex flex-col items-center justify-center p-4 sm:p-6">
+    <div class="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
+      <!-- Left Column: Player Identity & Room Creation/Joining -->
+      <div class="lg:col-span-7 bg-court-900/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 gold-border flex flex-col justify-between relative overflow-hidden">
+        <div class="absolute -right-12 -top-12 w-44 h-44 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-medium mb-4">
+            <i class="fa-solid fa-masks-theater"></i>
+            <span>2 a 6 Jogadores • Amigos Online ou Bots</span>
+          </div>
+
+          <h2 class="font-renaissance text-2xl sm:text-4xl font-bold text-amber-100 leading-tight mb-2">
+            A Corte Aguarda Sua Influência
+          </h2>
+          <p class="text-sm text-amber-100/70 mb-6">
+            Em uma Itália renascentista dominada por conspirações, apenas um nobre sobreviverá. Blefe seus personagens, conteste seus amigos por vídeo e dê o Golpe de Estado definitivo.
+          </p>
+
+          <!-- Player Name & Avatar Picker -->
+          <div class="space-y-4 mb-6">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-amber-300/90 mb-1.5">
+                Seu Título / Nome na Corte
+              </label>
+              <div class="relative">
+                <i class="fa-solid fa-feather-pointed absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-400/70"></i>
+                <input
+                  id="playerNameInput"
+                  type="text"
+                  maxlength="18"
+                  placeholder="Ex: Lorenzo de Médici"
+                  class="w-full pl-10 pr-4 py-3 rounded-xl bg-court-950/90 border border-amber-500/40 focus:border-amber-400 focus:outline-none text-amber-50 placeholder-amber-200/30 font-medium"
+                />
+              </div>
+            </div>
+
+            <!-- Avatar Archetype Selector -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-semibold uppercase tracking-wider text-amber-300/90">
+                  Escolha Seu Personagem na Corte
+                </label>
+                <span class="text-[11px] text-amber-200/60">8 Nobres Ilustrados</span>
+              </div>
+              <div id="avatarSelectorGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <!-- Populated dynamically by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Room Actions -->
+        <div class="space-y-4 pt-2 border-t border-amber-500/20">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button
+              id="createRoomBtn"
+              class="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-court-950 font-bold shadow-lg shadow-amber-600/25 transition transform active:scale-95 flex items-center justify-center gap-2 text-sm sm:text-base"
+            >
+              <i class="fa-solid fa-plus-circle text-lg"></i>
+              <span>Criar Nova Sala</span>
+            </button>
+
+            <button
+              id="quickSoloBotsBtn"
+              class="w-full py-3.5 px-5 rounded-xl bg-court-800 hover:bg-court-700 border border-amber-400/40 text-amber-200 font-semibold transition transform active:scale-95 flex items-center justify-center gap-2 text-sm sm:text-base"
+            >
+              <i class="fa-solid fa-robot text-amber-400"></i>
+              <span>Partida Rápida (c/ Bots)</span>
+            </button>
+          </div>
+
+          <!-- Join Existing Room -->
+          <div class="flex items-center gap-2">
+            <input
+              id="joinRoomCodeInput"
+              type="text"
+              maxlength="6"
+              placeholder="CÓDIGO DA SALA (EX: CORTE)"
+              class="flex-1 px-4 py-3 rounded-xl bg-court-950/90 border border-amber-500/40 focus:border-amber-400 focus:outline-none text-amber-200 font-mono uppercase tracking-widest text-sm"
+            />
+            <button
+              id="joinRoomBtn"
+              class="px-5 py-3 rounded-xl bg-amber-500/20 hover:bg-amber-500/35 border border-amber-400/50 text-amber-200 font-bold transition flex items-center gap-2 text-sm whitespace-nowrap"
+            >
+              <span>Entrar</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Characters Preview & Open Rooms List -->
+      <div class="lg:col-span-5 flex flex-col gap-5">
+        <!-- Characters Mini Showcase -->
+        <div class="bg-court-900/85 backdrop-blur-xl rounded-3xl p-5 gold-border flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-renaissance text-base font-bold text-amber-300 flex items-center gap-2">
+                <i class="fa-solid fa-chess-king"></i>
+                <span>Os 5 Personagens da Corte</span>
+              </h3>
+              <span class="text-[11px] text-amber-200/60">15 Cartas (3 de cada)</span>
+            </div>
+            <div id="lobbyCharactersPreview" class="space-y-2.5">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-amber-500/20 flex items-center justify-between text-xs text-amber-200/70">
+            <span><i class="fa-solid fa-video text-emerald-400 mr-1"></i> Vídeo & Voz P2P</span>
+            <span><i class="fa-solid fa-shield-halved text-amber-400 mr-1"></i> Conexão Direta Criptografada</span>
+          </div>
+        </div>
+
+        <!-- Active P2P Connection Status & Direct Invite Info -->
+        <div class="bg-court-900/85 backdrop-blur-xl rounded-3xl p-5 gold-border">
+          <div class="flex items-center justify-between mb-2.5">
+            <h3 class="font-renaissance text-sm font-bold text-amber-300 flex items-center gap-2">
+              <i class="fa-solid fa-network-wired"></i>
+              <span>Status da Rede P2P</span>
+            </h3>
+            <span id="connectionModeIndicator" class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+              Pronto (PeerJS P2P)
+            </span>
+          </div>
+          <div id="publicRoomsList" class="space-y-2 max-h-36 overflow-y-auto pr-1 text-xs text-amber-100/70">
+            <p class="py-2 leading-relaxed">
+              Crie uma sala e clique em <strong class="text-emerald-300">Link Convite</strong> para mandar no WhatsApp ou Discord. Seus amigos entram direto na sua mesa mesmo em outras redes Wi-Fi!
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- =================================================================== -->
+  <!-- VIEW 2: GAME ROOM (TABLE + ACTION HUD + CHAT/LOG DRAWER)            -->
+  <!-- =================================================================== -->
+  <div id="gameRoomView" class="hidden flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+
+    <!-- LEFT / CENTER AREA: THE RENAISSANCE COURT TABLE & PLAYER HUD -->
+    <div class="flex-1 flex flex-col justify-between p-2 sm:p-4 lg:p-5 overflow-y-auto relative">
+
+      <!-- WAITING ROOM CONTROLS BANNER (Shown when phase === 'WAITING') -->
+      <div id="waitingRoomBanner" class="hidden mb-3 bg-court-900/95 gold-border rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3 z-20">
+        <div class="flex items-center gap-3 text-center sm:text-left">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shrink-0 hidden sm:flex">
+            <i class="fa-solid fa-users-gear text-lg"></i>
+          </div>
+          <div>
+            <h3 class="font-renaissance font-bold text-amber-200 text-sm sm:text-base">
+              Sala de Espera da Corte (<span id="waitingPlayerCount">1</span>/6 Nobres)
+            </h3>
+            <p class="text-xs text-amber-100/70">
+              Envie o <strong class="text-emerald-300">Link de Convite</strong> ou o código <strong id="waitingBannerCode" class="text-amber-300 font-mono">-----</strong> para seus amigos.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-2">
+          <button id="copyInviteLinkBannerBtn" class="px-3 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/35 border border-emerald-400/50 text-emerald-200 text-xs sm:text-sm font-bold transition flex items-center gap-1.5">
+            <i class="fa-solid fa-link"></i>
+            <span>Copiar Link de Convite</span>
+          </button>
+          <button id="addBotBtn" class="px-3 py-2 rounded-xl bg-court-800 hover:bg-court-700 border border-amber-400/40 text-amber-200 text-xs sm:text-sm font-semibold transition flex items-center gap-1.5">
+            <i class="fa-solid fa-robot text-amber-400"></i>
+            <span>+ Bot</span>
+          </button>
+          <button id="removeBotBtn" class="px-3 py-2 rounded-xl bg-court-800 hover:bg-rose-950/70 border border-rose-500/30 text-rose-200 text-xs sm:text-sm font-medium transition flex items-center gap-1.5">
+            <i class="fa-solid fa-user-minus"></i>
+            <span>- Bot</span>
+          </button>
+          <button id="startGameBtn" class="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-court-950 font-bold text-xs sm:text-sm shadow-lg shadow-emerald-900/50 transition flex items-center gap-2">
+            <i class="fa-solid fa-play"></i>
+            <span>Iniciar Partida</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- THE COURT TABLE & SEATS GRID -->
+      <div class="flex-1 flex flex-col justify-center items-center my-auto relative">
+
+        <!-- Central Table Banner / Status -->
+        <div class="w-full max-w-5xl velvet-table rounded-3xl p-3 sm:p-5 relative flex flex-col justify-between min-h-[420px] sm:min-h-[490px]">
+
+          <!-- Top Row of Seats (Opponents) -->
+          <div id="seatsGridContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-4 z-10">
+            <!-- All 2-6 player seats rendered dynamically here -->
+          </div>
+
+          <!-- Center Court Treasury, Deck & Active Action Stage -->
+          <div class="my-3 sm:my-4 bg-court-950/85 backdrop-blur-md rounded-2xl p-3 sm:p-4 border border-amber-500/35 flex flex-col md:flex-row items-center justify-between gap-3 z-10 shadow-2xl">
+
+            <!-- Court Deck & Treasury Info -->
+            <div class="flex items-center gap-4 shrink-0">
+              <!-- Court Deck -->
+              <div class="flex items-center gap-2.5 bg-court-900/90 px-3 py-2 rounded-xl border border-amber-500/30">
+                <div class="w-8 h-11 rounded-md card-back-pattern border border-amber-400/60 flex items-center justify-center shadow-md">
+                  <i class="fa-solid fa-fleur-de-lis text-amber-400 text-xs"></i>
+                </div>
+                <div>
+                  <div class="text-[10px] uppercase tracking-wider text-amber-200/60">Baralho da Corte</div>
+                  <div class="text-sm font-bold text-amber-300"><span id="deckCountDisplay">15</span> cartas</div>
+                </div>
+              </div>
+
+              <!-- Central Treasury -->
+              <div class="flex items-center gap-2.5 bg-court-900/90 px-3 py-2 rounded-xl border border-amber-500/30">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-yellow-300 via-amber-500 to-amber-700 flex items-center justify-center text-court-950 font-black shadow-md border border-yellow-200">
+                  <i class="fa-solid fa-coins text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-[10px] uppercase tracking-wider text-amber-200/60">Tesouro Central</div>
+                  <div class="text-sm font-bold text-amber-300">Moedas de Ouro</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Live Turn & Reaction Stage Banner -->
+            <div id="centerStageStatus" class="flex-1 text-center md:text-right px-2">
+              <div id="stageHeadline" class="font-renaissance font-bold text-sm sm:text-base text-amber-200">
+                Aguardando o início das conspirações...
+              </div>
+              <div id="stageSubtext" class="text-xs text-amber-100/70 mt-0.5">
+                Prepare suas alianças e seus blefes.
+              </div>
+            </div>
+
+          </div>
+
+          <!-- REACTION / CHALLENGE / BLOCK BANNER (Appears dynamically when an action/block is pending!) -->
+          <div id="reactionBanner" class="hidden bg-gradient-to-r from-amber-950/95 via-court-900/95 to-amber-950/95 border-2 border-amber-400 rounded-2xl p-3.5 sm:p-4 shadow-2xl z-20 transition-all">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-3">
+              <div class="text-center md:text-left">
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[11px] font-bold uppercase tracking-wider mb-1">
+                  <i class="fa-solid fa-scale-balanced"></i>
+                  <span id="reactionPhaseTag">Janela de Reação da Corte</span>
+                </div>
+                <h4 id="reactionTitleText" class="font-renaissance font-bold text-sm sm:text-lg text-white">
+                  Jogador declarou Duque (Taxar +3 moedas)
+                </h4>
+                <p id="reactionSubtitleText" class="text-xs text-amber-200/80 mt-0.5">
+                  Alguém deseja contestar ou bloquear esta ação?
+                </p>
+              </div>
+
+              <!-- Reaction Buttons Container -->
+              <div id="reactionButtonsContainer" class="flex flex-wrap items-center justify-center gap-2 shrink-0">
+                <!-- Populated dynamically based on legal Coup reactions for local player -->
+              </div>
+            </div>
+          </div>
+
+          <!-- LOSS OF INFLUENCE SELECTION BANNER (Appears when a player must choose a card to reveal) -->
+          <div id="lossBanner" class="hidden bg-gradient-to-r from-rose-950/95 via-court-900/95 to-rose-950/95 border-2 border-rose-500 rounded-2xl p-4 shadow-2xl z-20">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div class="text-center sm:text-left">
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-500/25 text-rose-300 text-[11px] font-bold uppercase tracking-wider mb-1">
+                  <i class="fa-solid fa-skull"></i>
+                  <span>Perda de Influência</span>
+                </div>
+                <h4 id="lossBannerTitle" class="font-renaissance font-bold text-base sm:text-lg text-rose-100">
+                  Escolha uma carta de influência para revelar!
+                </h4>
+                <p id="lossBannerReason" class="text-xs text-rose-200/80 mt-0.5">
+                  Motivo: Golpe de Estado
+                </p>
+              </div>
+
+              <div id="lossCardsSelectionContainer" class="flex items-center gap-3">
+                <!-- If it's the local player losing influence, shows clickable cards here -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BOTTOM CONTROLS: MY HAND, EMOJI BAR & ACTION PANEL -->
+      <div class="mt-3 w-full max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-3 z-20">
+
+        <!-- Left: Local Player's Secret Hand + Floating Emoji Bar -->
+        <div class="lg:col-span-5 bg-court-900/95 gold-border rounded-2xl p-3 sm:p-4 flex flex-col justify-between gap-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-eye-low-vision"></i>
+                <span>Sua Influência Secreta</span>
+              </span>
+            </div>
+            <div class="flex items-center gap-1.5 bg-amber-500/15 border border-amber-400/40 px-2.5 py-1 rounded-full">
+              <i class="fa-solid fa-coins text-amber-400 text-xs"></i>
+              <span id="myCoinsCount" class="font-bold text-xs sm:text-sm text-amber-200">2 moedas</span>
+            </div>
+          </div>
+
+          <!-- Local Player's 2 Cards (Large & Detailed) -->
+          <div id="mySecretCardsContainer" class="grid grid-cols-2 gap-2.5">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Quick Floating Emoji Bar -->
+          <div class="pt-2 border-t border-amber-500/20 flex items-center justify-between gap-1">
+            <span class="text-[11px] text-amber-200/60 mr-1 hidden sm:inline">Reagir:</span>
+            <div id="emojiReactionBar" class="flex-1 flex items-center justify-around">
+              <button data-emoji="😂" class="emoji-btn hover:scale-125 active:scale-95 transition text-lg sm:text-xl p-1" title="Rir">😂</button>
+              <button data-emoji="🤨" class="emoji-btn hover:scale-125 active:scale-95 transition text-lg sm:text-xl p-1" title="Suspeitar">🤨</button>
+              <button data-emoji="🤥" class="emoji-btn hover:scale-125 active:scale-95 transition text-lg sm:text-xl p-1" title="Mentiroso / Blefe!">🤥</button>
+              <button data-emoji="😱" class="emoji-btn hover:scale-125 active:scale-95 transition text-lg sm:text-xl p-1" title="Chocado">😱</button>
+              <button data-emoji="🔥" class="emoji-btn hover:scale-125 active:scale-95 transition text-lg sm:text-xl p-1" title="Pegando Fogo">🔥</button>
+              <button data-emoji="👑" class="emoji-btn hover:scale-125 active:scale-95 transition text-lg sm:text-xl p-1" title="Realeza">👑</button>
+              <button data-emoji="💀" class="emoji-btn hover:scale-125 active:scale-95 transition text-lg sm:text-xl p-1" title="Eliminado">💀</button>
+              <button data-emoji="🤝" class="emoji-btn hover:scale-125 active:scale-95 transition text-lg sm:text-xl p-1" title="Trégua / Aliança">🤝</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Turn Action Buttons (Basic + Character Bluffable Actions) -->
+        <div class="lg:col-span-7 bg-court-900/95 gold-border rounded-2xl p-3 sm:p-4 flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-wand-sparkles"></i>
+              <span>Ações do Turno (Você pode blefar qualquer personagem!)</span>
+            </span>
+            <span id="myTurnIndicatorBadge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-court-800 text-amber-200/60 border border-amber-500/20">
+              Aguarde seu turno
+            </span>
+          </div>
+
+          <!-- Basic Actions Row -->
+          <div class="grid grid-cols-3 gap-2 mb-2.5">
+            <button data-action="INCOME" class="action-btn group p-2.5 rounded-xl bg-court-800/90 hover:bg-court-700 border border-amber-500/30 text-left transition disabled:opacity-40 disabled:pointer-events-none">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-xs sm:text-sm text-amber-100">Renda</span>
+                <span class="text-[11px] font-bold text-emerald-400">+1 <i class="fa-solid fa-coins"></i></span>
+              </div>
+              <div class="text-[10px] text-amber-200/60 mt-0.5">Livre • Sem bloqueio</div>
+            </button>
+
+            <button data-action="FOREIGN_AID" class="action-btn group p-2.5 rounded-xl bg-court-800/90 hover:bg-court-700 border border-amber-500/30 text-left transition disabled:opacity-40 disabled:pointer-events-none">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-xs sm:text-sm text-amber-100">Ajuda Externa</span>
+                <span class="text-[11px] font-bold text-emerald-400">+2 <i class="fa-solid fa-coins"></i></span>
+              </div>
+              <div class="text-[10px] text-amber-200/60 mt-0.5">Duque pode bloquear</div>
+            </button>
+
+            <button data-action="COUP" class="action-btn group p-2.5 rounded-xl bg-rose-950/70 hover:bg-rose-900/80 border border-rose-500/40 text-left transition disabled:opacity-40 disabled:pointer-events-none">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-xs sm:text-sm text-rose-200">Golpe de Estado</span>
+                <span class="text-[11px] font-bold text-rose-400">-7 <i class="fa-solid fa-coins"></i></span>
+              </div>
+              <div class="text-[10px] text-rose-200/70 mt-0.5">Elimina 1 influência</div>
+            </button>
+          </div>
+
+          <!-- Character Actions Row (4 Active Character Powers) -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button data-action="TAX" class="action-btn p-2.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/75 border border-purple-400/40 text-left transition disabled:opacity-40 disabled:pointer-events-none">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-purple-300">Duque</span>
+                <span class="text-[11px] font-bold text-emerald-400">+3 <i class="fa-solid fa-coins"></i></span>
+              </div>
+              <div class="font-semibold text-xs text-white mt-0.5">Taxar</div>
+              <div class="text-[10px] text-purple-200/70">Pega 3 moedas</div>
+            </button>
+
+            <button data-action="ASSASSINATE" class="action-btn p-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-rose-400/40 text-left transition disabled:opacity-40 disabled:pointer-events-none">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-rose-400">Assassino</span>
+                <span class="text-[11px] font-bold text-rose-400">-3 <i class="fa-solid fa-coins"></i></span>
+              </div>
+              <div class="font-semibold text-xs text-white mt-0.5">Assassinar</div>
+              <div class="text-[10px] text-slate-300/70">Elimina 1 influência</div>
+            </button>
+
+            <button data-action="STEAL" class="action-btn p-2.5 rounded-xl bg-sky-950/60 hover:bg-sky-900/75 border border-sky-400/40 text-left transition disabled:opacity-40 disabled:pointer-events-none">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-sky-300">Capitão</span>
+                <span class="text-[11px] font-bold text-amber-300">Roubar 2</span>
+              </div>
+              <div class="font-semibold text-xs text-white mt-0.5">Extorquir</div>
+              <div class="text-[10px] text-sky-200/70">Rouba até 2 moedas</div>
+            </button>
+
+            <button data-action="EXCHANGE" class="action-btn p-2.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/75 border border-emerald-400/40 text-left transition disabled:opacity-40 disabled:pointer-events-none">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-300">Embaixador</span>
+                <i class="fa-solid fa-shuffle text-emerald-400 text-xs"></i>
+              </div>
+              <div class="font-semibold text-xs text-white mt-0.5">Trocar Cartas</div>
+              <div class="text-[10px] text-emerald-200/70">Olha 2 do baralho</div>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT SIDEBAR: ACTION LOG, LIVE CHAT & QUICK CHEAT SHEET -->
+    <aside id="rightSidebarDrawer" class="fixed lg:static inset-y-0 right-0 z-40 w-80 sm:w-96 bg-court-900/98 border-l border-amber-500/30 flex flex-col transform translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+
+      <!-- Sidebar Tabs -->
+      <div class="p-2.5 border-b border-amber-500/25 flex items-center justify-between gap-1">
+        <div class="grid grid-cols-3 gap-1 flex-1 bg-court-950 p-1 rounded-xl border border-amber-500/20">
+          <button data-tab="log" class="sidebar-tab-btn py-1.5 px-2 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-300 transition">
+            <i class="fa-solid fa-scroll mr-1"></i>Crônicas
+          </button>
+          <button data-tab="chat" class="sidebar-tab-btn py-1.5 px-2 rounded-lg text-xs font-bold text-amber-100/60 hover:text-amber-200 transition">
+            <i class="fa-solid fa-comments mr-1"></i>Chat
+          </button>
+          <button data-tab="cheat" class="sidebar-tab-btn py-1.5 px-2 rounded-lg text-xs font-bold text-amber-100/60 hover:text-amber-200 transition">
+            <i class="fa-solid fa-book-open mr-1"></i>Cola
+          </button>
+        </div>
+        <button id="closeMobileSidebarBtn" class="lg:hidden p-2 text-amber-200/70 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- TAB 1: GAME CHRONICLES (DETAILED ACTION LOG) -->
+      <div id="sidebarTabLog" class="flex-1 flex flex-col overflow-hidden p-3">
+        <div id="gameLogContainer" class="flex-1 overflow-y-auto space-y-2 pr-1 text-xs">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- TAB 2: PLAYER CHAT -->
+      <div id="sidebarTabChat" class="hidden flex-1 flex flex-col overflow-hidden p-3">
+        <div id="chatMessagesContainer" class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs mb-3">
+          <!-- Populated dynamically -->
+        </div>
+        <form id="chatForm" class="flex items-center gap-2 pt-2 border-t border-amber-500/20">
+          <input
+            id="chatInput"
+            type="text"
+            maxlength="160"
+            placeholder="Envie uma mensagem ou blefe..."
+            class="flex-1 px-3 py-2.5 rounded-xl bg-court-950 border border-amber-500/35 text-xs text-amber-100 focus:outline-none focus:border-amber-400"
+          />
+          <button type="submit" class="px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-court-950 font-bold text-xs transition">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- TAB 3: QUICK REFERENCE CHEAT SHEET -->
+      <div id="sidebarTabCheat" class="hidden flex-1 overflow-y-auto p-3 space-y-2.5 text-xs">
+        <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200">
+          <strong class="block text-amber-300 mb-1"><i class="fa-solid fa-circle-info mr-1"></i>Regra de Ouro do Blefe:</strong>
+          Você pode declarar <em>qualquer ação de personagem</em> mesmo sem ter a carta! Só há problema se alguém clicar em <strong>Contestar (Duvidar)</strong>.
+        </div>
+        <div id="sidebarCheatCardsList" class="space-y-2">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- MODAL 1: SELECT TARGET FOR COUP / ASSASSINATE / STEAL               -->
+  <!-- =================================================================== -->
+  <div id="targetModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-court-900 gold-border-strong rounded-3xl p-6 shadow-2xl">
+      <div class="flex items-center justify-between mb-4">
+        <h3 id="targetModalTitle" class="font-renaissance text-lg sm:text-xl font-bold text-amber-300">
+          Escolha o Alvo da Ação
+        </h3>
+        <button id="cancelTargetModalBtn" class="text-amber-200/60 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <p id="targetModalSubtitle" class="text-xs text-amber-100/70 mb-4">
+        Selecione contra qual nobre você deseja executar esta ação:
+      </p>
+      <div id="targetPlayersList" class="space-y-2.5">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- MODAL 2: AMBASSADOR EXCHANGE MODAL                                  -->
+  <!-- =================================================================== -->
+  <div id="ambassadorModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-xl bg-court-900 gold-border-strong rounded-3xl p-6 shadow-2xl">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center text-emerald-300">
+          <i class="fa-solid fa-shuffle text-lg"></i>
+        </div>
+        <div>
+          <h3 class="font-renaissance text-lg sm:text-xl font-bold text-emerald-300">
+            Troca do Embaixador
+          </h3>
+          <p id="ambassadorModalInstruction" class="text-xs text-amber-100/80">
+            Selecione exatamente <strong class="text-amber-300">2</strong> cartas para manter em sua mão secreta. As outras 2 voltarão ao Baralho da Corte.
+          </p>
+        </div>
+      </div>
+
+      <div id="ambassadorCardsGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-5">
+        <!-- Populated dynamically with current unrevealed cards + 2 drawn cards -->
+      </div>
+
+      <button
+        id="confirmAmbassadorBtn"
+        disabled
+        class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 disabled:opacity-40 disabled:pointer-events-none text-court-950 font-bold text-sm transition"
+      >
+        Confirmar Cartas Escolhidas
+      </button>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- MODAL 3: RULES & CHARACTERS REFERENCE SHEET                         -->
+  <!-- =================================================================== -->
+  <div id="rulesModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-3xl max-h-[88vh] bg-court-900 gold-border-strong rounded-3xl p-5 sm:p-7 flex flex-col overflow-hidden shadow-2xl">
+      <div class="flex items-center justify-between pb-4 border-b border-amber-500/30">
+        <div class="flex items-center gap-2.5">
+          <i class="fa-solid fa-scroll text-amber-400 text-xl"></i>
+          <h3 class="font-renaissance text-lg sm:text-2xl font-bold text-amber-200">
+            Guia Rápido da Corte — Regras & Personagens
+          </h3>
+        </div>
+        <button id="closeRulesModalBtn" class="w-9 h-9 rounded-xl bg-court-800 hover:bg-court-700 text-amber-200 flex items-center justify-center">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto pr-1 py-4 space-y-5 text-xs sm:text-sm text-amber-100/85">
+        <!-- Characters Table -->
+        <div>
+          <h4 class="font-renaissance font-bold text-amber-300 text-sm sm:text-base mb-2.5">
+            Os 5 Personagens (3 cópias de cada no Baralho de 15 Cartas)
+          </h4>
+          <div id="modalCharactersGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Basic Actions & Challenges Summary -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-amber-500/20">
+          <div class="bg-court-950/80 p-4 rounded-2xl border border-amber-500/25">
+            <h5 class="font-renaissance font-bold text-amber-300 mb-2">Ações Básicas (Sem Personagem)</h5>
+            <ul class="space-y-1.5 text-xs">
+              <li><strong class="text-white">Renda (+1 moeda):</strong> Segura. Ninguém pode bloquear ou contestar.</li>
+              <li><strong class="text-white">Ajuda Externa (+2 moedas):</strong> Qualquer jogador pode bloquear dizendo que possui o <strong>Duque</strong>.</li>
+              <li><strong class="text-rose-300">Golpe de Estado (-7 moedas):</strong> Elimina 1 influência de um alvo imediatamente. Sem defesa! Obrigatório se iniciar o turno com 10+ moedas.</li>
+            </ul>
+          </div>
+
+          <div class="bg-court-950/80 p-4 rounded-2xl border border-amber-500/25">
+            <h5 class="font-renaissance font-bold text-amber-300 mb-2">Como Funcionam Contestações e Bloqueios</h5>
+            <ul class="space-y-1.5 text-xs">
+              <li><strong class="text-amber-200">Contestar (Duvidar):</strong> Quando alguém declara um personagem (para agir ou bloquear), qualquer oponente pode contestar.</li>
+              <li><strong class="text-emerald-300">Se dizia a verdade:</strong> Revela a carta, troca por uma nova do baralho, e <em>quem contestou perde 1 influência</em>!</li>
+              <li><strong class="text-rose-300">Se estava blefando:</strong> A ação/bloqueio falha e o <em>blefador perde 1 influência</em>!</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- MODAL 4: VICTORY / GAME OVER MODAL                                  -->
+  <!-- =================================================================== -->
+  <div id="victoryModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-court-900 gold-border-strong rounded-3xl p-6 sm:p-8 text-center shadow-2xl relative overflow-hidden">
+      <div class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-700 flex items-center justify-center shadow-xl border-2 border-yellow-200">
+        <i class="fa-solid fa-crown text-4xl text-court-950"></i>
+      </div>
+      <div class="text-xs font-bold uppercase tracking-widest text-amber-400 mb-1">
+        Soberano Absoluto da Corte
+      </div>
+      <h2 id="winnerNameTitle" class="font-renaissance text-2xl sm:text-3xl font-extrabold text-white mb-2">
+        Lorenzo Venceu!
+      </h2>
+      <p id="winnerSubtitleText" class="text-xs sm:text-sm text-amber-100/75 mb-6">
+        Todos os outros conspiradores perderam sua influência.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button id="playAgainBtn" class="flex-1 py-3.5 px-5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-court-950 font-bold text-sm transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>Jogar Novamente na Sala</span>
+        </button>
+        <button id="closeVictoryModalBtn" class="py-3.5 px-4 rounded-xl bg-court-800 hover:bg-court-700 border border-amber-500/30 text-amber-200 text-sm font-medium transition">
+          Ver Mesa
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- MODAL 5: HOW TO PLAY WITH FRIENDS / INVITE GUIDE                    -->
+  <!-- =================================================================== -->
+  <div id="inviteFriendsModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-lg bg-court-900 gold-border-strong rounded-3xl p-6 sm:p-7 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-amber-500/30 mb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300">
+            <i class="fa-solid fa-user-group"></i>
+          </div>
+          <h3 class="font-renaissance text-lg sm:text-xl font-bold text-amber-200">
+            Como Jogar com Seus Amigos
+          </h3>
+        </div>
+        <button id="closeInviteModalBtn" class="w-8 h-8 rounded-xl bg-court-800 hover:bg-court-700 text-amber-200 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3.5 text-xs sm:text-sm text-amber-100/85">
+        <div class="p-3.5 rounded-2xl bg-court-950/90 border border-amber-500/25 flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-amber-500 text-court-950 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
+          <div>
+            <strong class="text-amber-300 block">Crie a Sala e Copie o Link Direto</strong>
+            Escolha seu personagem, clique em <strong>"Criar Nova Sala"</strong> e clique em <strong>"Copiar Link de Convite"</strong>. O link já inclui a senha de acesso e o código da sua sala!
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-court-950/90 border border-amber-500/25 flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-amber-500 text-court-950 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
+          <div>
+            <strong class="text-amber-300 block">Mande no Discord ou WhatsApp</strong>
+            Quando seus amigos abrirem o link no celular ou PC (em qualquer Wi-Fi), o portão de senha se abre automaticamente e o código da sala já aparece preenchido para eles clicarem em <strong>Entrar</strong>.
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-court-950/90 border border-amber-500/25 flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-amber-500 text-court-950 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
+          <div>
+            <strong class="text-amber-300 block">Câmera, Voz e Bots Opcionais</strong>
+            Dentro da sala, cada jogador pode ligar sua <strong>Câmera</strong> e <strong>Voz</strong> no topo da tela para ver as expressões de blefe dos amigos ao vivo no assento!
+          </div>
+        </div>
+      </div>
+
+      <div id="inviteModalActiveCodeBox" class="hidden mt-4 p-3 rounded-2xl bg-emerald-950/60 border border-emerald-400/40 items-center justify-between gap-2">
+        <div>
+          <div class="text-[10px] uppercase tracking-wider text-emerald-300/80">Sua Sala Atual</div>
+          <div id="inviteModalRoomCode" class="font-mono font-bold text-lg text-emerald-200 tracking-widest">-----</div>
+        </div>
+        <button id="inviteModalCopyBtn" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-court-950 font-bold text-xs transition flex items-center gap-1.5">
+          <i class="fa-solid fa-link"></i>
+          <span>Copiar Link c/ Senha</span>
+        </button>
+      </div>
+
+      <button id="gotItInviteModalBtn" class="mt-5 w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-court-950 font-bold text-sm transition">
+        Entendi, Vamos Jogar!
+      </button>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- MAIN APPLICATION: ACCESS GATE + PEERJS P2P + WEBRTC + BOT ENGINE    -->
+  <!-- =================================================================== -->
+  <script>
+    /*************************************************************************
+     * 0. CONFIGURAÇÃO DE ACESSO PRIVADO (SENHA DA GALERA)
+     * Altere ACCESS_PIN abaixo se quiser mudar a senha padrão da mesa.
+     *************************************************************************/
+    const ACCESS_PIN = 'CORTE';
+    const STORAGE_UNLOCK_KEY = 'intrigas_corte_unlocked_v1';
+    const PEER_ROOM_PREFIX = 'intrigas-corte-sala-';
+
+    /*************************************************************************
+     * 1. CHARACTER DEFINITIONS, ARTWORK SVGs & RENAISSANCE ARCHETYPES
+     *************************************************************************/
+    const ROLES = {
+      DUQUE: {
+        id: 'DUQUE',
+        name: 'Duque',
+        actionName: 'Taxar (+3 moedas)',
+        blocksText: 'Bloqueia Ajuda Externa',
+        description: 'Pega 3 moedas do Tesouro Central. Também bloqueia qualquer jogador que tente pedir Ajuda Externa.',
+        colorClass: 'from-purple-900 via-fuchsia-950 to-court-950',
+        borderClass: 'border-purple-400/70',
+        badgeClass: 'bg-purple-500/20 text-purple-200 border-purple-400/40',
+        accentHex: '#c084fc',
+        icon: 'fa-crown',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <defs>
+            <linearGradient id="dukeBg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#581c87"/>
+              <stop offset="100%" stop-color="#1e1b4b"/>
+            </linearGradient>
+            <linearGradient id="skinTone1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f5cba7"/>
+              <stop offset="100%" stop-color="#d49a6a"/>
+            </linearGradient>
+          </defs>
+          <circle cx="50" cy="50" r="46" fill="url(#dukeBg)" stroke="#e9d5ff" stroke-width="2.5"/>
+          <!-- Fur & Velvet Noble Cloak -->
+          <path d="M14 90 C18 68, 32 62, 50 62 C68 62, 82 68, 86 90 Z" fill="#7e22ce" stroke="#facc15" stroke-width="1.5"/>
+          <path d="M26 66 C34 76, 66 76, 74 66 L78 88 L22 88 Z" fill="#fef3c7" opacity="0.9"/>
+          <!-- Gold Chain of Office -->
+          <path d="M30 70 Q50 86 70 70" fill="none" stroke="#facc15" stroke-width="3.5" stroke-dasharray="4 2"/>
+          <!-- Neck & Head -->
+          <rect x="43" y="52" width="14" height="14" rx="5" fill="url(#skinTone1)"/>
+          <path d="M34 36 C34 23, 66 23, 66 36 C66 52, 58 60, 50 60 C42 60, 34 52, 34 36 Z" fill="url(#skinTone1)"/>
+          <!-- Aristocratic Beard & Mustache -->
+          <path d="M35 46 Q50 54 65 46 Q62 61 50 63 Q38 61 35 46 Z" fill="#271c19"/>
+          <path d="M40 48 Q50 44 60 48" fill="none" stroke="#43302b" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Smug Noble Eyes & Brows -->
+          <path d="M39 36 L46 38" stroke="#271c19" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M61 36 L54 38" stroke="#271c19" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="42.5" cy="40.5" r="2.2" fill="#1c1917"/>
+          <circle cx="57.5" cy="40.5" r="2.2" fill="#1c1917"/>
+          <!-- Gold Monocle -->
+          <circle cx="57.5" cy="40.5" r="5" fill="rgba(254,240,138,0.2)" stroke="#facc15" stroke-width="1.5"/>
+          <!-- Ducal Velvet Beret & Crown -->
+          <path d="M26 28 C28 14, 72 14, 74 28 C66 32, 34 32, 26 28 Z" fill="#6b21a8" stroke="#facc15" stroke-width="1.5"/>
+          <path d="M33 28 L37 19 L45 25 L50 17 L55 25 L63 19 L67 28 Z" fill="#facc15"/>
+          <circle cx="50" cy="24" r="2.2" fill="#dc2626"/>
+        </svg>`
+      },
+      ASSASSINO: {
+        id: 'ASSASSINO',
+        name: 'Assassino',
+        actionName: 'Assassinar (-3 moedas)',
+        blocksText: 'Não bloqueia ações',
+        description: 'Paga 3 moedas ao Tesouro para forçar um alvo a perder 1 influência (pode ser bloqueado pela Condessa).',
+        colorClass: 'from-slate-900 via-rose-950 to-black',
+        borderClass: 'border-rose-500/70',
+        badgeClass: 'bg-rose-500/20 text-rose-200 border-rose-400/40',
+        accentHex: '#fb7185',
+        icon: 'fa-user-ninja',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <defs>
+            <linearGradient id="assBg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#4c0519"/>
+              <stop offset="100%" stop-color="#09090b"/>
+            </linearGradient>
+          </defs>
+          <circle cx="50" cy="50" r="46" fill="url(#assBg)" stroke="#fb7185" stroke-width="2.5"/>
+          <!-- Dark Leather Pauldrons & Cloak -->
+          <path d="M14 90 C18 68, 32 62, 50 62 C68 62, 82 68, 86 90 Z" fill="#18181b" stroke="#e11d48" stroke-width="1.5"/>
+          <!-- Deep Assassin Hood -->
+          <path d="M24 64 C20 34, 34 12, 50 10 C66 12, 80 34, 76 64 C66 56, 34 56, 24 64 Z" fill="#27272a" stroke="#9f1239" stroke-width="1.5"/>
+          <!-- Shadowed Face -->
+          <path d="M35 36 C35 24, 65 24, 65 36 C65 53, 57 60, 50 60 C43 60, 35 53, 35 36 Z" fill="#d6b49c"/>
+          <path d="M34 26 Q50 38 66 26 Q64 42 50 40 Q36 42 34 26 Z" fill="#09090b" opacity="0.65"/>
+          <!-- Eye Scar -->
+          <line x1="41" y1="33" x2="45" y2="45" stroke="#be123c" stroke-width="1.8" stroke-linecap="round"/>
+          <!-- Piercing Crimson/Amber Eyes -->
+          <ellipse cx="43" cy="39" rx="3" ry="1.8" fill="#fb7185"/>
+          <ellipse cx="57" cy="39" rx="3" ry="1.8" fill="#fb7185"/>
+          <!-- Face Mask Covering Nose & Mouth -->
+          <path d="M34 44 Q50 39 66 44 L62 62 Q50 67 38 62 Z" fill="#18181b" stroke="#be123c" stroke-width="1.2"/>
+          <!-- Gleaming Dagger Across Front -->
+          <path d="M24 78 L72 64 L78 65 L73 69 L26 83 Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+          <path d="M20 81 L30 74" stroke="#facc15" stroke-width="4" stroke-linecap="round"/>
+        </svg>`
+      },
+      CONDESSA: {
+        id: 'CONDESSA',
+        name: 'Condessa',
+        actionName: 'Sem ação ativa',
+        blocksText: 'Bloqueia Assassinato',
+        description: 'Impede que o Assassino elimine sua influência. Muito usada como blefe defensivo quando você está sem ela!',
+        colorClass: 'from-rose-900 via-red-950 to-court-950',
+        borderClass: 'border-amber-400/70',
+        badgeClass: 'bg-amber-500/20 text-amber-200 border-amber-400/40',
+        accentHex: '#fbbf24',
+        icon: 'fa-mask',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <defs>
+            <linearGradient id="condBg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#881337"/>
+              <stop offset="100%" stop-color="#2e1065"/>
+            </linearGradient>
+          </defs>
+          <circle cx="50" cy="50" r="46" fill="url(#condBg)" stroke="#fbbf24" stroke-width="2.5"/>
+          <!-- High Renaissance Hairdo -->
+          <circle cx="34" cy="28" r="12" fill="#1c1917"/>
+          <circle cx="66" cy="28" r="12" fill="#1c1917"/>
+          <circle cx="50" cy="22" r="14" fill="#1c1917"/>
+          <!-- Royal Crimson Velvet Gown -->
+          <path d="M16 90 C20 68, 34 63, 50 63 C66 63, 80 68, 84 90 Z" fill="#be123c" stroke="#fde047" stroke-width="1.5"/>
+          <!-- Neck & Décolletage + Ruby Necklace -->
+          <path d="M38 55 L62 55 L66 74 Q50 82 34 74 Z" fill="#fde4cf"/>
+          <path d="M37 64 Q50 72 63 64" fill="none" stroke="#facc15" stroke-width="2"/>
+          <circle cx="50" cy="69" r="3.5" fill="#e11d48" stroke="#fde047" stroke-width="1"/>
+          <!-- Contessa Face -->
+          <path d="M35 34 C35 22, 65 22, 65 34 C65 50, 58 58, 50 58 C42 58, 35 50, 35 34 Z" fill="#fde4cf"/>
+          <!-- Golden Venetian Masquerade Mask -->
+          <path d="M33 34 C33 27, 45 28, 50 33 C55 28, 67 27, 67 34 C67 42, 56 45, 50 40 C44 45, 33 42, 33 34 Z" fill="#f59e0b" stroke="#fef08a" stroke-width="1.5"/>
+          <ellipse cx="42" cy="35" rx="3.2" ry="1.8" fill="#1e293b"/>
+          <ellipse cx="58" cy="35" rx="3.2" ry="1.8" fill="#1e293b"/>
+          <!-- Crimson Lips & Beauty Mark -->
+          <path d="M45 50 Q50 47 55 50 Q50 54 45 50 Z" fill="#be123c"/>
+          <circle cx="57" cy="47" r="1" fill="#1c1917"/>
+          <!-- Tiara -->
+          <path d="M36 22 L43 13 L50 19 L57 13 L64 22 Z" fill="#fde047"/>
+        </svg>`
+      },
+      CAPITAO: {
+        id: 'CAPITAO',
+        name: 'Capitão',
+        actionName: 'Extorquir (Rouba 2)',
+        blocksText: 'Bloqueia Roubo (Capitão)',
+        description: 'Rouba até 2 moedas de outro jogador. Também bloqueia tentativas de roubo de outros Capitães.',
+        colorClass: 'from-sky-900 via-blue-950 to-court-950',
+        borderClass: 'border-sky-400/70',
+        badgeClass: 'bg-sky-500/20 text-sky-200 border-sky-400/40',
+        accentHex: '#38bdf8',
+        icon: 'fa-compass',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <defs>
+            <linearGradient id="capBg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#0c4a6e"/>
+              <stop offset="100%" stop-color="#0f172a"/>
+            </linearGradient>
+          </defs>
+          <circle cx="50" cy="50" r="46" fill="url(#capBg)" stroke="#38bdf8" stroke-width="2.5"/>
+          <!-- Admiral Coat & Gold Epaulettes -->
+          <path d="M14 90 C18 68, 32 62, 50 62 C68 62, 82 68, 86 90 Z" fill="#0369a1" stroke="#facc15" stroke-width="1.8"/>
+          <ellipse cx="24" cy="68" rx="9" ry="4" fill="#facc15"/>
+          <ellipse cx="76" cy="68" rx="9" ry="4" fill="#facc15"/>
+          <!-- Neck & Tanned Face -->
+          <rect x="43" y="52" width="14" height="14" rx="5" fill="#d99b72"/>
+          <path d="M35 35 C35 23, 65 23, 65 35 C65 51, 58 59, 50 59 C42 59, 35 51, 35 35 Z" fill="#e6ab83"/>
+          <!-- Rugged Goatee & Grin -->
+          <path d="M39 48 Q50 57 61 48 Q58 60 50 61 Q42 60 39 48 Z" fill="#3f271d"/>
+          <path d="M44 50 Q50 53 56 50" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <!-- Eyepatch & Keen Eye -->
+          <line x1="35" y1="33" x2="65" y2="41" stroke="#1e293b" stroke-width="2"/>
+          <circle cx="43" cy="38" r="4.5" fill="#1e293b" stroke="#facc15" stroke-width="1"/>
+          <circle cx="57" cy="38" r="2.3" fill="#0f172a"/>
+          <!-- Tricorn Hat with Plume -->
+          <path d="M18 30 L50 14 L82 30 Q50 36 18 30 Z" fill="#0f172a" stroke="#facc15" stroke-width="2"/>
+          <path d="M64 20 Q78 8 84 22" fill="none" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
+        </svg>`
+      },
+      EMBAIXADOR: {
+        id: 'EMBAIXADOR',
+        name: 'Embaixador',
+        actionName: 'Trocar Cartas c/ Corte',
+        blocksText: 'Bloqueia Roubo (Capitão)',
+        description: 'Compra 2 cartas da Corte, escolhe quais manter secretamente e devolve 2. Também bloqueia o Capitão.',
+        colorClass: 'from-emerald-900 via-teal-950 to-court-950',
+        borderClass: 'border-emerald-400/70',
+        badgeClass: 'bg-emerald-500/20 text-emerald-200 border-emerald-400/40',
+        accentHex: '#34d399',
+        icon: 'fa-scroll',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <defs>
+            <linearGradient id="embBg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#065f46"/>
+              <stop offset="100%" stop-color="#022c22"/>
+            </linearGradient>
+          </defs>
+          <circle cx="50" cy="50" r="46" fill="url(#embBg)" stroke="#34d399" stroke-width="2.5"/>
+          <!-- Emerald Diplomat Robes -->
+          <path d="M14 90 C18 68, 32 62, 50 62 C68 62, 82 68, 86 90 Z" fill="#047857" stroke="#fde047" stroke-width="1.5"/>
+          <path d="M38 62 L50 88 L62 62 Z" fill="#064e3b" stroke="#facc15" stroke-width="1.2"/>
+          <!-- Head & Distinguished Features -->
+          <path d="M35 35 C35 23, 65 23, 65 35 C65 51, 58 59, 50 59 C42 59, 35 51, 35 35 Z" fill="#f3c6a5"/>
+          <!-- Silver Van Dyke Beard -->
+          <path d="M41 49 Q50 55 59 49 Q55 61 50 62 Q45 61 41 49 Z" fill="#cbd5e1"/>
+          <!-- Golden Spectacles -->
+          <circle cx="43" cy="39" r="5" fill="rgba(255,255,255,0.15)" stroke="#facc15" stroke-width="1.6"/>
+          <circle cx="57" cy="39" r="5" fill="rgba(255,255,255,0.15)" stroke="#facc15" stroke-width="1.6"/>
+          <line x1="48" y1="39" x2="52" y2="39" stroke="#facc15" stroke-width="1.6"/>
+          <circle cx="43" cy="39" r="1.8" fill="#0f172a"/>
+          <circle cx="57" cy="39" r="1.8" fill="#0f172a"/>
+          <!-- Velvet Diplomat Hat -->
+          <path d="M26 28 C30 14, 70 14, 74 28 Z" fill="#064e3b" stroke="#facc15" stroke-width="1.5"/>
+          <!-- Sealed Royal Scroll in Front -->
+          <rect x="58" y="68" width="22" height="9" rx="3" transform="rotate(-18 58 68)" fill="#fef3c7" stroke="#d97706" stroke-width="1.2"/>
+          <circle cx="69" cy="70" r="3" fill="#dc2626"/>
+        </svg>`
+      }
+    };
+
+    const AVATARS = [
+      {
+        id: 'lorenzo',
+        label: 'Dom Lorenzo',
+        roleTitle: 'Aristocrata Calculista',
+        bg: 'from-amber-700 to-yellow-950',
+        svg: ROLES.DUQUE.svg
+      },
+      {
+        id: 'caterina',
+        label: 'Lady Caterina',
+        roleTitle: 'Dama de Ferro',
+        bg: 'from-rose-700 to-red-950',
+        svg: ROLES.CONDESSA.svg
+      },
+      {
+        id: 'ezio',
+        label: 'Ezio Valenti',
+        roleTitle: 'Sombra de Florença',
+        bg: 'from-slate-800 to-rose-950',
+        svg: ROLES.ASSASSINO.svg
+      },
+      {
+        id: 'vittoria',
+        label: 'Capitã Vittoria',
+        roleTitle: 'Corsária do Adriático',
+        bg: 'from-sky-700 to-blue-950',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <circle cx="50" cy="50" r="46" fill="#0c4a6e" stroke="#38bdf8" stroke-width="2.5"/>
+          <path d="M24 38 C20 65, 28 84, 34 88 L66 88 C72 84, 80 65, 76 38 Z" fill="#7c2d12"/>
+          <path d="M16 90 C20 68, 34 63, 50 63 C66 63, 80 68, 84 90 Z" fill="#0284c7" stroke="#facc15" stroke-width="1.5"/>
+          <path d="M36 36 C36 24, 64 24, 64 36 C64 51, 57 58, 50 58 C43 58, 36 51, 36 36 Z" fill="#f3c6a5"/>
+          <circle cx="65" cy="46" r="4" fill="none" stroke="#facc15" stroke-width="2"/>
+          <circle cx="43" cy="39" r="2.2" fill="#0f172a"/>
+          <circle cx="57" cy="39" r="2.2" fill="#0f172a"/>
+          <path d="M45 49 Q50 52 55 49" fill="none" stroke="#be123c" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M18 30 L50 15 L82 30 Q50 35 18 30 Z" fill="#1e293b" stroke="#facc15" stroke-width="2"/>
+          <path d="M26 24 Q38 10 54 16" fill="none" stroke="#f43f5e" stroke-width="4" stroke-linecap="round"/>
+        </svg>`
+      },
+      {
+        id: 'borgia',
+        label: 'Cardeal Borgia',
+        roleTitle: 'Eminência Parda',
+        bg: 'from-red-800 to-rose-950',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <circle cx="50" cy="50" r="46" fill="#450a0a" stroke="#f87171" stroke-width="2.5"/>
+          <path d="M14 90 C18 66, 32 60, 50 60 C68 60, 82 66, 86 90 Z" fill="#991b1b" stroke="#facc15" stroke-width="1.5"/>
+          <line x1="50" y1="64" x2="50" y2="84" stroke="#facc15" stroke-width="3"/>
+          <line x1="43" y1="72" x2="57" y2="72" stroke="#facc15" stroke-width="3"/>
+          <path d="M35 36 C35 23, 65 23, 65 36 C65 52, 58 60, 50 60 C42 60, 35 52, 35 36 Z" fill="#f5d0b5"/>
+          <path d="M32 32 L35 45 M68 32 L65 45" stroke="#e2e8f0" stroke-width="4" stroke-linecap="round"/>
+          <path d="M39 36 L46 38 M61 36 L54 38" stroke="#475569" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="43" cy="40" r="2" fill="#0f172a"/>
+          <circle cx="57" cy="40" r="2" fill="#0f172a"/>
+          <path d="M44 50 Q50 48 56 50" fill="none" stroke="#7f1d1d" stroke-width="2" stroke-linecap="round"/>
+          <path d="M31 28 C34 15, 66 15, 69 28 Z" fill="#dc2626" stroke="#facc15" stroke-width="1.5"/>
+        </svg>`
+      },
+      {
+        id: 'marco',
+        label: 'Lorde Marco',
+        roleTitle: 'Banqueiro Veneziano',
+        bg: 'from-purple-800 to-indigo-950',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <circle cx="50" cy="50" r="46" fill="#2e1065" stroke="#c084fc" stroke-width="2.5"/>
+          <path d="M16 90 C20 68, 34 62, 50 62 C66 62, 80 68, 84 90 Z" fill="#4c1d95" stroke="#facc15" stroke-width="1.5"/>
+          <path d="M34 35 C34 22, 66 22, 66 35 C66 51, 58 59, 50 59 C42 59, 34 51, 34 35 Z" fill="#f3c6a5"/>
+          <path d="M32 32 C32 16, 68 16, 68 32 C62 24, 38 24, 32 32 Z" fill="#271c19"/>
+          <circle cx="43" cy="39" r="2.2" fill="#1e1b4b"/>
+          <circle cx="57" cy="39" r="2.2" fill="#1e1b4b"/>
+          <path d="M44 49 Q51 53 57 48" fill="none" stroke="#7c2d12" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="70" cy="74" r="6" fill="#facc15" stroke="#fef08a" stroke-width="1.2"/>
+        </svg>`
+      },
+      {
+        id: 'isabella',
+        label: 'Condessa Isabella',
+        roleTitle: 'Rosa Negra',
+        bg: 'from-fuchsia-900 to-slate-950',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
+          <circle cx="50" cy="50" r="46" fill="#3b0764" stroke="#f472b6" stroke-width="2.5"/>
+          <path d="M24 30 C18 58, 24 82, 30 90 L70 90 C76 82, 82 58, 76 30 Z" fill="#09090b"/>
+          <path d="M18 90 C22 70, 35 64, 50 64 C65 64, 78 70, 82 90 Z" fill="#831843" stroke="#f472b6" stroke-width="1.5"/>
+          <path d="M36 35 C36 23, 64 23, 64 35 C64 51, 57 58, 50 58 C43 58, 36 51, 36 35 Z" fill="#fde6d2"/>
+          <circle cx="43" cy="38" r="2.3" fill="#831843"/>
+          <circle cx="57" cy="38" r="2.3" fill="#831843"/>
+          <path d="M45 49 Q50 47 55 49 Q50 53 45 49 Z" fill="#881337"/>
+          <circle cx="38" cy="22" r="5" fill="#e11d48"/>
+          <circle cx="45" cy="20" r="4" fill="#be123c"/>
+        </svg>`
+      },
+      {
+        id: 'dante',
+        label: 'Mestre Dante',
+        roleTitle: 'Emissário Real',
+        bg: 'from-emerald-700 to-teal-950',
+        svg: ROLES.EMBAIXADOR.svg
+      }
+    ];
+
+    const BOT_NAMES = [
+      'Lady Caterina (Bot)',
+      'Ezio Valenti (Bot)',
+      'Cardeal Borgia (Bot)',
+      'Capitã Vittoria (Bot)',
+      'Mestre Dante (Bot)'
+    ];
+
+    /*************************************************************************
+     * 2. WEB AUDIO SYNTHESIZER (RENAISSANCE SOUND EFFECTS, ZERO EXTERNAL URLS)
+     *************************************************************************/
+    class SoundEngine {
+      constructor() {
+        this.enabled = true;
+        this.ctx = null;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume().catch(() => {});
+        }
+      }
+      playTone(freq, type = 'sine', duration = 0.15, delay = 0, gainVal = 0.12) {
+        if (!this.enabled) return;
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime + delay;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(gainVal, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + duration);
+        } catch (e) {}
+      }
+      coin() {
+        this.playTone(1318.5, 'triangle', 0.14, 0, 0.12);
+        this.playTone(1975.5, 'sine', 0.22, 0.06, 0.1);
+      }
+      cardFlip() {
+        this.playTone(320, 'triangle', 0.08, 0, 0.1);
+        this.playTone(480, 'sine', 0.1, 0.04, 0.08);
+      }
+      challenge() {
+        // Dramatic brass chord
+        this.playTone(220, 'sawtooth', 0.35, 0, 0.11);
+        this.playTone(277.18, 'sawtooth', 0.35, 0.04, 0.11);
+        this.playTone(329.63, 'sawtooth', 0.45, 0.08, 0.13);
+      }
+      block() {
+        this.playTone(392, 'triangle', 0.16, 0, 0.14);
+        this.playTone(523.25, 'triangle', 0.24, 0.08, 0.14);
+      }
+      eliminate() {
+        this.playTone(196, 'sawtooth', 0.25, 0, 0.14);
+        this.playTone(146.83, 'sawtooth', 0.4, 0.15, 0.14);
+      }
+      yourTurn() {
+        this.playTone(523.25, 'sine', 0.15, 0, 0.11);
+        this.playTone(659.25, 'sine', 0.18, 0.1, 0.11);
+        this.playTone(783.99, 'sine', 0.25, 0.2, 0.12);
+      }
+      victory() {
+        [523.25, 659.25, 783.99, 1046.5].forEach((f, idx) => {
+          this.playTone(f, 'triangle', 0.3, idx * 0.11, 0.14);
+        });
+      }
+      emojiPop() {
+        this.playTone(680, 'sine', 0.09, 0, 0.08);
+      }
+    }
+    const sfx = new SoundEngine();
+
+    /*************************************************************************
+     * 3. GLOBAL APPLICATION STATE & PEERJS P2P NETWORKING
+     *************************************************************************/
+    let myUid = 'p_' + crypto.randomUUID().slice(0, 8);
+    let myName = 'Dom Lorenzo';
+    let myAvatar = AVATARS[0].id;
+
+    // Room & Game State
+    let currentRoomCode = null;
+    let currentRoomData = null;
+    let isRoomHost = false;
+    let lastProcessedEmojiId = null;
+    let previousTurnUid = null;
+    let botThinkingTimer = null;
+
+    // PeerJS P2P State (Works across any Wi-Fi / Internet connection!)
+    let myPeer = null;
+    let hostConnections = {}; // On Host: peerId -> DataConnection
+    let clientToHostConn = null; // On Client: DataConnection to Host
+    const mediaCalls = {}; // remoteUid -> MediaConnection
+
+    // Local BroadcastChannel fallback for same-browser tabs
+    const localChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('intrigas_corte_local_channel') : null;
+    const inMemoryRooms = {};
+
+    // WebRTC Media State
+    let localStream = null;
+    let camEnabled = false;
+    let micEnabled = false;
+    const remoteStreams = {}; // remoteUid -> MediaStream
+    let localSpeakingInterval = null;
+
+    const PEER_CONFIG = {
+      debug: 1,
+      config: {
+        iceServers: [
+          { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'stun:stun1.l.google.com:19302' },
+          { urls: 'stun:stun2.l.google.com:19302' }
+        ]
+      }
+    };
+
+    /*************************************************************************
+     * 4. ACCESS GATE (PORTÃO PRIVADO) & INVITE URL PARSING
+     *************************************************************************/
+    function initAccessGateAndUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      const urlRoom = (params.get('room') || '').trim().toUpperCase();
+      const urlKey = (params.get('key') || '').trim().toUpperCase();
+
+      if (urlRoom) {
+        const joinInput = document.getElementById('joinRoomCodeInput');
+        if (joinInput) joinInput.value = urlRoom;
+      }
+
+      const savedUnlock = localStorage.getItem(STORAGE_UNLOCK_KEY);
+      if (urlKey === ACCESS_PIN.toUpperCase() || savedUnlock === ACCESS_PIN.toUpperCase()) {
+        localStorage.setItem(STORAGE_UNLOCK_KEY, ACCESS_PIN.toUpperCase());
+        unlockAccessGate(urlRoom);
+      }
+
+      const gateForm = document.getElementById('accessGateForm');
+      gateForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const entered = document.getElementById('accessPinInput').value.trim().toUpperCase();
+        if (entered === ACCESS_PIN.toUpperCase()) {
+          localStorage.setItem(STORAGE_UNLOCK_KEY, ACCESS_PIN.toUpperCase());
+          document.getElementById('accessGateError').classList.add('hidden');
+          sfx.coin();
+          unlockAccessGate(urlRoom);
+        } else {
+          document.getElementById('accessGateError').classList.remove('hidden');
+          sfx.eliminate();
+        }
+      });
+
+      document.getElementById('lockGateBtn').addEventListener('click', () => {
+        localStorage.removeItem(STORAGE_UNLOCK_KEY);
+        document.getElementById('accessPinInput').value = '';
+        document.getElementById('accessGateOverlay').classList.remove('hidden');
+        showToast('Portão da Corte trancado.', 'info');
+      });
+    }
+
+    function unlockAccessGate(autoHighlightRoom = '') {
+      document.getElementById('accessGateOverlay').classList.add('hidden');
+      if (autoHighlightRoom) {
+        showToast(`Convite detectado para a sala ${autoHighlightRoom}! Escolha seu nome e clique em Entrar.`, 'success');
+      }
+    }
+
+    function copyFullInviteLink() {
+      if (!currentRoomCode) return;
+      const baseUrl = window.location.origin + window.location.pathname;
+      const inviteUrl = `${baseUrl}?room=${encodeURIComponent(currentRoomCode)}&key=${encodeURIComponent(ACCESS_PIN)}`;
+      copyTextToClipboard(inviteUrl);
+      showToast(`Link de convite da sala ${currentRoomCode} copiado! Mande no Discord/WhatsApp.`, 'success');
+    }
+
+    function copyTextToClipboard(text) {
+      const tempInput = document.createElement('input');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      tempInput.remove();
+    }
+
+    /*************************************************************************
+     * 5. P2P DATA SYNCHRONIZATION LAYER (PEERJS + LOCAL FALLBACK)
+     *************************************************************************/
+    function updateNetworkBadge(text, isOnline = true) {
+      const indicator = document.getElementById('connectionModeIndicator');
+      if (!indicator) return;
+      indicator.textContent = text;
+      indicator.className = isOnline
+        ? 'text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+        : 'text-[11px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30';
+    }
+
+    async function saveRoomState(roomCode, roomData) {
+      if (!roomData) return;
+      roomData.updatedAt = Date.now();
+      inMemoryRooms[roomCode] = JSON.parse(JSON.stringify(roomData));
+
+      if (isRoomHost) {
+        // Broadcast authoritative state to all connected PeerJS clients
+        Object.values(hostConnections).forEach(conn => {
+          if (conn && conn.open) {
+            try {
+              conn.send({ type: 'ROOM_STATE_SYNC', roomData: inMemoryRooms[roomCode] });
+            } catch (e) {}
+          }
+        });
+        // Also broadcast on local channel for same-browser tabs
+        if (localChannel) {
+          localChannel.postMessage({ type: 'ROOM_UPDATE', roomCode, roomData: inMemoryRooms[roomCode] });
+        }
+        handleRoomSnapshotUpdate(inMemoryRooms[roomCode]);
+      } else if (clientToHostConn && clientToHostConn.open) {
+        // Client sends updated state to Host, who rebroadcasts to all peers
+        try {
+          clientToHostConn.send({ type: 'CLIENT_STATE_PUSH', roomData: inMemoryRooms[roomCode] });
+        } catch (e) {}
+        handleRoomSnapshotUpdate(inMemoryRooms[roomCode]);
+      } else {
+        if (localChannel) {
+          localChannel.postMessage({ type: 'ROOM_UPDATE', roomCode, roomData: inMemoryRooms[roomCode] });
+        }
+        handleRoomSnapshotUpdate(inMemoryRooms[roomCode]);
+      }
+    }
+
+    if (localChannel) {
+      localChannel.onmessage = (ev) => {
+        const msg = ev.data;
+        if (msg && msg.type === 'ROOM_UPDATE' && msg.roomCode === currentRoomCode) {
+          inMemoryRooms[msg.roomCode] = msg.roomData;
+          handleRoomSnapshotUpdate(msg.roomData);
+        }
+      };
+    }
+
+    function setupIncomingMediaCallHandler(peerInstance) {
+      peerInstance.on('call', (call) => {
+        // Answer incoming video/audio call with our localStream (if active)
+        try {
+          call.answer(localStream || undefined);
+        } catch (e) {
+          try { call.answer(); } catch (err) {}
+        }
+        call.on('stream', (remoteStream) => {
+          const callerUid = call.metadata?.uid || call.peer.replace(PEER_ROOM_PREFIX, '');
+          remoteStreams[callerUid] = remoteStream;
+          attachVideoStreamsToSeats();
+        });
+      });
+    }
+
+    /*************************************************************************
+     * 6. UI HELPERS & INITIAL RENDERERS
+     *************************************************************************/
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const el = document.createElement('div');
+      const colors = {
+        info: 'bg-court-900/95 border-amber-400 text-amber-100',
+        success: 'bg-emerald-950/95 border-emerald-400 text-emerald-100',
+        danger: 'bg-rose-950/95 border-rose-400 text-rose-100'
+      };
+      el.className = `px-4 py-2.5 rounded-2xl border-2 shadow-2xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all duration-300 ${colors[type] || colors.info}`;
+      el.innerHTML = `<i class="fa-solid fa-crown text-amber-400"></i><span>${escapeHtml(message)}</span>`;
+      container.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(-8px)';
+        setTimeout(() => el.remove(), 300);
+      }, 3200);
+    }
+
+    function renderInitialStaticViews() {
+      // Avatar Selector in Lobby (8 Illustrated Human Characters)
+      const avatarGrid = document.getElementById('avatarSelectorGrid');
+      avatarGrid.innerHTML = AVATARS.map(av => `
+        <button
+          type="button"
+          data-avatar="${av.id}"
+          class="avatar-pick-btn p-2 rounded-2xl border transition flex items-center gap-2.5 text-left ${
+            av.id === myAvatar
+              ? 'bg-amber-500/25 border-amber-400 text-amber-100 shadow-lg ring-1 ring-amber-300/50'
+              : 'bg-court-950/85 border-amber-500/20 text-amber-100/70 hover:border-amber-500/45'
+          }"
+        >
+          <div class="w-11 h-11 rounded-xl overflow-hidden bg-gradient-to-br ${av.bg} shrink-0 shadow-md border border-amber-300/40">
+            ${av.svg}
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="font-renaissance font-bold text-xs text-amber-100 truncate">${av.label}</div>
+            <div class="text-[10px] text-amber-300/75 truncate">${av.roleTitle}</div>
+          </div>
+        </button>
+      `).join('');
+
+      avatarGrid.querySelectorAll('.avatar-pick-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          myAvatar = btn.dataset.avatar;
+          const picked = AVATARS.find(a => a.id === myAvatar);
+          const nameInput = document.getElementById('playerNameInput');
+          if (picked && (!nameInput.value.trim() || AVATARS.some(a => a.label === nameInput.value.trim()))) {
+            nameInput.value = picked.label;
+          }
+          renderInitialStaticViews();
+        });
+      });
+
+      // Lobby Characters Preview
+      const previewEl = document.getElementById('lobbyCharactersPreview');
+      previewEl.innerHTML = Object.values(ROLES).map(r => `
+        <div class="flex items-center gap-3 p-2 rounded-xl bg-court-950/85 border border-amber-500/20">
+          <div class="w-9 h-9 shrink-0">${r.svg}</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-renaissance font-bold text-xs text-amber-200">${r.name}</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full ${r.badgeClass} border">${r.actionName}</span>
+            </div>
+            <p class="text-[11px] text-amber-100/65 truncate">${r.blocksText}</p>
+          </div>
+        </div>
+      `).join('');
+
+      // Sidebar Cheat Sheet & Modal Rules Sheet
+      const cheatHtml = Object.values(ROLES).map(r => `
+        <div class="p-3 rounded-2xl bg-gradient-to-br ${r.colorClass} border ${r.borderClass} flex items-start gap-3">
+          <div class="w-12 h-12 shrink-0">${r.svg}</div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h5 class="font-renaissance font-bold text-sm text-white">${r.name}</h5>
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-black/40 text-amber-300 border border-amber-400/30">
+                ${r.actionName}
+              </span>
+            </div>
+            <div class="text-[11px] font-semibold text-amber-300 mt-0.5">${r.blocksText}</div>
+            <p class="text-[11px] text-amber-100/80 mt-1 leading-relaxed">${r.description}</p>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('sidebarCheatCardsList').innerHTML = cheatHtml;
+      document.getElementById('modalCharactersGrid').innerHTML = cheatHtml;
+    }
+
+    /*************************************************************************
+     * 7. ROOM CREATION, JOINING (PEERJS HOST & CLIENT) & BOT MANAGEMENT
+     *************************************************************************/
+    function generateRoomCode() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let code = '';
+      for (let i = 0; i < 5; i++) {
+        code += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return code;
+    }
+
+    function getSanitizedPlayerName() {
+      const input = document.getElementById('playerNameInput').value.trim();
+      if (input) {
+        myName = input.slice(0, 18);
+      } else {
+        const picked = AVATARS.find(a => a.id === myAvatar);
+        myName = picked ? picked.label : 'Dom Lorenzo';
+      }
+      return myName;
+    }
+
+    function createInitialDeck() {
+      const deck = [];
+      Object.keys(ROLES).forEach(roleKey => {
+        for (let i = 0; i < 3; i++) {
+          deck.push(roleKey);
+        }
+      });
+      return shuffleArray(deck);
+    }
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    async function createRoom(withInstantBots = false) {
+      getSanitizedPlayerName();
+      const roomCode = generateRoomCode();
+      isRoomHost = true;
+
+      const hostPlayer = {
+        uid: myUid,
+        name: myName,
+        avatar: myAvatar,
+        isBot: false,
+        coins: 2,
+        cards: [],
+        alive: true,
+        camOn: camEnabled,
+        micOn: micEnabled,
+        peerId: `${PEER_ROOM_PREFIX}${roomCode}`
+      };
+
+      const players = [hostPlayer];
+
+      if (withInstantBots) {
+        for (let i = 0; i < 3; i++) {
+          players.push({
+            uid: `bot_${crypto.randomUUID().slice(0, 6)}`,
+            name: BOT_NAMES[i],
+            avatar: AVATARS[(i + 1) % AVATARS.length].id,
+            isBot: true,
+            coins: 2,
+            cards: [],
+            alive: true,
+            camOn: false,
+            micOn: false
+          });
+        }
+      }
+
+      const newRoom = {
+        code: roomCode,
+        hostUid: myUid,
+        hostName: myName,
+        phase: 'WAITING',
+        players,
+        deck: createInitialDeck(),
+        currentTurnIndex: 0,
+        pendingAction: null,
+        logs: [
+          {
+            id: crypto.randomUUID(),
+            time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+            text: `👑 ${myName} abriu a sala privada ${roomCode} na Corte.`,
+            type: 'system'
+          }
+        ],
+        chats: [],
+        lastEmoji: null,
+        winnerUid: null,
+        updatedAt: Date.now()
+      };
+
+      // Initialize Host PeerJS Node with deterministic Room ID
+      if (typeof Peer !== 'undefined') {
+        try {
+          if (myPeer) myPeer.destroy();
+          const hostPeerId = `${PEER_ROOM_PREFIX}${roomCode}`;
+          myPeer = new Peer(hostPeerId, PEER_CONFIG);
+
+          myPeer.on('open', () => {
+            updateNetworkBadge(`Sala P2P Ativa (${roomCode})`, true);
+          });
+
+          myPeer.on('connection', (conn) => {
+            conn.on('open', () => {
+              hostConnections[conn.peer] = conn;
+            });
+
+            conn.on('data', async (data) => {
+              if (!data || !currentRoomData) return;
+
+              if (data.type === 'JOIN_REQUEST' && data.player) {
+                const joining = data.player;
+                const existsIdx = currentRoomData.players.findIndex(p => p.uid === joining.uid);
+                if (existsIdx === -1) {
+                  if (currentRoomData.phase !== 'WAITING') {
+                    conn.send({ type: 'JOIN_REJECTED', reason: 'A partida já está em andamento.' });
+                    return;
+                  }
+                  if (currentRoomData.players.length >= 6) {
+                    conn.send({ type: 'JOIN_REJECTED', reason: 'A sala já atingiu o limite de 6 nobres.' });
+                    return;
+                  }
+                  currentRoomData.players.push(joining);
+                  appendLogEntry(currentRoomData, `⚜️ ${joining.name} entrou na sala via conexão P2P.`, 'system');
+                } else {
+                  currentRoomData.players[existsIdx].name = joining.name;
+                  currentRoomData.players[existsIdx].avatar = joining.avatar;
+                  currentRoomData.players[existsIdx].peerId = joining.peerId;
+                }
+                await saveRoomState(currentRoomCode, currentRoomData);
+              } else if (data.type === 'CLIENT_STATE_PUSH' && data.roomData) {
+                currentRoomData = data.roomData;
+                await saveRoomState(currentRoomCode, currentRoomData);
+              }
+            });
+
+            conn.on('close', () => {
+              delete hostConnections[conn.peer];
+            });
+          });
+
+          setupIncomingMediaCallHandler(myPeer);
+        } catch (err) {
+          console.warn('Aviso PeerJS Host:', err);
+        }
+      }
+
+      await saveRoomState(roomCode, newRoom);
+      await enterRoomSession(roomCode);
+
+      if (withInstantBots) {
+        await startNewMatch();
+      }
+    }
+
+    async function joinRoomByCode(rawCode) {
+      const code = String(rawCode || '').trim().toUpperCase();
+      if (!code || code.length < 3) {
+        showToast('Digite um código de sala válido.', 'danger');
+        return;
+      }
+
+      getSanitizedPlayerName();
+
+      // First check if room exists in local same-browser memory
+      if (inMemoryRooms[code]) {
+        const room = inMemoryRooms[code];
+        const existingIdx = (room.players || []).findIndex(p => p.uid === myUid);
+        if (existingIdx === -1) {
+          if (room.phase !== 'WAITING') {
+            showToast('Esta partida já está em andamento.', 'danger');
+            return;
+          }
+          if (room.players.length >= 6) {
+            showToast('Esta sala já atingiu o limite de 6 jogadores.', 'danger');
+            return;
+          }
+          room.players.push({
+            uid: myUid,
+            name: myName,
+            avatar: myAvatar,
+            isBot: false,
+            coins: 2,
+            cards: [],
+            alive: true,
+            camOn: camEnabled,
+            micOn: micEnabled,
+            peerId: myUid
+          });
+          appendLogEntry(room, `⚜️ ${myName} tomou assento na Corte.`, 'system');
+        }
+        await saveRoomState(code, room);
+        await enterRoomSession(code);
+        return;
+      }
+
+      // Connect across networks via PeerJS to Host
+      if (typeof Peer === 'undefined') {
+        showToast('Biblioteca P2P indisponível no momento.', 'danger');
+        return;
+      }
+
+      showToast(`Conectando à sala ${code}...`, 'info');
+      isRoomHost = false;
+
+      if (myPeer) myPeer.destroy();
+      const clientPeerId = `${PEER_ROOM_PREFIX}${code}-${myUid}`;
+      myPeer = new Peer(clientPeerId, PEER_CONFIG);
+
+      myPeer.on('open', () => {
+        const hostPeerId = `${PEER_ROOM_PREFIX}${code}`;
+        const conn = myPeer.connect(hostPeerId, { reliable: true });
+        clientToHostConn = conn;
+
+        conn.on('open', async () => {
+          updateNetworkBadge(`Conectado à Sala ${code}`, true);
+          conn.send({
+            type: 'JOIN_REQUEST',
+            player: {
+              uid: myUid,
+              name: myName,
+              avatar: myAvatar,
+              isBot: false,
+              coins: 2,
+              cards: [],
+              alive: true,
+              camOn: camEnabled,
+              micOn: micEnabled,
+              peerId: clientPeerId
+            }
+          });
+          await enterRoomSession(code);
+        });
+
+        conn.on('data', (data) => {
+          if (!data) return;
+          if (data.type === 'JOIN_REJECTED') {
+            showToast(data.reason || 'Não foi possível entrar na sala.', 'danger');
+            leaveCurrentRoom();
+            return;
+          }
+          if (data.type === 'ROOM_STATE_SYNC' && data.roomData) {
+            inMemoryRooms[code] = data.roomData;
+            handleRoomSnapshotUpdate(data.roomData);
+          }
+        });
+
+        conn.on('close', () => {
+          showToast('A conexão com o anfitrião da sala foi encerrada.', 'danger');
+        });
+      });
+
+      myPeer.on('error', (err) => {
+        console.warn('Erro ao conectar à sala P2P:', err);
+        showToast(`Sala "${code}" não encontrada ou anfitrião offline.`, 'danger');
+      });
+
+      setupIncomingMediaCallHandler(myPeer);
+    }
+    window.joinRoomByCode = joinRoomByCode;
+
+    async function enterRoomSession(roomCode) {
+      currentRoomCode = roomCode;
+
+      // Switch UI from Lobby to Game Room
+      document.getElementById('lobbyView').classList.add('hidden');
+      document.getElementById('gameRoomView').classList.remove('hidden');
+      document.getElementById('roomHeaderBadge').classList.remove('hidden');
+      document.getElementById('roomHeaderBadge').classList.add('flex');
+      document.getElementById('toggleCamBtn').classList.remove('hidden');
+      document.getElementById('toggleCamBtn').classList.add('flex');
+      document.getElementById('toggleMicBtn').classList.remove('hidden');
+      document.getElementById('toggleMicBtn').classList.add('flex');
+      document.getElementById('leaveRoomBtn').classList.remove('hidden');
+      document.getElementById('leaveRoomBtn').classList.add('flex');
+
+      document.getElementById('roomCodeDisplay').textContent = roomCode;
+      document.getElementById('waitingBannerCode').textContent = roomCode;
+
+      const localData = inMemoryRooms[roomCode];
+      if (localData) handleRoomSnapshotUpdate(localData);
+    }
+
+    async function leaveCurrentRoom() {
+      if (botThinkingTimer) clearTimeout(botThinkingTimer);
+      stopLocalMediaAndPeers();
+
+      if (clientToHostConn) {
+        try { clientToHostConn.close(); } catch (e) {}
+        clientToHostConn = null;
+      }
+      Object.values(hostConnections).forEach(c => {
+        try { c.close(); } catch (e) {}
+      });
+      hostConnections = {};
+
+      if (myPeer) {
+        try { myPeer.destroy(); } catch (e) {}
+        myPeer = null;
+      }
+
+      currentRoomCode = null;
+      currentRoomData = null;
+      isRoomHost = false;
+
+      document.getElementById('gameRoomView').classList.add('hidden');
+      document.getElementById('lobbyView').classList.remove('hidden');
+      document.getElementById('roomHeaderBadge').classList.add('hidden');
+      document.getElementById('toggleCamBtn').classList.add('hidden');
+      document.getElementById('toggleMicBtn').classList.add('hidden');
+      document.getElementById('leaveRoomBtn').classList.add('hidden');
+      document.getElementById('victoryModal').classList.add('hidden');
+    }
+
+    async function addBotToRoom() {
+      if (!currentRoomData || currentRoomData.phase !== 'WAITING') return;
+      if (sendIntentToHost('ADD_BOT')) return;
+
+      if (currentRoomData.players.length >= 6) {
+        showToast('A mesa já possui o máximo de 6 jogadores.', 'info');
+        return;
+      }
+      const usedNames = new Set(currentRoomData.players.map(p => p.name));
+      const availableName = BOT_NAMES.find(n => !usedNames.has(n)) || `Nobre Autômato ${currentRoomData.players.length}`;
+
+      currentRoomData.players.push({
+        uid: `bot_${Math.random().toString(36).slice(2, 8)}`,
+        peerId: null,
+        name: availableName,
+        avatar: AVATARS[currentRoomData.players.length % AVATARS.length].id,
+        isBot: true,
+        coins: 2,
+        cards: [],
+        alive: true,
+        camOn: false,
+        micOn: false
+      });
+
+      appendLogEntry(currentRoomData, `🤖 ${availableName} foi convidado para a mesa.`, 'system');
+      await saveRoomState(currentRoomCode, currentRoomData);
+    }
+
+    async function removeBotFromRoom() {
+      if (!currentRoomData || currentRoomData.phase !== 'WAITING') return;
+      if (sendIntentToHost('REMOVE_BOT')) return;
+
+      const lastBotIdx = [...currentRoomData.players].reverse().findIndex(p => p.isBot);
+      if (lastBotIdx === -1) {
+        showToast('Não há Bots na sala para remover.', 'info');
+        return;
+      }
+      const actualIdx = currentRoomData.players.length - 1 - lastBotIdx;
+      const removed = currentRoomData.players.splice(actualIdx, 1)[0];
+      appendLogEntry(currentRoomData, `🤖 ${removed.name} retirou-se da mesa.`, 'system');
+      await saveRoomState(currentRoomCode, currentRoomData);
+    }
+
+    function appendLogEntry(room, text, type = 'action') {
+      if (!room.logs) room.logs = [];
+      room.logs.push({
+        id: Math.random().toString(36).slice(2),
+        time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+        text,
+        type
+      });
+      if (room.logs.length > 60) {
+        room.logs = room.logs.slice(room.logs.length - 60);
+      }
+    }
+
+    /*************************************************************************
+     * 8. COMPLETE COUP RULES & GAME ENGINE
+     *************************************************************************/
+    async function startNewMatch() {
+      if (!currentRoomData) return;
+      if (sendIntentToHost('START_GAME')) return;
+
+      if (currentRoomData.players.length < 2) {
+        showToast('Adicione pelo menos 1 amigo ou Bot para iniciar a partida (mínimo 2 jogadores).', 'danger');
+        return;
+      }
+
+      const deck = createInitialDeck();
+      currentRoomData.players.forEach(p => {
+        p.coins = 2;
+        p.alive = true;
+        p.cards = [
+          { id: Math.random().toString(36).slice(2), role: deck.pop(), revealed: false },
+          { id: Math.random().toString(36).slice(2), role: deck.pop(), revealed: false }
+        ];
+      });
+
+      currentRoomData.deck = deck;
+      currentRoomData.currentTurnIndex = Math.floor(Math.random() * currentRoomData.players.length);
+      currentRoomData.phase = 'TURN_START';
+      currentRoomData.pendingAction = null;
+      currentRoomData.winnerUid = null;
+
+      const starter = currentRoomData.players[currentRoomData.currentTurnIndex];
+      appendLogEntry(
+        currentRoomData,
+        `⚔️ Nova partida iniciada! Cada jogador recebeu 2 moedas e 2 cartas secretas. Turno de ${starter.name}.`,
+        'highlight'
+      );
+
+      sfx.cardFlip();
+      document.getElementById('victoryModal').classList.add('hidden');
+      await saveRoomState(currentRoomCode, currentRoomData);
+    }
+
+    function getCurrentTurnPlayer(room) {
+      if (!room || !room.players || room.players.length === 0) return null;
+      return room.players[room.currentTurnIndex % room.players.length];
+    }
+
+    function getPlayerByUid(room, uid) {
+      if (!room || !room.players) return null;
+      return room.players.find(p => p.uid === uid) || null;
+    }
+
+    function getUnrevealedCardsCount(player) {
+      if (!player || !player.cards) return 0;
+      return player.cards.filter(c => !c.revealed).length;
+    }
+
+    function advanceToNextAliveTurn(room) {
+      const alivePlayers = room.players.filter(p => p.alive && getUnrevealedCardsCount(p) > 0);
+      if (alivePlayers.length <= 1) {
+        room.phase = 'GAME_OVER';
+        room.pendingAction = null;
+        room.winnerUid = alivePlayers[0] ? alivePlayers[0].uid : null;
+        if (alivePlayers[0]) {
+          appendLogEntry(room, `🏆 ${alivePlayers[0].name} é o último sobrevivente e conquistou a Corte!`, 'victory');
+        }
+        return;
+      }
+
+      let nextIdx = room.currentTurnIndex;
+      for (let step = 0; step < room.players.length; step++) {
+        nextIdx = (nextIdx + 1) % room.players.length;
+        const candidate = room.players[nextIdx];
+        if (candidate.alive && getUnrevealedCardsCount(candidate) > 0) {
+          room.currentTurnIndex = nextIdx;
+          break;
+        }
+      }
+      room.phase = 'TURN_START';
+      room.pendingAction = null;
+    }
+
+    // Step 1: Player declares an action on their turn
+    async function declareTurnAction(actorUid, actionType, targetUid = null) {
+      if (!currentRoomData || currentRoomData.phase !== 'TURN_START') return;
+      if (actorUid === myUid && sendIntentToHost('DECLARE_ACTION', { actionType, targetUid })) return;
+
+      const actor = getCurrentTurnPlayer(currentRoomData);
+      if (!actor || actor.uid !== actorUid) return;
+
+      // Mandatory Coup rule if 10+ coins
+      if (actor.coins >= 10 && actionType !== 'COUP') {
+        showToast('Com 10 ou mais moedas, você é obrigado pelas regras a dar um Golpe de Estado!', 'danger');
+        return;
+      }
+
+      const target = targetUid ? getPlayerByUid(currentRoomData, targetUid) : null;
+
+      // 1. INCOME (Renda: +1 coin immediately, unchallengeable, unblockable)
+      if (actionType === 'INCOME') {
+        actor.coins += 1;
+        appendLogEntry(currentRoomData, `🪙 ${actor.name} pegou Renda (+1 moeda).`, 'action');
+        sfx.coin();
+        advanceToNextAliveTurn(currentRoomData);
+        await saveRoomState(currentRoomCode, currentRoomData);
+        return;
+      }
+
+      // 2. COUP (Golpe de Estado: -7 coins, target loses 1 influence immediately)
+      if (actionType === 'COUP') {
+        if (actor.coins < 7 || !target) return;
+        actor.coins -= 7;
+        appendLogEntry(currentRoomData, `💥 ${actor.name} pagou 7 moedas e lançou um GOLPE DE ESTADO contra ${target.name}!`, 'danger');
+        sfx.eliminate();
+
+        triggerInfluenceLoss(
+          currentRoomData,
+          target.uid,
+          `Golpe de Estado de ${actor.name}`,
+          'END_TURN'
+        );
+        await saveRoomState(currentRoomCode, currentRoomData);
+        return;
+      }
+
+      // 3. FOREIGN AID (Ajuda Externa: +2 coins, blockable by DUQUE, not challengeable)
+      if (actionType === 'FOREIGN_AID') {
+        currentRoomData.phase = 'AWAIT_REACTION';
+        currentRoomData.pendingAction = {
+          type: 'FOREIGN_AID',
+          actorUid: actor.uid,
+          targetUid: null,
+          claimedRole: null,
+          challengeable: false,
+          blockableRoles: ['DUQUE'],
+          blockableBy: 'ANY',
+          passedUids: [actor.uid],
+          blockerUid: null,
+          blockRole: null
+        };
+        appendLogEntry(currentRoomData, `💰 ${actor.name} pediu Ajuda Externa (+2 moedas). Alguém bloqueia com o Duque?`, 'action');
+        await saveRoomState(currentRoomCode, currentRoomData);
+        return;
+      }
+
+      // 4. TAX (Duque: +3 coins, challengeable, not blockable)
+      if (actionType === 'TAX') {
+        currentRoomData.phase = 'AWAIT_REACTION';
+        currentRoomData.pendingAction = {
+          type: 'TAX',
+          actorUid: actor.uid,
+          targetUid: null,
+          claimedRole: 'DUQUE',
+          challengeable: true,
+          blockableRoles: [],
+          blockableBy: 'NONE',
+          passedUids: [actor.uid],
+          blockerUid: null,
+          blockRole: null
+        };
+        appendLogEntry(currentRoomData, `👑 ${actor.name} declarou DUQUE para Taxar (+3 moedas).`, 'action');
+        await saveRoomState(currentRoomCode, currentRoomData);
+        return;
+      }
+
+      // 5. ASSASSINATE (Assassino: pays 3 coins on declaration, target can block with CONDESSA, anyone can challenge)
+      if (actionType === 'ASSASSINATE') {
+        if (actor.coins < 3 || !target) return;
+        actor.coins -= 3; // Paid when declared per official Coup rules
+        currentRoomData.phase = 'AWAIT_REACTION';
+        currentRoomData.pendingAction = {
+          type: 'ASSASSINATE',
+          actorUid: actor.uid,
+          targetUid: target.uid,
+          claimedRole: 'ASSASSINO',
+          challengeable: true,
+          blockableRoles: ['CONDESSA'],
+          blockableBy: 'TARGET',
+          passedUids: [actor.uid],
+          blockerUid: null,
+          blockRole: null
+        };
+        appendLogEntry(currentRoomData, `🗡️ ${actor.name} pagou 3 moedas e declarou ASSASSINO contra ${target.name}!`, 'danger');
+        await saveRoomState(currentRoomCode, currentRoomData);
+        return;
+      }
+
+      // 6. STEAL (Capitão: steals up to 2 coins from target; target can block with CAPITAO or EMBAIXADOR)
+      if (actionType === 'STEAL') {
+        if (!target) return;
+        currentRoomData.phase = 'AWAIT_REACTION';
+        currentRoomData.pendingAction = {
+          type: 'STEAL',
+          actorUid: actor.uid,
+          targetUid: target.uid,
+          claimedRole: 'CAPITAO',
+          challengeable: true,
+          blockableRoles: ['CAPITAO', 'EMBAIXADOR'],
+          blockableBy: 'TARGET',
+          passedUids: [actor.uid],
+          blockerUid: null,
+          blockRole: null
+        };
+        appendLogEntry(currentRoomData, `🧭 ${actor.name} declarou CAPITÃO para extorquir 2 moedas de ${target.name}!`, 'action');
+        await saveRoomState(currentRoomCode, currentRoomData);
+        return;
+      }
+
+      // 7. EXCHANGE (Embaixador: draw 2 cards from court deck, swap, return 2)
+      if (actionType === 'EXCHANGE') {
+        currentRoomData.phase = 'AWAIT_REACTION';
+        currentRoomData.pendingAction = {
+          type: 'EXCHANGE',
+          actorUid: actor.uid,
+          targetUid: null,
+          claimedRole: 'EMBAIXADOR',
+          challengeable: true,
+          blockableRoles: [],
+          blockableBy: 'NONE',
+          passedUids: [actor.uid],
+          blockerUid: null,
+          blockRole: null
+        };
+        appendLogEntry(currentRoomData, `📜 ${actor.name} declarou EMBAIXADOR para trocar cartas com o Baralho da Corte.`, 'action');
+        await saveRoomState(currentRoomCode, currentRoomData);
+        return;
+      }
+    }
+
+    // Step 2: Reaction Window Responses (Pass, Block, Challenge)
+    async function submitPassReaction(responderUid) {
+      if (!currentRoomData || !currentRoomData.pendingAction) return;
+      if (responderUid === myUid && sendIntentToHost('PASS_REACTION')) return;
+
+      const pa = currentRoomData.pendingAction;
+      if (!pa.passedUids) pa.passedUids = [];
+      if (!pa.passedUids.includes(responderUid)) {
+        pa.passedUids.push(responderUid);
+      }
+
+      const aliveUids = currentRoomData.players.filter(p => p.alive).map(p => p.uid);
+      const allOthersPassed = aliveUids.every(uid => pa.passedUids.includes(uid));
+
+      if (allOthersPassed) {
+        if (currentRoomData.phase === 'AWAIT_REACTION') {
+          // Everyone accepted the action without blocking or challenging
+          await executePendingActionEffect(currentRoomData);
+        } else if (currentRoomData.phase === 'AWAIT_BLOCK_REACTION') {
+          // Everyone accepted the block! Action is prevented, turn ends
+          const blocker = getPlayerByUid(currentRoomData, pa.blockerUid);
+          appendLogEntry(
+            currentRoomData,
+            `🛡️ O bloqueio de ${blocker ? blocker.name : 'Nobre'} (${ROLES[pa.blockRole]?.name}) não foi contestado. Ação impedida!`,
+            'action'
+          );
+          advanceToNextAliveTurn(currentRoomData);
+        }
+      }
+
+      await saveRoomState(currentRoomCode, currentRoomData);
+    }
+
+    async function submitBlockAction(blockerUid, blockRole) {
+      if (!currentRoomData || currentRoomData.phase !== 'AWAIT_REACTION' || !currentRoomData.pendingAction) return;
+      if (blockerUid === myUid && sendIntentToHost('BLOCK_ACTION', { blockRole })) return;
+
+      const pa = currentRoomData.pendingAction;
+      const blocker = getPlayerByUid(currentRoomData, blockerUid);
+      const actor = getPlayerByUid(currentRoomData, pa.actorUid);
+      if (!blocker || !blocker.alive) return;
+
+      pa.blockerUid = blocker.uid;
+      pa.blockRole = blockRole;
+      pa.passedUids = [blocker.uid];
+      currentRoomData.phase = 'AWAIT_BLOCK_REACTION';
+
+      sfx.block();
+      appendLogEntry(
+        currentRoomData,
+        `🛡️ ${blocker.name} declarou ${ROLES[blockRole].name} para BLOQUEAR a ação de ${actor ? actor.name : ''}!`,
+        'highlight'
+      );
+
+      await saveRoomState(currentRoomCode, currentRoomData);
+    }
+
+    async function submitChallenge(challengerUid) {
+      if (!currentRoomData || !currentRoomData.pendingAction) return;
+      if (challengerUid === myUid && sendIntentToHost('CHALLENGE')) return;
+
+      const phase = currentRoomData.phase;
+      if (phase !== 'AWAIT_REACTION' && phase !== 'AWAIT_BLOCK_REACTION') return;
+
+      const pa = currentRoomData.pendingAction;
+      const challenger = getPlayerByUid(currentRoomData, challengerUid);
+      if (!challenger || !challenger.alive) return;
+
+      sfx.challenge();
+
+      const isChallengingBlock = phase === 'AWAIT_BLOCK_REACTION';
+      const challengedUid = isChallengingBlock ? pa.blockerUid : pa.actorUid;
+      const claimedRole = isChallengingBlock ? pa.blockRole : pa.claimedRole;
+      const challengedPlayer = getPlayerByUid(currentRoomData, challengedUid);
+
+      if (!challengedPlayer || !claimedRole) return;
+
+      appendLogEntry(
+        currentRoomData,
+        `⚡ CONTESTAÇÃO! ${challenger.name} duvidou que ${challengedPlayer.name} possui ${ROLES[claimedRole].name}!`,
+        'danger'
+      );
+
+      // Check if challengedPlayer actually holds an unrevealed copy of claimedRole
+      const matchingCardIdx = challengedPlayer.cards.findIndex(c => !c.revealed && c.role === claimedRole);
+
+      if (matchingCardIdx !== -1) {
+        // CHALLENGED PLAYER TOLD THE TRUTH!
+        // Return that card to deck, shuffle, draw a replacement card
+        const oldCard = challengedPlayer.cards[matchingCardIdx];
+        currentRoomData.deck.push(oldCard.role);
+        currentRoomData.deck = shuffleArray(currentRoomData.deck);
+        const replacementRole = currentRoomData.deck.pop();
+        challengedPlayer.cards[matchingCardIdx] = {
+          id: crypto.randomUUID(),
+          role: replacementRole,
+          revealed: false
+        };
+
+        appendLogEntry(
+          currentRoomData,
+          `✅ ${challengedPlayer.name} PROVOU ter ${ROLES[claimedRole].name}! Devolveu a carta ao baralho e comprou uma nova. ${challenger.name} perdeu a contestação!`,
+          'victory'
+        );
+
+        // Challenger loses 1 influence!
+        // If challenging action -> after challenger loses influence, original action executes.
+        // If challenging block -> after challenger loses influence, block stands and turn ends.
+        const nextStep = isChallengingBlock ? 'END_TURN' : 'EXECUTE_ACTION';
+        triggerInfluenceLoss(
+          currentRoomData,
+          challenger.uid,
+          `Contestou ${challengedPlayer.name} (${ROLES[claimedRole].name}) e errou!`,
+          nextStep
+        );
+      } else {
+        // CHALLENGED PLAYER WAS BLUFFING!
+        appendLogEntry(
+          currentRoomData,
+          `🤥 BLEFE DESMASCARADO! ${challengedPlayer.name} NÃO possui ${ROLES[claimedRole].name} e perde 1 influência!`,
+          'danger'
+        );
+
+        // Challenged player loses 1 influence!
+        // If actor bluffed -> action fails, turn ends ('END_TURN').
+        // If blocker bluffed -> block fails, original action proceeds ('EXECUTE_ACTION')!
+        const nextStep = isChallengingBlock ? 'EXECUTE_ACTION' : 'END_TURN';
+        triggerInfluenceLoss(
+          currentRoomData,
+          challengedPlayer.uid,
+          `Foi pego blefando ${ROLES[claimedRole].name} por ${challenger.name}!`,
+          nextStep
+        );
+      }
+
+      await saveRoomState(currentRoomCode, currentRoomData);
+    }
+
+    function triggerInfluenceLoss(room, losingPlayerUid, reason, nextStepAfterLoss) {
+      const victim = getPlayerByUid(room, losingPlayerUid);
+      if (!victim) {
+        advanceToNextAliveTurn(room);
+        return;
+      }
+
+      const unrevealed = victim.cards.filter(c => !c.revealed);
+      if (unrevealed.length === 0) {
+        victim.alive = false;
+        resumeAfterInfluenceLoss(room, nextStepAfterLoss);
+        return;
+      }
+
+      // If only 1 unrevealed card left, auto-reveal it immediately so play is snappy
+      if (unrevealed.length === 1) {
+        unrevealed[0].revealed = true;
+        victim.alive = false;
+        appendLogEntry(
+          room,
+          `💀 ${victim.name} revelou sua última influência (${ROLES[unrevealed[0].role].name}) e foi ELIMINADO da Corte!`,
+          'danger'
+        );
+        sfx.eliminate();
+        resumeAfterInfluenceLoss(room, nextStepAfterLoss);
+        return;
+      }
+
+      // Player has 2 unrevealed cards -> let them choose which one to lose
+      room.phase = 'AWAIT_LOSS';
+      room.pendingLoss = {
+        losingPlayerUid,
+        reason,
+        nextStepAfterLoss
+      };
+    }
+
+    async function selectCardToLose(playerUid, cardId) {
+      if (!currentRoomData || currentRoomData.phase !== 'AWAIT_LOSS' || !currentRoomData.pendingLoss) return;
+      if (playerUid === myUid && sendIntentToHost('SELECT_CARD_LOSS', { cardId })) return;
+
+      const pl = currentRoomData.pendingLoss;
+      if (pl.losingPlayerUid !== playerUid) return;
+
+      const player = getPlayerByUid(currentRoomData, playerUid);
+      if (!player) return;
+
+      const card = player.cards.find(c => c.id === cardId && !c.revealed);
+      if (!card) return;
+
+      card.revealed = true;
+      const remaining = getUnrevealedCardsCount(player);
+      if (remaining === 0) {
+        player.alive = false;
+      }
+
+      sfx.eliminate();
+      appendLogEntry(
+        currentRoomData,
+        `💔 ${player.name} perdeu 1 influência e revelou ${ROLES[card.role].name}${remaining === 0 ? ' (Eliminado!)' : ''}.`,
+        'danger'
+      );
+
+      const nextStep = pl.nextStepAfterLoss;
+      currentRoomData.pendingLoss = null;
+      await resumeAfterInfluenceLoss(currentRoomData, nextStep);
+      await saveRoomState(currentRoomCode, currentRoomData);
+    }
+    window.selectCardToLose = selectCardToLose;
+
+    async function resumeAfterInfluenceLoss(room, nextStep) {
+      // Check if game is already over
+      const alivePlayers = room.players.filter(p => p.alive && getUnrevealedCardsCount(p) > 0);
+      if (alivePlayers.length <= 1) {
+        advanceToNextAliveTurn(room);
+        return;
+      }
+
+      if (nextStep === 'EXECUTE_ACTION' && room.pendingAction) {
+        await executePendingActionEffect(room);
+      } else {
+        advanceToNextAliveTurn(room);
+      }
+    }
+
+    async function executePendingActionEffect(room) {
+      const pa = room.pendingAction;
+      if (!pa) {
+        advanceToNextAliveTurn(room);
+        return;
+      }
+
+      const actor = getPlayerByUid(room, pa.actorUid);
+      const target = pa.targetUid ? getPlayerByUid(room, pa.targetUid) : null;
+
+      if (!actor || !actor.alive) {
+        advanceToNextAliveTurn(room);
+        return;
+      }
+
+      if (pa.type === 'FOREIGN_AID') {
+        actor.coins += 2;
+        sfx.coin();
+        appendLogEntry(room, `💰 ${actor.name} recebeu +2 moedas de Ajuda Externa.`, 'action');
+        advanceToNextAliveTurn(room);
+        return;
+      }
+
+      if (pa.type === 'TAX') {
+        actor.coins += 3;
+        sfx.coin();
+        appendLogEntry(room, `👑 ${actor.name} coletou +3 moedas com o Duque.`, 'action');
+        advanceToNextAliveTurn(room);
+        return;
+      }
+
+      if (pa.type === 'STEAL') {
+        if (target) {
+          const stolen = Math.min(2, target.coins);
+          target.coins -= stolen;
+          actor.coins += stolen;
+          sfx.coin();
+          appendLogEntry(room, `🧭 ${actor.name} extorquiu ${stolen} moeda(s) de ${target.name} com o Capitão!`, 'action');
+        }
+        advanceToNextAliveTurn(room);
+        return;
+      }
+
+      if (pa.type === 'ASSASSINATE') {
+        if (target && target.alive && getUnrevealedCardsCount(target) > 0) {
+          appendLogEntry(room, `🗡️ O assassinato de ${actor.name} contra ${target.name} foi consumado!`, 'danger');
+          triggerInfluenceLoss(room, target.uid, `Assassinado por ${actor.name}`, 'END_TURN');
+        } else {
+          advanceToNextAliveTurn(room);
+        }
+        return;
+      }
+
+      if (pa.type === 'EXCHANGE') {
+        // Draw 2 cards from deck for Ambassador exchange
+        room.deck = shuffleArray(room.deck);
+        const drawn = [room.deck.pop(), room.deck.pop()].filter(Boolean);
+        const activeCards = actor.cards.filter(c => !c.revealed).map(c => c.role);
+        const pool = [...activeCards, ...drawn];
+
+        if (actor.isBot) {
+          // Bot automatically keeps best diverse roles and returns 2 to deck
+          const shuffledPool = shuffleArray(pool);
+          const keepCount = activeCards.length;
+          const kept = shuffledPool.slice(0, keepCount);
+          const returned = shuffledPool.slice(keepCount);
+          let kIdx = 0;
+          actor.cards.forEach(c => {
+            if (!c.revealed) {
+              c.role = kept[kIdx++];
+            }
+          });
+          room.deck.push(...returned);
+          room.deck = shuffleArray(room.deck);
+          appendLogEntry(room, `📜 ${actor.name} trocou cartas com o Baralho da Corte usando o Embaixador.`, 'action');
+          advanceToNextAliveTurn(room);
+        } else {
+          room.phase = 'AWAIT_EXCHANGE';
+          room.pendingExchange = {
+            actorUid: actor.uid,
+            keepCount: activeCards.length,
+            poolRoles: pool
+          };
+        }
+        return;
+      }
+
+      advanceToNextAliveTurn(room);
+    }
+
+    async function completeAmbassadorExchange(keptIndices) {
+      document.getElementById('ambassadorModal').classList.add('hidden');
+      if (sendIntentToHost('AMBASSADOR_COMPLETE', { keptIndices })) return;
+      await completeAmbassadorExchangeForPlayer(myUid, keptIndices);
+    }
+
+    async function completeAmbassadorExchangeForPlayer(playerUid, keptIndices) {
+      if (!currentRoomData || currentRoomData.phase !== 'AWAIT_EXCHANGE' || !currentRoomData.pendingExchange) return;
+      const pe = currentRoomData.pendingExchange;
+      if (pe.actorUid !== playerUid) return;
+
+      const actor = getPlayerByUid(currentRoomData, playerUid);
+      if (!actor) return;
+
+      const keptRoles = [];
+      const returnedRoles = [];
+      pe.poolRoles.forEach((role, idx) => {
+        if ((keptIndices || []).includes(idx)) {
+          keptRoles.push(role);
+        } else {
+          returnedRoles.push(role);
+        }
+      });
+
+      if (keptRoles.length !== pe.keepCount) return;
+
+      let k = 0;
+      actor.cards.forEach(c => {
+        if (!c.revealed) {
+          c.role = keptRoles[k++];
+        }
+      });
+
+      currentRoomData.deck.push(...returnedRoles);
+      currentRoomData.deck = shuffleArray(currentRoomData.deck);
+      currentRoomData.pendingExchange = null;
+
+      sfx.cardFlip();
+      appendLogEntry(currentRoomData, `📜 ${actor.name} concluiu a troca secreta do Embaixador com a Corte.`, 'action');
+      advanceToNextAliveTurn(currentRoomData);
+      await saveRoomState(currentRoomCode, currentRoomData);
+    }
+
+    /*************************************************************************
+     * 9. INTELLIGENT BOT AI ENGINE (RUNS AUTOMATICALLY ON ROOM HOST)
+     *************************************************************************/
+    function scheduleBotActionsIfNeeded(room) {
+      if (botThinkingTimer) clearTimeout(botThinkingTimer);
+      if (!room || room.phase === 'WAITING' || room.phase === 'GAME_OVER') return;
+
+      // Only the authoritative Host runs bot decisions
+      if (!isHostMode && room.hostUid !== myUid) return;
+
+      // 1. Bot's Turn to Act
+      if (room.phase === 'TURN_START') {
+        const current = getCurrentTurnPlayer(room);
+        if (current && current.isBot && current.alive) {
+          botThinkingTimer = setTimeout(() => {
+            executeBotTurnDecision(room, current);
+          }, 1300);
+        }
+        return;
+      }
+
+      // 2. Bot Must Choose a Card to Lose
+      if (room.phase === 'AWAIT_LOSS' && room.pendingLoss) {
+        const victim = getPlayerByUid(room, room.pendingLoss.losingPlayerUid);
+        if (victim && victim.isBot) {
+          botThinkingTimer = setTimeout(() => {
+            const unrevealed = victim.cards.filter(c => !c.revealed);
+            if (unrevealed.length > 0) {
+              selectCardToLose(victim.uid, unrevealed[0].id);
+            }
+          }, 1100);
+        }
+        return;
+      }
+
+      // 3. Bots Reacting to an Action or Block
+      if ((room.phase === 'AWAIT_REACTION' || room.phase === 'AWAIT_BLOCK_REACTION') && room.pendingAction) {
+        const pa = room.pendingAction;
+        const pendingBots = room.players.filter(
+          p => p.isBot && p.alive && !(pa.passedUids || []).includes(p.uid)
+        );
+        if (pendingBots.length > 0) {
+          botThinkingTimer = setTimeout(() => {
+            executeBotReactionDecision(room, pendingBots[0]);
+          }, 1100);
+        }
+      }
+    }
+
+    async function executeBotTurnDecision(room, bot) {
+      if (!currentRoomData || currentRoomData.phase !== 'TURN_START') return;
+      const aliveOpponents = room.players.filter(p => p.alive && p.uid !== bot.uid);
+      if (aliveOpponents.length === 0) return;
+
+      // Target prioritization: pick opponent with most coins or most influence
+      aliveOpponents.sort((a, b) => (getUnrevealedCardsCount(b) * 10 + b.coins) - (getUnrevealedCardsCount(a) * 10 + a.coins));
+      const mainTarget = aliveOpponents[0];
+
+      // Mandatory Coup at 10+ coins, or smart Coup at 7+ coins
+      if (bot.coins >= 7) {
+        await declareTurnAction(bot.uid, 'COUP', mainTarget.uid);
+        return;
+      }
+
+      const myRoles = bot.cards.filter(c => !c.revealed).map(c => c.role);
+      const roll = Math.random();
+
+      // Truthful or Bluff Character Actions
+      if ((myRoles.includes('ASSASSINO') || roll < 0.16) && bot.coins >= 3) {
+        await declareTurnAction(bot.uid, 'ASSASSINATE', mainTarget.uid);
+        return;
+      }
+      if (myRoles.includes('DUQUE') || roll < 0.42) {
+        await declareTurnAction(bot.uid, 'TAX');
+        return;
+      }
+      const richTarget = aliveOpponents.find(p => p.coins >= 2);
+      if ((myRoles.includes('CAPITAO') || roll < 0.62) && richTarget) {
+        await declareTurnAction(bot.uid, 'STEAL', richTarget.uid);
+        return;
+      }
+      if (myRoles.includes('EMBAIXADOR') && roll < 0.72) {
+        await declareTurnAction(bot.uid, 'EXCHANGE');
+        return;
+      }
+      if (roll < 0.86) {
+        await declareTurnAction(bot.uid, 'FOREIGN_AID');
+        return;
+      }
+      await declareTurnAction(bot.uid, 'INCOME');
+    }
+
+    async function executeBotReactionDecision(room, bot) {
+      if (!currentRoomData || !currentRoomData.pendingAction) return;
+      const pa = currentRoomData.pendingAction;
+      const myRoles = bot.cards.filter(c => !c.revealed).map(c => c.role);
+
+      // Count how many copies of a role are already revealed on the table + in bot's hand
+      const countKnownCopies = (role) => {
+        let count = myRoles.filter(r => r === role).length;
+        room.players.forEach(p => {
+          p.cards.forEach(c => {
+            if (c.revealed && c.role === role) count++;
+          });
+        });
+        return count;
+      };
+
+      if (room.phase === 'AWAIT_REACTION') {
+        // 1. Check if bot knows for a fact that actor is bluffing (3 copies already accounted for!)
+        if (pa.challengeable && pa.claimedRole) {
+          const known = countKnownCopies(pa.claimedRole);
+          if (known >= 3 || (known === 2 && Math.random() < 0.45) || Math.random() < 0.12) {
+            await submitChallenge(bot.uid);
+            return;
+          }
+        }
+
+        // 2. If bot is targeted by Assassinate -> block with Condessa (truthfully or desperate bluff if down to 1 card!)
+        if (pa.type === 'ASSASSINATE' && pa.targetUid === bot.uid) {
+          if (myRoles.includes('CONDESSA') || getUnrevealedCardsCount(bot) === 1 || Math.random() < 0.45) {
+            await submitBlockAction(bot.uid, 'CONDESSA');
+            return;
+          }
+        }
+
+        // 3. If bot is targeted by Steal -> block with Capitão or Embaixador
+        if (pa.type === 'STEAL' && pa.targetUid === bot.uid) {
+          if (myRoles.includes('CAPITAO')) {
+            await submitBlockAction(bot.uid, 'CAPITAO');
+            return;
+          }
+          if (myRoles.includes('EMBAIXADOR')) {
+            await submitBlockAction(bot.uid, 'EMBAIXADOR');
+            return;
+          }
+          if (Math.random() < 0.28) {
+            await submitBlockAction(bot.uid, 'CAPITAO');
+            return;
+          }
+        }
+
+        // 4. Foreign Aid -> block with Duque if bot has Duque or bluffs
+        if (pa.type === 'FOREIGN_AID') {
+          if (myRoles.includes('DUQUE') || Math.random() < 0.22) {
+            await submitBlockAction(bot.uid, 'DUQUE');
+            return;
+          }
+        }
+
+        await submitPassReaction(bot.uid);
+      } else if (room.phase === 'AWAIT_BLOCK_REACTION') {
+        const known = countKnownCopies(pa.blockRole);
+        if (known >= 3 || (pa.actorUid === bot.uid && known >= 2 && Math.random() < 0.55) || Math.random() < 0.1) {
+          await submitChallenge(bot.uid);
+          return;
+        }
+        await submitPassReaction(bot.uid);
+      }
+    }
+
+    /*************************************************************************
+     * 10. RENDERING THE GAME ROOM, SEATS, CARDS, REACTIONS & CHAT
+     *************************************************************************/
+    function handleRoomSnapshotUpdate(roomData) {
+      if (!roomData) return;
+      currentRoomData = roomData;
+
+      // Waiting Room Banner Visibility
+      const waitingBanner = document.getElementById('waitingRoomBanner');
+      if (roomData.phase === 'WAITING') {
+        waitingBanner.classList.remove('hidden');
+        document.getElementById('waitingPlayerCount').textContent = roomData.players.length;
+      } else {
+        waitingBanner.classList.add('hidden');
+      }
+
+      // Deck Count
+      document.getElementById('deckCountDisplay').textContent = (roomData.deck || []).length;
+
+      // Play turn notification sound if turn switched to me
+      const currentTurnPlayer = getCurrentTurnPlayer(roomData);
+      if (roomData.phase === 'TURN_START' && currentTurnPlayer) {
+        if (currentTurnPlayer.uid !== previousTurnUid) {
+          previousTurnUid = currentTurnPlayer.uid;
+          if (currentTurnPlayer.uid === myUid) {
+            sfx.yourTurn();
+            showToast('É a sua vez de agir na Corte!', 'info');
+          }
+        }
+      }
+
+      // Floating Emoji Trigger
+      if (roomData.lastEmoji && roomData.lastEmoji.id !== lastProcessedEmojiId) {
+        lastProcessedEmojiId = roomData.lastEmoji.id;
+        spawnFloatingEmojiOnSeat(roomData.lastEmoji.uid, roomData.lastEmoji.emoji);
+      }
+
+      // Render components
+      renderSeatsGrid(roomData);
+      renderCenterStageAndBanners(roomData);
+      renderMySecretHandAndControls(roomData);
+      renderLogsAndChat(roomData);
+
+      // Ambassador Modal Check
+      if (roomData.phase === 'AWAIT_EXCHANGE' && roomData.pendingExchange && roomData.pendingExchange.actorUid === myUid) {
+        openAmbassadorExchangeModal(roomData.pendingExchange);
+      } else {
+        document.getElementById('ambassadorModal').classList.add('hidden');
+      }
+
+      // Victory Modal Check
+      if (roomData.phase === 'GAME_OVER' && roomData.winnerUid) {
+        const winner = getPlayerByUid(roomData, roomData.winnerUid);
+        if (winner) {
+          document.getElementById('winnerNameTitle').textContent = `${winner.name} Venceu!`;
+          document.getElementById('victoryModal').classList.remove('hidden');
+          sfx.victory();
+        }
+      }
+
+      // Connect WebRTC peers if new human players joined
+      syncWebRTCPeersWithRoom(roomData);
+
+      // Trigger Bot Engine if applicable
+      scheduleBotActionsIfNeeded(roomData);
+    }
+
+    function renderSeatsGrid(room) {
+      const container = document.getElementById('seatsGridContainer');
+      const currentTurnPlayer = getCurrentTurnPlayer(room);
+
+      container.innerHTML = room.players.map(player => {
+        const isTurn = room.phase !== 'WAITING' && room.phase !== 'GAME_OVER' && currentTurnPlayer && currentTurnPlayer.uid === player.uid;
+        const isMe = player.uid === myUid;
+        const avatarObj = AVATARS.find(a => a.id === player.avatar) || AVATARS[0];
+        const unrevealedCount = getUnrevealedCardsCount(player);
+        const isEliminated = room.phase !== 'WAITING' && (!player.alive || unrevealedCount === 0);
+
+        // Render player's 2 influence cards on their seat
+        const cardsHtml = (player.cards && player.cards.length > 0)
+          ? player.cards.map(c => {
+              if (c.revealed) {
+                const r = ROLES[c.role];
+                return `
+                  <div class="flex-1 rounded-xl p-1.5 bg-gradient-to-br ${r.colorClass} border border-rose-500/70 opacity-75 flex items-center gap-1.5 relative overflow-hidden">
+                    <div class="w-6 h-6 shrink-0">${r.svg}</div>
+                    <div class="min-w-0">
+                      <div class="text-[10px] font-bold text-rose-200 truncate line-through">${r.name}</div>
+                      <div class="text-[9px] text-rose-300 uppercase">Revelada</div>
+                    </div>
+                  </div>
+                `;
+              } else {
+                return `
+                  <div class="flex-1 rounded-xl p-1.5 card-back-pattern border border-amber-400/50 flex items-center justify-center gap-1.5 shadow-inner min-h-[38px]">
+                    <i class="fa-solid fa-mask text-amber-400/80 text-xs"></i>
+                    <span class="text-[10px] font-semibold text-amber-200/90">Influência</span>
+                  </div>
+                `;
+              }
+            }).join('')
+          : `
+            <div class="col-span-2 text-[11px] text-amber-200/50 italic py-1.5 text-center w-full">
+              Aguardando distribuição de cartas...
+            </div>
+          `;
+
+        return `
+          <div
+            id="seat-card-${escapeHtml(player.uid)}"
+            class="relative rounded-2xl p-2.5 sm:p-3 bg-court-950/90 border transition-all flex flex-col justify-between gap-2 ${
+              isTurn ? 'active-turn-seat border-amber-300' : 'border-amber-500/30'
+            } ${isEliminated ? 'opacity-55 grayscale-[45%]' : ''}"
+          >
+            <!-- Floating Emoji Anchor -->
+            <div id="emoji-anchor-${escapeHtml(player.uid)}" class="absolute -top-3 left-1/2 -translate-x-1/2 pointer-events-none z-50"></div>
+
+            <!-- Top Row: Video / Avatar Frame + Player Info + Coins -->
+            <div class="flex items-center gap-2.5">
+              <!-- Webcam Video Box or Illustrated Human Character Portrait -->
+              <div
+                id="video-frame-${escapeHtml(player.uid)}"
+                class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden bg-gradient-to-br ${avatarObj.bg} border-2 border-amber-400/60 shrink-0 flex items-center justify-center shadow-lg"
+              >
+                <div class="w-full h-full">${avatarObj.svg}</div>
+                <video
+                  id="seat-video-${escapeHtml(player.uid)}"
+                  autoplay
+                  playsinline
+                  ${isMe ? 'muted' : ''}
+                  class="opacity-0 pointer-events-none absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isMe ? 'mirror-video' : ''}"
+                ></video>
+
+                <!-- Media Status Mini Icons -->
+                ${!player.isBot ? `
+                  <div class="absolute bottom-0.5 right-0.5 flex items-center gap-0.5 bg-black/75 px-1.5 py-0.5 rounded text-[9px]">
+                    <i class="fa-solid ${player.micOn ? 'fa-microphone text-emerald-400' : 'fa-microphone-slash text-rose-400/80'}"></i>
+                  </div>
+                ` : `
+                  <div class="absolute bottom-0.5 right-0.5 bg-black/75 px-1 py-0.5 rounded text-[8px] text-amber-300 font-bold">
+                    BOT
+                  </div>
+                `}
+              </div>
+
+              <!-- Name & Badges -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <span class="font-renaissance font-bold text-xs sm:text-sm text-amber-100 truncate">
+                    ${escapeHtml(player.name)}
+                  </span>
+                  ${isMe ? `<span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/25 text-amber-300 font-bold">VOCÊ</span>` : ''}
+                </div>
+                <div class="text-[10px] text-amber-300/70 truncate">${escapeHtml(avatarObj.roleTitle || 'Nobre da Corte')}</div>
+
+                <div class="flex items-center gap-2 mt-1">
+                  <!-- Coin Counter -->
+                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-400/35 text-amber-300 text-[11px] font-bold">
+                    <i class="fa-solid fa-coins text-amber-400 text-[10px]"></i>
+                    <span>${player.coins}</span>
+                  </div>
+
+                  <!-- Status Tag -->
+                  ${isEliminated
+                    ? `<span class="text-[10px] font-bold text-rose-400 uppercase"><i class="fa-solid fa-skull mr-1"></i>Eliminado</span>`
+                    : isTurn
+                      ? `<span class="text-[10px] font-bold text-emerald-300 animate-pulse">● Agindo...</span>`
+                      : `<span class="text-[10px] text-amber-200/60">${unrevealedCount} influência(s)</span>`
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Row: Player's 2 Influence Cards -->
+            <div class="flex items-center gap-1.5 pt-1 border-t border-amber-500/15">
+              ${cardsHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Re-attach live WebRTC video streams after DOM update
+      attachVideoStreamsToSeats();
+    }
+
+    function renderCenterStageAndBanners(room) {
+      const headline = document.getElementById('stageHeadline');
+      const subtext = document.getElementById('stageSubtext');
+      const reactionBanner = document.getElementById('reactionBanner');
+      const lossBanner = document.getElementById('lossBanner');
+
+      reactionBanner.classList.add('hidden');
+      lossBanner.classList.add('hidden');
+
+      if (room.phase === 'WAITING') {
+        headline.textContent = 'A Corte está reunindo os conspiradores...';
+        subtext.textContent = 'Adicione Bots ou aguarde seus amigos entrarem com o código da sala.';
+        return;
+      }
+
+      if (room.phase === 'GAME_OVER') {
+        const winner = getPlayerByUid(room, room.winnerUid);
+        headline.textContent = `🏆 ${winner ? winner.name : 'Um nobre'} triunfou na Corte!`;
+        subtext.textContent = 'Clique em "Jogar Novamente" para iniciar uma nova conspiração.';
+        return;
+      }
+
+      const turnPlayer = getCurrentTurnPlayer(room);
+
+      if (room.phase === 'TURN_START' && turnPlayer) {
+        headline.textContent = turnPlayer.uid === myUid
+          ? '👑 É a sua vez! Escolha uma ação no painel abaixo.'
+          : `⏳ Turno de ${turnPlayer.name}`;
+        subtext.textContent = turnPlayer.coins >= 10
+          ? 'Atenção: Com 10+ moedas, o Golpe de Estado é obrigatório!'
+          : 'Qualquer personagem pode ser declarado — verdade ou blefe.';
+        return;
+      }
+
+      if (room.phase === 'AWAIT_EXCHANGE' && room.pendingExchange) {
+        const actor = getPlayerByUid(room, room.pendingExchange.actorUid);
+        headline.textContent = `📜 ${actor ? actor.name : 'Nobre'} está trocando cartas com o Baralho da Corte...`;
+        subtext.textContent = 'O Embaixador examina secretamente 2 cartas da Corte.';
+        return;
+      }
+
+      // LOSS OF INFLUENCE PHASE
+      if (room.phase === 'AWAIT_LOSS' && room.pendingLoss) {
+        const pl = room.pendingLoss;
+        const victim = getPlayerByUid(room, pl.losingPlayerUid);
+        lossBanner.classList.remove('hidden');
+
+        document.getElementById('lossBannerReason').textContent = `Motivo: ${pl.reason}`;
+        const cardsBox = document.getElementById('lossCardsSelectionContainer');
+
+        if (pl.losingPlayerUid === myUid && victim) {
+          document.getElementById('lossBannerTitle').textContent = 'Você perdeu 1 influência! Clique na carta que deseja revelar:';
+          const unrevealed = victim.cards.filter(c => !c.revealed);
+          cardsBox.innerHTML = unrevealed.map(c => {
+            const r = ROLES[c.role];
+            return `
+              <button
+                onclick="window.selectCardToLose('${escapeHtml(myUid)}', '${escapeHtml(c.id)}')"
+                class="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs sm:text-sm shadow-lg transition flex items-center gap-2 border border-rose-300"
+              >
+                <i class="fa-solid fa-skull"></i>
+                <span>Revelar ${r.name}</span>
+              </button>
+            `;
+          }).join('');
+        } else {
+          document.getElementById('lossBannerTitle').textContent = `Aguardando ${victim ? victim.name : 'jogador'} escolher qual influência revelar...`;
+          cardsBox.innerHTML = `<span class="text-xs text-rose-200 animate-pulse">Escolhendo carta...</span>`;
+        }
+        return;
+      }
+
+      // REACTION OR BLOCK REACTION PHASE
+      if ((room.phase === 'AWAIT_REACTION' || room.phase === 'AWAIT_BLOCK_REACTION') && room.pendingAction) {
+        const pa = room.pendingAction;
+        const actor = getPlayerByUid(room, pa.actorUid);
+        const target = pa.targetUid ? getPlayerByUid(room, pa.targetUid) : null;
+        const blocker = pa.blockerUid ? getPlayerByUid(room, pa.blockerUid) : null;
+        const me = getPlayerByUid(room, myUid);
+
+        reactionBanner.classList.remove('hidden');
+        const btnContainer = document.getElementById('reactionButtonsContainer');
+        btnContainer.innerHTML = '';
+
+        if (room.phase === 'AWAIT_REACTION') {
+          const actionLabels = {
+            FOREIGN_AID: `pediu Ajuda Externa (+2 moedas)`,
+            TAX: `declarou DUQUE para Taxar (+3 moedas)`,
+            ASSASSINATE: `declarou ASSASSINO para atacar ${target ? target.name : ''}`,
+            STEAL: `declarou CAPITÃO para extorquir 2 moedas de ${target ? target.name : ''}`,
+            EXCHANGE: `declarou EMBAIXADOR para trocar cartas com a Corte`
+          };
+          document.getElementById('reactionPhaseTag').textContent = 'Janela de Reação da Corte';
+          document.getElementById('reactionTitleText').textContent = `${actor ? actor.name : 'Jogador'} ${actionLabels[pa.type] || ''}`;
+
+          const alreadyPassed = (pa.passedUids || []).includes(myUid);
+
+          if (!me || !me.alive) {
+            document.getElementById('reactionSubtitleText').textContent = 'Você foi eliminado e está observando a decisão da Corte.';
+          } else if (pa.actorUid === myUid) {
+            document.getElementById('reactionSubtitleText').textContent = 'Aguardando os outros nobres aceitarem, bloquearem ou contestarem sua ação...';
+          } else if (alreadyPassed) {
+            document.getElementById('reactionSubtitleText').textContent = 'Você aceitou a ação. Aguardando os demais jogadores...';
+          } else {
+            document.getElementById('reactionSubtitleText').textContent = 'Como você deseja reagir?';
+
+            // 1. Pass / Accept Button
+            const passBtn = document.createElement('button');
+            passBtn.className = 'px-4 py-2.5 rounded-xl bg-court-800 hover:bg-court-700 border border-amber-500/40 text-amber-100 font-semibold text-xs sm:text-sm transition flex items-center gap-1.5';
+            passBtn.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i><span>Passar / Aceitar</span>`;
+            passBtn.onclick = () => submitPassReaction(myUid);
+            btnContainer.appendChild(passBtn);
+
+            // 2. Challenge Button (if challengeable)
+            if (pa.challengeable && pa.claimedRole) {
+              const chalBtn = document.createElement('button');
+              chalBtn.className = 'px-4 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-red-700 hover:from-rose-500 hover:to-red-600 text-white font-bold text-xs sm:text-sm shadow-lg transition flex items-center gap-1.5';
+              chalBtn.innerHTML = `<i class="fa-solid fa-bolt"></i><span>Contestar ${ROLES[pa.claimedRole].name}!</span>`;
+              chalBtn.onclick = () => submitChallenge(myUid);
+              btnContainer.appendChild(chalBtn);
+            }
+
+            // 3. Block Buttons (if local player is eligible to block)
+            const canIBlock = pa.blockableBy === 'ANY' || (pa.blockableBy === 'TARGET' && pa.targetUid === myUid);
+            if (canIBlock && pa.blockableRoles && pa.blockableRoles.length > 0) {
+              pa.blockableRoles.forEach(bRole => {
+                const blockBtn = document.createElement('button');
+                blockBtn.className = 'px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-court-950 font-bold text-xs sm:text-sm shadow-lg transition flex items-center gap-1.5';
+                blockBtn.innerHTML = `<i class="fa-solid fa-shield-halved"></i><span>Bloquear c/ ${ROLES[bRole].name}</span>`;
+                blockBtn.onclick = () => submitBlockAction(myUid, bRole);
+                btnContainer.appendChild(blockBtn);
+              });
+            }
+          }
+        } else if (room.phase === 'AWAIT_BLOCK_REACTION') {
+          document.getElementById('reactionPhaseTag').textContent = 'Bloqueio Declarado!';
+          document.getElementById('reactionTitleText').textContent = `${blocker ? blocker.name : 'Jogador'} bloqueou declarando ${ROLES[pa.blockRole]?.name || ''}!`;
+
+          const alreadyPassed = (pa.passedUids || []).includes(myUid);
+          if (!me || !me.alive) {
+            document.getElementById('reactionSubtitleText').textContent = 'Observando resolução do bloqueio...';
+          } else if (pa.blockerUid === myUid) {
+            document.getElementById('reactionSubtitleText').textContent = 'Aguardando para ver se alguém contesta o seu bloqueio...';
+          } else if (alreadyPassed) {
+            document.getElementById('reactionSubtitleText').textContent = 'Você aceitou o bloqueio. Aguardando os demais...';
+          } else {
+            document.getElementById('reactionSubtitleText').textContent = 'Você aceita o bloqueio ou duvida que ele possui esta carta?';
+
+            const acceptBlockBtn = document.createElement('button');
+            acceptBlockBtn.className = 'px-4 py-2.5 rounded-xl bg-court-800 hover:bg-court-700 border border-amber-500/40 text-amber-100 font-semibold text-xs sm:text-sm transition flex items-center gap-1.5';
+            acceptBlockBtn.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i><span>Aceitar Bloqueio</span>`;
+            acceptBlockBtn.onclick = () => submitPassReaction(myUid);
+            btnContainer.appendChild(acceptBlockBtn);
+
+            const chalBlockBtn = document.createElement('button');
+            chalBlockBtn.className = 'px-4 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-red-700 hover:from-rose-500 hover:to-red-600 text-white font-bold text-xs sm:text-sm shadow-lg transition flex items-center gap-1.5';
+            chalBlockBtn.innerHTML = `<i class="fa-solid fa-bolt"></i><span>Contestar ${ROLES[pa.blockRole]?.name}!</span>`;
+            chalBlockBtn.onclick = () => submitChallenge(myUid);
+            btnContainer.appendChild(chalBlockBtn);
+          }
+        }
+      }
+    }
+
+    function renderMySecretHandAndControls(room) {
+      const me = getPlayerByUid(room, myUid);
+      const coinsEl = document.getElementById('myCoinsCount');
+      const cardsContainer = document.getElementById('mySecretCardsContainer');
+      const turnBadge = document.getElementById('myTurnIndicatorBadge');
+
+      if (!me) return;
+      coinsEl.textContent = `${me.coins} moeda${me.coins === 1 ? '' : 's'}`;
+
+      if (!me.cards || me.cards.length === 0) {
+        cardsContainer.innerHTML = `
+          <div class="col-span-2 p-4 rounded-xl bg-court-950/70 border border-amber-500/20 text-center text-xs text-amber-200/60">
+            Suas 2 cartas secretas aparecerão aqui assim que a partida começar.
+          </div>
+        `;
+      } else {
+        cardsContainer.innerHTML = me.cards.map(c => {
+          const r = ROLES[c.role];
+          return `
+            <div class="influence-card rounded-2xl p-2.5 bg-gradient-to-br ${r.colorClass} border-2 ${
+              c.revealed ? 'border-rose-500/60 opacity-50 grayscale' : r.borderClass
+            } flex items-center gap-2.5 shadow-lg relative overflow-hidden">
+              <div class="w-11 h-11 shrink-0">${r.svg}</div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center justify-between">
+                  <span class="font-renaissance font-bold text-xs sm:text-sm text-white truncate">${r.name}</span>
+                </div>
+                <div class="text-[10px] font-semibold text-amber-300 truncate">${r.actionName}</div>
+                <div class="text-[9px] text-amber-100/75 truncate">${
+                  c.revealed ? '💀 ELIMINADA' : r.blocksText
+                }</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Enable / Disable Turn Action Buttons
+      const currentTurnPlayer = getCurrentTurnPlayer(room);
+      const isMyTurn = room.phase === 'TURN_START' && currentTurnPlayer && currentTurnPlayer.uid === myUid && me.alive;
+
+      if (isMyTurn) {
+        turnBadge.textContent = me.coins >= 10 ? 'GOLPE OBRIGATÓRIO (10+ moedas)' : 'SUA VEZ DE AGIR!';
+        turnBadge.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/25 text-emerald-300 border border-emerald-400/50 animate-pulse';
+      } else {
+        turnBadge.textContent = room.phase === 'WAITING' ? 'Sala de Espera' : 'Aguarde seu turno';
+        turnBadge.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-court-800 text-amber-200/60 border border-amber-500/20';
+      }
+
+      document.querySelectorAll('.action-btn').forEach(btn => {
+        const act = btn.dataset.action;
+        if (!isMyTurn) {
+          btn.disabled = true;
+          return;
+        }
+        if (me.coins >= 10) {
+          btn.disabled = act !== 'COUP';
+          return;
+        }
+        if (act === 'COUP' && me.coins < 7) {
+          btn.disabled = true;
+          return;
+        }
+        if (act === 'ASSASSINATE' && me.coins < 3) {
+          btn.disabled = true;
+          return;
+        }
+        btn.disabled = false;
+      });
+    }
+
+    function openTargetSelectionModal(actionType) {
+      if (!currentRoomData) return;
+      const opponents = currentRoomData.players.filter(
+        p => p.uid !== myUid && p.alive && getUnrevealedCardsCount(p) > 0
+      );
+      if (opponents.length === 0) return;
+
+      // If only 1 opponent alive, target them directly!
+      if (opponents.length === 1) {
+        declareTurnAction(myUid, actionType, opponents[0].uid);
+        return;
+      }
+
+      const titles = {
+        COUP: 'Escolha o Alvo do Golpe de Estado (-7 moedas)',
+        ASSASSINATE: 'Escolha o Alvo do Assassino (-3 moedas)',
+        STEAL: 'Escolha de Quem Extorquir 2 Moedas (Capitão)'
+      };
+      document.getElementById('targetModalTitle').textContent = titles[actionType] || 'Escolha o Alvo';
+      const listEl = document.getElementById('targetPlayersList');
+
+      listEl.innerHTML = opponents.map(opp => {
+        const unrev = getUnrevealedCardsCount(opp);
+        const oppAvatar = AVATARS.find(a => a.id === opp.avatar) || AVATARS[0];
+        return `
+          <button
+            data-target-uid="${escapeHtml(opp.uid)}"
+            class="w-full p-3 rounded-2xl bg-court-950 hover:bg-court-800 border border-amber-500/35 hover:border-amber-400 transition flex items-center justify-between"
+          >
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl overflow-hidden border border-amber-400/50 shrink-0">
+                ${oppAvatar.svg}
+              </div>
+              <div class="text-left">
+                <div class="font-renaissance font-bold text-sm text-white">${escapeHtml(opp.name)}</div>
+                <div class="text-[11px] text-amber-200/70">${unrev} influência(s) ativa(s)</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 bg-amber-500/15 px-3 py-1 rounded-full text-amber-300 text-xs font-bold">
+              <i class="fa-solid fa-coins"></i>
+              <span>${opp.coins}</span>
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      listEl.querySelectorAll('button').forEach(btn => {
+        btn.onclick = () => {
+          const tUid = btn.dataset.targetUid;
+          document.getElementById('targetModal').classList.add('hidden');
+          declareTurnAction(myUid, actionType, tUid);
+        };
+      });
+
+      document.getElementById('targetModal').classList.remove('hidden');
+    }
+
+    function openAmbassadorExchangeModal(pe) {
+      const modal = document.getElementById('ambassadorModal');
+      const grid = document.getElementById('ambassadorCardsGrid');
+      const confirmBtn = document.getElementById('confirmAmbassadorBtn');
+      const instr = document.getElementById('ambassadorModalInstruction');
+
+      instr.innerHTML = `Selecione exatamente <strong class="text-amber-300">${pe.keepCount}</strong> carta(s) para manter em sua mão secreta. As outras 2 voltarão ao Baralho da Corte.`;
+
+      const selectedIndices = new Set();
+      confirmBtn.disabled = true;
+
+      const renderCards = () => {
+        grid.innerHTML = pe.poolRoles.map((roleKey, idx) => {
+          const r = ROLES[roleKey];
+          const isSelected = selectedIndices.has(idx);
+          return `
+            <div
+              data-idx="${idx}"
+              class="cursor-pointer rounded-2xl p-3 bg-gradient-to-br ${r.colorClass} border-2 transition transform ${
+                isSelected
+                  ? 'border-emerald-400 scale-105 shadow-xl shadow-emerald-900/50'
+                  : 'border-amber-500/30 opacity-75 hover:opacity-100'
+              } flex flex-col items-center text-center gap-2"
+            >
+              <div class="w-14 h-14">${r.svg}</div>
+              <div class="font-renaissance font-bold text-sm text-white">${r.name}</div>
+              <div class="text-[10px] text-amber-200/80">${r.actionName}</div>
+              <div class="mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                isSelected ? 'bg-emerald-500 text-court-950' : 'bg-black/50 text-amber-200/70'
+              }">
+                ${isSelected ? '✓ Manter' : 'Clique p/ escolher'}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        grid.querySelectorAll('[data-idx]').forEach(cardEl => {
+          cardEl.onclick = () => {
+            const i = Number(cardEl.dataset.idx);
+            if (selectedIndices.has(i)) {
+              selectedIndices.delete(i);
+            } else {
+              if (selectedIndices.size < pe.keepCount) {
+                selectedIndices.add(i);
+              } else if (pe.keepCount === 1) {
+                selectedIndices.clear();
+                selectedIndices.add(i);
+              }
+            }
+            confirmBtn.disabled = selectedIndices.size !== pe.keepCount;
+            renderCards();
+          };
+        });
+      };
+
+      renderCards();
+      confirmBtn.onclick = () => {
+        completeAmbassadorExchange(Array.from(selectedIndices));
+      };
+      modal.classList.remove('hidden');
+    }
+
+    function renderLogsAndChat(room) {
+      const logBox = document.getElementById('gameLogContainer');
+      const logs = room.logs || [];
+      logBox.innerHTML = logs.map(item => {
+        const styleMap = {
+          system: 'bg-court-950/70 border-amber-500/20 text-amber-200/75',
+          action: 'bg-court-950/90 border-amber-500/30 text-amber-100',
+          highlight: 'bg-amber-500/15 border-amber-400/50 text-amber-200 font-medium',
+          danger: 'bg-rose-950/70 border-rose-500/40 text-rose-200 font-medium',
+          victory: 'bg-emerald-950/70 border-emerald-400/50 text-emerald-200 font-bold'
+        };
+        return `
+          <div class="p-2.5 rounded-xl border ${styleMap[item.type] || styleMap.action} leading-relaxed">
+            <span class="text-[10px] opacity-60 mr-1.5 font-mono">[${escapeHtml(item.time)}]</span>
+            <span>${escapeHtml(item.text)}</span>
+          </div>
+        `;
+      }).join('');
+      logBox.scrollTop = logBox.scrollHeight;
+
+      const chatBox = document.getElementById('chatMessagesContainer');
+      const chats = room.chats || [];
+      if (chats.length === 0) {
+        chatBox.innerHTML = `<p class="text-center text-amber-200/40 italic py-6">Nenhuma mensagem ainda. Converse ou blefe com a mesa!</p>`;
+      } else {
+        chatBox.innerHTML = chats.map(msg => {
+          const isMine = msg.uid === myUid;
+          return `
+            <div class="flex flex-col ${isMine ? 'items-end' : 'items-start'}">
+              <span class="text-[10px] text-amber-300/75 mb-0.5 px-1">${escapeHtml(msg.name)} • ${escapeHtml(msg.time)}</span>
+              <div class="max-w-[85%] px-3 py-2 rounded-2xl ${
+                isMine
+                  ? 'bg-amber-500 text-court-950 font-medium rounded-br-none'
+                  : 'bg-court-950 border border-amber-500/30 text-amber-100 rounded-bl-none'
+              }">
+                ${escapeHtml(msg.text)}
+              </div>
+            </div>
+          `;
+        }).join('');
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+    }
+
+    async function sendChatMessage(text) {
+      if (!currentRoomData || !text.trim()) return;
+      if (sendIntentToHost('CHAT_MSG', { name: myName, text: text.trim() })) return;
+      await sendChatMessageFromPlayer(myUid, myName, text);
+    }
+
+    async function sendChatMessageFromPlayer(senderUid, senderName, text) {
+      if (!currentRoomData || !text || !text.trim()) return;
+      if (!currentRoomData.chats) currentRoomData.chats = [];
+      currentRoomData.chats.push({
+        id: Math.random().toString(36).slice(2),
+        uid: senderUid,
+        name: senderName || 'Nobre',
+        text: text.trim().slice(0, 160),
+        time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+      });
+      if (currentRoomData.chats.length > 50) {
+        currentRoomData.chats = currentRoomData.chats.slice(currentRoomData.chats.length - 50);
+      }
+      await saveRoomState(currentRoomCode, currentRoomData);
+    }
+
+    async function sendEmojiReaction(emoji) {
+      if (!currentRoomData) return;
+      if (sendIntentToHost('EMOJI', { name: myName, emoji })) return;
+      await sendEmojiReactionFromPlayer(myUid, myName, emoji);
+    }
+
+    async function sendEmojiReactionFromPlayer(senderUid, senderName, emoji) {
+      if (!currentRoomData) return;
+      currentRoomData.lastEmoji = {
+        id: Math.random().toString(36).slice(2),
+        uid: senderUid,
+        name: senderName || 'Nobre',
+        emoji,
+        timestamp: Date.now()
+      };
+      await saveRoomState(currentRoomCode, currentRoomData);
+    }
+
+    function spawnFloatingEmojiOnSeat(uid, emoji) {
+      sfx.emojiPop();
+      const anchor = document.getElementById(`emoji-anchor-${uid}`);
+      if (!anchor) return;
+      const el = document.createElement('div');
+      el.className = 'floating-emoji text-3xl sm:text-4xl drop-shadow-lg select-none';
+      el.textContent = emoji;
+      anchor.appendChild(el);
+      setTimeout(() => el.remove(), 2600);
+    }
+
+    /*************************************************************************
+     * 11. EMBEDDED WEBRTC VIDEO & VOICE CHAT VIA PEERJS MEDIA CALLS
+     *************************************************************************/
+    async function toggleMediaDevice(kind) {
+      try {
+        if (kind === 'video') {
+          camEnabled = !camEnabled;
+        } else {
+          micEnabled = !micEnabled;
+        }
+
+        if (!camEnabled && !micEnabled) {
+          if (localStream) {
+            localStream.getTracks().forEach(t => t.stop());
+            localStream = null;
+          }
+          if (localSpeakingInterval) {
+            clearInterval(localSpeakingInterval);
+            localSpeakingInterval = null;
+          }
+          Object.values(activeMediaCalls).forEach(call => {
+            try { call.close(); } catch (e) {}
+          });
+          for (const k in activeMediaCalls) delete activeMediaCalls[k];
+        } else {
+          if (localStream) {
+            localStream.getTracks().forEach(t => t.stop());
+          }
+          localStream = await navigator.mediaDevices.getUserMedia({
+            video: camEnabled ? { width: { ideal: 320 }, height: { ideal: 240 }, facingMode: 'user' } : false,
+            audio: micEnabled ? { echoCancellation: true, noiseSuppression: true } : false
+          });
+          setupVoiceActivityDetectorForPlayer(myUid, localStream, true);
+        }
+
+        updateMediaButtonsUI();
+
+        // Update player's camOn/micOn flags in room
+        if (currentRoomData) {
+          if (!sendIntentToHost('MEDIA_STATUS', { camOn: camEnabled, micOn: micEnabled, peerId: myPeerId })) {
+            const me = getPlayerByUid(currentRoomData, myUid);
+            if (me) {
+              me.camOn = camEnabled;
+              me.micOn = micEnabled;
+              if (myPeerId) me.peerId = myPeerId;
+              await saveRoomState(currentRoomCode, currentRoomData);
+            }
+          }
+        }
+
+        // Call all human peers in the room with our updated media stream
+        if (localStream && (camEnabled || micEnabled)) {
+          initiatePeerMediaCallsToAll();
+        }
+        attachVideoStreamsToSeats();
+      } catch (err) {
+        console.warn('Permissão de câmera/microfone negada ou indisponível:', err);
+        if (kind === 'video') camEnabled = false;
+        if (kind === 'mic') micEnabled = false;
+        updateMediaButtonsUI();
+        showToast('Para usar Câmera e Voz, abra o jogo em HTTPS (ex: GitHub Pages) e permita o acesso no navegador.', 'danger');
+      }
+    }
+
+    function updateMediaButtonsUI() {
+      const camIcon = document.getElementById('camIcon');
+      const micIcon = document.getElementById('micIcon');
+
+      if (camEnabled) {
+        camIcon.className = 'fa-solid fa-video text-emerald-400';
+      } else {
+        camIcon.className = 'fa-solid fa-video-slash text-rose-400';
+      }
+
+      if (micEnabled) {
+        micIcon.className = 'fa-solid fa-microphone text-emerald-400';
+      } else {
+        micIcon.className = 'fa-solid fa-microphone-slash text-rose-400';
+      }
+    }
+
+    function setupVoiceActivityDetectorForPlayer(playerUid, stream, isLocal = false) {
+      if (isLocal && localSpeakingInterval) {
+        clearInterval(localSpeakingInterval);
+        localSpeakingInterval = null;
+      }
+      if (!isLocal && remoteAudioAnalysers[playerUid]) {
+        clearInterval(remoteAudioAnalysers[playerUid]);
+        delete remoteAudioAnalysers[playerUid];
+      }
+      if (!stream || stream.getAudioTracks().length === 0) return;
+
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioCtx();
+        const source = audioCtx.createMediaStreamSource(stream);
+        const analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 256;
+        source.connect(analyser);
+        const data = new Uint8Array(analyser.frequencyBinCount);
+
+        const intervalId = setInterval(() => {
+          if (isLocal && !micEnabled) return;
+          analyser.getByteFrequencyData(data);
+          const avg = data.reduce((a, b) => a + b, 0) / data.length;
+          const frame = document.getElementById(`video-frame-${playerUid}`);
+          if (frame) {
+            if (avg > 16) {
+              frame.classList.add('speaking-ring');
+            } else {
+              frame.classList.remove('speaking-ring');
+            }
+          }
+        }, 180);
+
+        if (isLocal) {
+          localSpeakingInterval = intervalId;
+        } else {
+          remoteAudioAnalysers[playerUid] = intervalId;
+        }
+      } catch (e) {}
+    }
+
+    function setupIncomingMediaCallListener(peerInstance) {
+      if (!peerInstance) return;
+      peerInstance.on('call', (call) => {
+        const callerUid = call.metadata?.callerUid;
+        // Answer with our localStream if active, or empty answer to receive their video/voice
+        if (localStream && (camEnabled || micEnabled)) {
+          call.answer(localStream);
+        } else {
+          call.answer();
+        }
+
+        call.on('stream', (remoteStream) => {
+          const resolvedUid = callerUid || findPlayerUidByPeerId(call.peer);
+          if (resolvedUid) {
+            remoteStreams[resolvedUid] = remoteStream;
+            setupVoiceActivityDetectorForPlayer(resolvedUid, remoteStream, false);
+            attachVideoStreamsToSeats();
+          }
+        });
+      });
+    }
+
+    function findPlayerUidByPeerId(peerId) {
+      if (!currentRoomData || !currentRoomData.players) return null;
+      const found = currentRoomData.players.find(p => p.peerId === peerId);
+      return found ? found.uid : null;
+    }
+
+    function callRemotePeerWithStream(remotePeerId, remoteUid) {
+      if (!myPeer || !localStream || !remotePeerId || remotePeerId === myPeerId) return;
+      try {
+        const call = myPeer.call(remotePeerId, localStream, {
+          metadata: { callerUid: myUid }
+        });
+        if (!call) return;
+        activeMediaCalls[remotePeerId] = call;
+
+        call.on('stream', (remoteStream) => {
+          if (remoteUid) {
+            remoteStreams[remoteUid] = remoteStream;
+            setupVoiceActivityDetectorForPlayer(remoteUid, remoteStream, false);
+            attachVideoStreamsToSeats();
+          }
+        });
+      } catch (e) {}
+    }
+
+    function initiatePeerMediaCallsToAll() {
+      if (!currentRoomData || !myPeer || !localStream) return;
+      const otherHumans = (currentRoomData.players || []).filter(
+        p => !p.isBot && p.uid !== myUid && p.peerId
+      );
+      otherHumans.forEach(other => {
+        callRemotePeerWithStream(other.peerId, other.uid);
+      });
+    }
+
+    function syncWebRTCPeersWithRoom(roomData) {
+      if (!roomData || !myPeer || !localStream || (!camEnabled && !micEnabled)) return;
+      const otherHumans = (roomData.players || []).filter(
+        p => !p.isBot && p.uid !== myUid && p.peerId
+      );
+      otherHumans.forEach(other => {
+        if (!activeMediaCalls[other.peerId]) {
+          callRemotePeerWithStream(other.peerId, other.uid);
+        }
+      });
+    }
+
+    function attachVideoStreamsToSeats() {
+      // Attach local stream to my own seat
+      const myVideoEl = document.getElementById(`seat-video-${myUid}`);
+      if (myVideoEl) {
+        if (localStream && camEnabled && localStream.getVideoTracks().length > 0) {
+          if (myVideoEl.srcObject !== localStream) {
+            myVideoEl.srcObject = localStream;
+          }
+          myVideoEl.classList.remove('hidden');
+        } else {
+          myVideoEl.classList.add('hidden');
+        }
+      }
+
+      // Attach remote streams to opponents' seats
+      Object.entries(remoteStreams).forEach(([remoteUid, stream]) => {
+        const remoteVideoEl = document.getElementById(`seat-video-${remoteUid}`);
+        if (remoteVideoEl && stream) {
+          if (remoteVideoEl.srcObject !== stream) {
+            remoteVideoEl.srcObject = stream;
+          }
+          const hasVideo = stream.getVideoTracks().some(t => t.enabled && t.readyState === 'live');
+          const playerObj = currentRoomData ? getPlayerByUid(currentRoomData, remoteUid) : null;
+          if (hasVideo || (playerObj && playerObj.camOn)) {
+            remoteVideoEl.classList.remove('hidden');
+          } else {
+            remoteVideoEl.classList.add('hidden');
+          }
+        }
+      });
+    }
+
+    async function syncWebRTCPeersWithRoom(roomData) {
+      if (!myPeer || !roomData || !localStream) return;
+      const otherHumans = (roomData.players || []).filter(p => !p.isBot && p.uid !== myUid && p.peerId);
+
+      for (const other of otherHumans) {
+        if (!mediaCalls[other.uid] && (camEnabled || micEnabled)) {
+          try {
+            const call = myPeer.call(other.peerId, localStream, { metadata: { uid: myUid } });
+            if (call) {
+              mediaCalls[other.uid] = call;
+              call.on('stream', (remoteStream) => {
+                remoteStreams[other.uid] = remoteStream;
+                attachVideoStreamsToSeats();
+              });
+              call.on('close', () => {
+                delete mediaCalls[other.uid];
+              });
+            }
+          } catch (e) {}
+        }
+      }
+    }
+
+    async function refreshOutgoingTracksOnPeers() {
+      Object.values(mediaCalls).forEach(call => {
+        try { call.close(); } catch (e) {}
+      });
+      for (const k in mediaCalls) delete mediaCalls[k];
+
+      if (currentRoomData && localStream && (camEnabled || micEnabled)) {
+        await syncWebRTCPeersWithRoom(currentRoomData);
+      }
+    }
+
+    function stopLocalMediaAndPeers() {
+      if (localSpeakingInterval) {
+        clearInterval(localSpeakingInterval);
+        localSpeakingInterval = null;
+      }
+      if (localStream) {
+        localStream.getTracks().forEach(t => t.stop());
+        localStream = null;
+      }
+      camEnabled = false;
+      micEnabled = false;
+      updateMediaButtonsUI();
+
+      Object.values(mediaCalls).forEach(call => {
+        try { call.close(); } catch (e) {}
+      });
+      for (const k in mediaCalls) delete mediaCalls[k];
+      for (const k in remoteStreams) delete remoteStreams[k];
+    }
+
+    /*************************************************************************
+     * 12. EVENT LISTENERS & INITIALIZATION ON LOAD
+     *************************************************************************/
+    window.addEventListener('DOMContentLoaded', async () => {
+      renderInitialStaticViews();
+      initAccessGateAndUrlParams();
+
+      // Lobby Buttons
+      document.getElementById('createRoomBtn').addEventListener('click', () => createRoom(false));
+      document.getElementById('quickSoloBotsBtn').addEventListener('click', () => createRoom(true));
+      document.getElementById('joinRoomBtn').addEventListener('click', () => {
+        const code = document.getElementById('joinRoomCodeInput').value;
+        joinRoomByCode(code);
+      });
+      document.getElementById('joinRoomCodeInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          joinRoomByCode(e.target.value);
+        }
+      });
+
+      // Copy Room Code & Full Invite Link with Password Key
+      document.getElementById('copyRoomCodeBtn').addEventListener('click', () => {
+        if (!currentRoomCode) return;
+        copyTextToClipboard(currentRoomCode);
+        showToast(`Código ${currentRoomCode} copiado!`, 'success');
+      });
+      document.getElementById('copyInviteLinkHeaderBtn').addEventListener('click', copyFullInviteLink);
+      document.getElementById('copyInviteLinkBannerBtn').addEventListener('click', copyFullInviteLink);
+
+      // Waiting Room Controls
+      document.getElementById('addBotBtn').addEventListener('click', addBotToRoom);
+      document.getElementById('removeBotBtn').addEventListener('click', removeBotFromRoom);
+      document.getElementById('startGameBtn').addEventListener('click', startNewMatch);
+      document.getElementById('leaveRoomBtn').addEventListener('click', leaveCurrentRoom);
+
+      // Media Controls
+      document.getElementById('toggleCamBtn').addEventListener('click', () => toggleMediaDevice('video'));
+      document.getElementById('toggleMicBtn').addEventListener('click', () => toggleMediaDevice('mic'));
+      document.getElementById('toggleSfxBtn').addEventListener('click', () => {
+        sfx.enabled = !sfx.enabled;
+        const icon = document.getElementById('sfxIcon');
+        icon.className = sfx.enabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark text-rose-400';
+        showToast(sfx.enabled ? 'Efeitos sonoros ativados' : 'Efeitos sonoros silenciados', 'info');
+      });
+
+      // Turn Action Buttons
+      document.querySelectorAll('.action-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const action = btn.dataset.action;
+          if (action === 'COUP' || action === 'ASSASSINATE' || action === 'STEAL') {
+            openTargetSelectionModal(action);
+          } else {
+            declareTurnAction(myUid, action);
+          }
+        });
+      });
+
+      // Cancel Target Modal
+      document.getElementById('cancelTargetModalBtn').addEventListener('click', () => {
+        document.getElementById('targetModal').classList.add('hidden');
+      });
+
+      // Emoji Reactions
+      document.querySelectorAll('.emoji-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sendEmojiReaction(btn.dataset.emoji);
+        });
+      });
+
+      // Chat Form
+      document.getElementById('chatForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('chatInput');
+        if (input.value.trim()) {
+          sendChatMessage(input.value);
+          input.value = '';
+        }
+      });
+
+      // Sidebar Tabs Switching
+      document.querySelectorAll('.sidebar-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tab = btn.dataset.tab;
+          document.querySelectorAll('.sidebar-tab-btn').forEach(b => {
+            b.className = 'sidebar-tab-btn py-1.5 px-2 rounded-lg text-xs font-bold text-amber-100/60 hover:text-amber-200 transition';
+          });
+          btn.className = 'sidebar-tab-btn py-1.5 px-2 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-300 transition';
+
+          document.getElementById('sidebarTabLog').classList.toggle('hidden', tab !== 'log');
+          document.getElementById('sidebarTabChat').classList.toggle('hidden', tab !== 'chat');
+          document.getElementById('sidebarTabCheat').classList.toggle('hidden', tab !== 'cheat');
+        });
+      });
+
+      // Mobile Sidebar Drawer Toggle
+      const rightDrawer = document.getElementById('rightSidebarDrawer');
+      document.getElementById('toggleMobileSidebarBtn').addEventListener('click', () => {
+        rightDrawer.classList.toggle('translate-x-full');
+      });
+      document.getElementById('closeMobileSidebarBtn').addEventListener('click', () => {
+        rightDrawer.classList.add('translate-x-full');
+      });
+
+      // Rules Modal
+      document.getElementById('openRulesModalBtn').addEventListener('click', () => {
+        document.getElementById('rulesModal').classList.remove('hidden');
+      });
+      document.getElementById('closeRulesModalBtn').addEventListener('click', () => {
+        document.getElementById('rulesModal').classList.add('hidden');
+      });
+
+      // Invite Friends / How to Play Modal
+      const openInviteModal = () => {
+        const codeBox = document.getElementById('inviteModalActiveCodeBox');
+        if (currentRoomCode) {
+          codeBox.classList.remove('hidden');
+          codeBox.classList.add('flex');
+          document.getElementById('inviteModalRoomCode').textContent = currentRoomCode;
+        } else {
+          codeBox.classList.add('hidden');
+          codeBox.classList.remove('flex');
+        }
+        document.getElementById('inviteFriendsModal').classList.remove('hidden');
+      };
+      document.getElementById('openInviteModalBtn').addEventListener('click', openInviteModal);
+      document.getElementById('closeInviteModalBtn').addEventListener('click', () => {
+        document.getElementById('inviteFriendsModal').classList.add('hidden');
+      });
+      document.getElementById('gotItInviteModalBtn').addEventListener('click', () => {
+        document.getElementById('inviteFriendsModal').classList.add('hidden');
+      });
+      document.getElementById('inviteModalCopyBtn').addEventListener('click', copyFullInviteLink);
+
+      // Victory Modal Controls
+      document.getElementById('playAgainBtn').addEventListener('click', startNewMatch);
+      document.getElementById('closeVictoryModalBtn').addEventListener('click', () => {
+        document.getElementById('victoryModal').classList.add('hidden');
+      });
+    });
+  </script>
+</body>
+</html>
