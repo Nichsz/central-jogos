@@ -1381,9 +1381,11 @@
 
     // PeerJS P2P State (Works across any Wi-Fi / Internet connection!)
     let myPeer = null;
+    let myPeerId = null;
     let hostConnections = {}; // On Host: peerId -> DataConnection
     let clientToHostConn = null; // On Client: DataConnection to Host
-    const mediaCalls = {}; // remoteUid -> MediaConnection
+    const activeMediaCalls = {}; // remotePeerId -> MediaConnection
+    const remoteAudioAnalysers = {}; // remoteUid -> intervalId
 
     // Local BroadcastChannel fallback for same-browser tabs
     const localChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('intrigas_corte_local_channel') : null;
@@ -1406,6 +1408,76 @@
         ]
       }
     };
+
+    // Helper for clients to send actions/intents to the authoritative Room Host
+    function sendIntentToHost(intentType, payload = {}) {
+      if (isRoomHost || !currentRoomData || currentRoomData.hostUid === myUid) {
+        return false; // Local player is the Host; execute directly
+      }
+      if (clientToHostConn && clientToHostConn.open) {
+        try {
+          clientToHostConn.send({
+            type: 'CLIENT_INTENT',
+            intentType,
+            senderUid: myUid,
+            payload
+          });
+          return true;
+        } catch (e) {
+          console.warn('Falha ao enviar ação ao anfitrião:', e);
+        }
+      }
+      return false;
+    }
+
+    async function handleClientIntentOnHost(senderUid, intentType, payload = {}) {
+      if (!isRoomHost || !currentRoomData) return;
+      switch (intentType) {
+        case 'ADD_BOT':
+          await addBotToRoom();
+          break;
+        case 'REMOVE_BOT':
+          await removeBotFromRoom();
+          break;
+        case 'START_GAME':
+          await startNewMatch();
+          break;
+        case 'DECLARE_ACTION':
+          await declareTurnAction(senderUid, payload.actionType, payload.targetUid);
+          break;
+        case 'PASS_REACTION':
+          await submitPassReaction(senderUid);
+          break;
+        case 'BLOCK_ACTION':
+          await submitBlockAction(senderUid, payload.blockRole);
+          break;
+        case 'CHALLENGE':
+          await submitChallenge(senderUid);
+          break;
+        case 'SELECT_CARD_LOSS':
+          await selectCardToLose(senderUid, payload.cardId);
+          break;
+        case 'AMBASSADOR_COMPLETE':
+          await completeAmbassadorExchangeForPlayer(senderUid, payload.keptIndices);
+          break;
+        case 'CHAT_MSG':
+          await sendChatMessageFromPlayer(senderUid, payload.name, payload.text);
+          break;
+        case 'EMOJI':
+          await sendEmojiReactionFromPlayer(senderUid, payload.name, payload.emoji);
+          break;
+        case 'MEDIA_STATUS': {
+          const p = getPlayerByUid(currentRoomData, senderUid);
+          if (p) {
+            p.camOn = !!payload.camOn;
+            p.micOn = !!payload.micOn;
+            if (payload.peerId) p.peerId = payload.peerId;
+            await saveRoomState(currentRoomCode, currentRoomData);
+          }
+          break;
+        }
+      }
+    }
 
     /*************************************************************************
      * 4. ACCESS GATE (PORTÃO PRIVADO) & INVITE URL PARSING
@@ -1526,22 +1598,6 @@
           handleRoomSnapshotUpdate(msg.roomData);
         }
       };
-    }
-
-    function setupIncomingMediaCallHandler(peerInstance) {
-      peerInstance.on('call', (call) => {
-        // Answer incoming video/audio call with our localStream (if active)
-        try {
-          call.answer(localStream || undefined);
-        } catch (e) {
-          try { call.answer(); } catch (err) {}
-        }
-        call.on('stream', (remoteStream) => {
-          const callerUid = call.metadata?.uid || call.peer.replace(PEER_ROOM_PREFIX, '');
-          remoteStreams[callerUid] = remoteStream;
-          attachVideoStreamsToSeats();
-        });
-      });
     }
 
     /*************************************************************************
@@ -1750,15 +1806,20 @@
         try {
           if (myPeer) myPeer.destroy();
           const hostPeerId = `${PEER_ROOM_PREFIX}${roomCode}`;
+          myPeerId = hostPeerId;
           myPeer = new Peer(hostPeerId, PEER_CONFIG);
 
-          myPeer.on('open', () => {
+          myPeer.on('open', (id) => {
+            myPeerId = id;
             updateNetworkBadge(`Sala P2P Ativa (${roomCode})`, true);
           });
 
           myPeer.on('connection', (conn) => {
             conn.on('open', () => {
               hostConnections[conn.peer] = conn;
+              if (currentRoomData) {
+                conn.send({ type: 'ROOM_STATE_SYNC', roomData: currentRoomData });
+              }
             });
 
             conn.on('data', async (data) => {
@@ -1784,6 +1845,8 @@
                   currentRoomData.players[existsIdx].peerId = joining.peerId;
                 }
                 await saveRoomState(currentRoomCode, currentRoomData);
+              } else if (data.type === 'CLIENT_INTENT') {
+                await handleClientIntentOnHost(data.senderUid, data.intentType, data.payload);
               } else if (data.type === 'CLIENT_STATE_PUSH' && data.roomData) {
                 currentRoomData = data.roomData;
                 await saveRoomState(currentRoomCode, currentRoomData);
@@ -1795,7 +1858,7 @@
             });
           });
 
-          setupIncomingMediaCallHandler(myPeer);
+          setupIncomingMediaCallListener(myPeer);
         } catch (err) {
           console.warn('Aviso PeerJS Host:', err);
         }
@@ -1861,9 +1924,11 @@
 
       if (myPeer) myPeer.destroy();
       const clientPeerId = `${PEER_ROOM_PREFIX}${code}-${myUid}`;
+      myPeerId = clientPeerId;
       myPeer = new Peer(clientPeerId, PEER_CONFIG);
 
-      myPeer.on('open', () => {
+      myPeer.on('open', (id) => {
+        myPeerId = id;
         const hostPeerId = `${PEER_ROOM_PREFIX}${code}`;
         const conn = myPeer.connect(hostPeerId, { reliable: true });
         clientToHostConn = conn;
@@ -1911,7 +1976,7 @@
         showToast(`Sala "${code}" não encontrada ou anfitrião offline.`, 'danger');
       });
 
-      setupIncomingMediaCallHandler(myPeer);
+      setupIncomingMediaCallListener(myPeer);
     }
     window.joinRoomByCode = joinRoomByCode;
 
@@ -2615,7 +2680,7 @@
       if (!room || room.phase === 'WAITING' || room.phase === 'GAME_OVER') return;
 
       // Only the authoritative Host runs bot decisions
-      if (!isHostMode && room.hostUid !== myUid) return;
+      if (!isRoomHost && room.hostUid !== myUid) return;
 
       // 1. Bot's Turn to Act
       if (room.phase === 'TURN_START') {
@@ -2898,16 +2963,17 @@
                   autoplay
                   playsinline
                   ${isMe ? 'muted' : ''}
-                  class="opacity-0 pointer-events-none absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isMe ? 'mirror-video' : ''}"
+                  class="hidden absolute inset-0 w-full h-full object-cover z-10 ${isMe ? 'mirror-video' : ''}"
                 ></video>
 
                 <!-- Media Status Mini Icons -->
                 ${!player.isBot ? `
-                  <div class="absolute bottom-0.5 right-0.5 flex items-center gap-0.5 bg-black/75 px-1.5 py-0.5 rounded text-[9px]">
+                  <div class="absolute bottom-0.5 right-0.5 z-20 flex items-center gap-1 bg-black/75 px-1.5 py-0.5 rounded text-[9px]">
+                    <i class="fa-solid ${player.camOn ? 'fa-video text-emerald-400' : 'fa-video-slash text-rose-400/80'}"></i>
                     <i class="fa-solid ${player.micOn ? 'fa-microphone text-emerald-400' : 'fa-microphone-slash text-rose-400/80'}"></i>
                   </div>
                 ` : `
-                  <div class="absolute bottom-0.5 right-0.5 bg-black/75 px-1 py-0.5 rounded text-[8px] text-amber-300 font-bold">
+                  <div class="absolute bottom-0.5 right-0.5 z-20 bg-black/75 px-1 py-0.5 rounded text-[8px] text-amber-300 font-bold">
                     BOT
                   </div>
                 `}
@@ -3407,6 +3473,11 @@
      *************************************************************************/
     async function toggleMediaDevice(kind) {
       try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          showToast('Câmera/Voz requer conexão segura (HTTPS ou localhost).', 'danger');
+          return;
+        }
+
         if (kind === 'video') {
           camEnabled = !camEnabled;
         } else {
@@ -3422,6 +3493,9 @@
             clearInterval(localSpeakingInterval);
             localSpeakingInterval = null;
           }
+          const myFrame = document.getElementById(`video-frame-${myUid}`);
+          if (myFrame) myFrame.classList.remove('speaking-ring');
+
           Object.values(activeMediaCalls).forEach(call => {
             try { call.close(); } catch (e) {}
           });
@@ -3457,12 +3531,18 @@
           initiatePeerMediaCallsToAll();
         }
         attachVideoStreamsToSeats();
+        showToast(
+          kind === 'video'
+            ? (camEnabled ? 'Câmera ativada na mesa!' : 'Câmera desligada.')
+            : (micEnabled ? 'Microfone ativado na mesa!' : 'Microfone silenciado.'),
+          'info'
+        );
       } catch (err) {
         console.warn('Permissão de câmera/microfone negada ou indisponível:', err);
         if (kind === 'video') camEnabled = false;
         if (kind === 'mic') micEnabled = false;
         updateMediaButtonsUI();
-        showToast('Para usar Câmera e Voz, abra o jogo em HTTPS (ex: GitHub Pages) e permita o acesso no navegador.', 'danger');
+        showToast('Permita o acesso à Câmera/Microfone no cadeado do navegador (requer HTTPS).', 'danger');
       }
     }
 
@@ -3528,13 +3608,15 @@
     function setupIncomingMediaCallListener(peerInstance) {
       if (!peerInstance) return;
       peerInstance.on('call', (call) => {
-        const callerUid = call.metadata?.callerUid;
+        const callerUid = call.metadata?.callerUid || call.metadata?.uid;
         // Answer with our localStream if active, or empty answer to receive their video/voice
-        if (localStream && (camEnabled || micEnabled)) {
-          call.answer(localStream);
-        } else {
-          call.answer();
-        }
+        try {
+          if (localStream && (camEnabled || micEnabled)) {
+            call.answer(localStream);
+          } else {
+            call.answer();
+          }
+        } catch (e) {}
 
         call.on('stream', (remoteStream) => {
           const resolvedUid = callerUid || findPlayerUidByPeerId(call.peer);
@@ -3556,8 +3638,11 @@
     function callRemotePeerWithStream(remotePeerId, remoteUid) {
       if (!myPeer || !localStream || !remotePeerId || remotePeerId === myPeerId) return;
       try {
+        if (activeMediaCalls[remotePeerId]) {
+          try { activeMediaCalls[remotePeerId].close(); } catch (e) {}
+        }
         const call = myPeer.call(remotePeerId, localStream, {
-          metadata: { callerUid: myUid }
+          metadata: { callerUid: myUid, uid: myUid }
         });
         if (!call) return;
         activeMediaCalls[remotePeerId] = call;
@@ -3568,6 +3653,10 @@
             setupVoiceActivityDetectorForPlayer(remoteUid, remoteStream, false);
             attachVideoStreamsToSeats();
           }
+        });
+
+        call.on('close', () => {
+          delete activeMediaCalls[remotePeerId];
         });
       } catch (e) {}
     }
@@ -3603,6 +3692,7 @@
             myVideoEl.srcObject = localStream;
           }
           myVideoEl.classList.remove('hidden');
+          myVideoEl.play().catch(() => {});
         } else {
           myVideoEl.classList.add('hidden');
         }
@@ -3617,47 +3707,14 @@
           }
           const hasVideo = stream.getVideoTracks().some(t => t.enabled && t.readyState === 'live');
           const playerObj = currentRoomData ? getPlayerByUid(currentRoomData, remoteUid) : null;
-          if (hasVideo || (playerObj && playerObj.camOn)) {
+          if (hasVideo && (!playerObj || playerObj.camOn)) {
             remoteVideoEl.classList.remove('hidden');
           } else {
             remoteVideoEl.classList.add('hidden');
           }
+          remoteVideoEl.play().catch(() => {});
         }
       });
-    }
-
-    async function syncWebRTCPeersWithRoom(roomData) {
-      if (!myPeer || !roomData || !localStream) return;
-      const otherHumans = (roomData.players || []).filter(p => !p.isBot && p.uid !== myUid && p.peerId);
-
-      for (const other of otherHumans) {
-        if (!mediaCalls[other.uid] && (camEnabled || micEnabled)) {
-          try {
-            const call = myPeer.call(other.peerId, localStream, { metadata: { uid: myUid } });
-            if (call) {
-              mediaCalls[other.uid] = call;
-              call.on('stream', (remoteStream) => {
-                remoteStreams[other.uid] = remoteStream;
-                attachVideoStreamsToSeats();
-              });
-              call.on('close', () => {
-                delete mediaCalls[other.uid];
-              });
-            }
-          } catch (e) {}
-        }
-      }
-    }
-
-    async function refreshOutgoingTracksOnPeers() {
-      Object.values(mediaCalls).forEach(call => {
-        try { call.close(); } catch (e) {}
-      });
-      for (const k in mediaCalls) delete mediaCalls[k];
-
-      if (currentRoomData && localStream && (camEnabled || micEnabled)) {
-        await syncWebRTCPeersWithRoom(currentRoomData);
-      }
     }
 
     function stopLocalMediaAndPeers() {
@@ -3665,6 +3722,9 @@
         clearInterval(localSpeakingInterval);
         localSpeakingInterval = null;
       }
+      Object.values(remoteAudioAnalysers).forEach(intervalId => clearInterval(intervalId));
+      for (const k in remoteAudioAnalysers) delete remoteAudioAnalysers[k];
+
       if (localStream) {
         localStream.getTracks().forEach(t => t.stop());
         localStream = null;
@@ -3673,10 +3733,10 @@
       micEnabled = false;
       updateMediaButtonsUI();
 
-      Object.values(mediaCalls).forEach(call => {
+      Object.values(activeMediaCalls).forEach(call => {
         try { call.close(); } catch (e) {}
       });
-      for (const k in mediaCalls) delete mediaCalls[k];
+      for (const k in activeMediaCalls) delete activeMediaCalls[k];
       for (const k in remoteStreams) delete remoteStreams[k];
     }
 
