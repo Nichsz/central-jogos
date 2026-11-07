@@ -89,6 +89,24 @@
     .fx-coin-anim { animation: fxCoinDrop 1.5s cubic-bezier(0.22,1,0.36,1) forwards; }
     .fx-slash-line { animation: fxSlash 0.9s cubic-bezier(0.16,1,0.3,1) forwards; }
     .fx-flash-bg { animation: fxLightningFlash 0.8s ease-out forwards; }
+    @keyframes fxSwordLeft {
+      0% { transform: translate(-90px, 60px) rotate(-65deg) scale(0.5); opacity: 0; }
+      40% { transform: translate(0, 0) rotate(-15deg) scale(1.15); opacity: 1; }
+      100% { transform: translate(15px, -10px) rotate(0deg) scale(1); opacity: 1; }
+    }
+    @keyframes fxSwordRight {
+      0% { transform: translate(90px, 60px) rotate(65deg) scale(0.5); opacity: 0; }
+      40% { transform: translate(0, 0) rotate(15deg) scale(1.15); opacity: 1; }
+      100% { transform: translate(-15px, -10px) rotate(0deg) scale(1); opacity: 1; }
+    }
+    @keyframes fxBloodSplatter {
+      0% { transform: scale(0.2); opacity: 0; }
+      30% { transform: scale(1.25); opacity: 0.95; }
+      100% { transform: scale(1.45) translateY(12px); opacity: 0; }
+    }
+    .fx-sword-l { animation: fxSwordLeft 0.55s cubic-bezier(0.16,1,0.3,1) forwards; }
+    .fx-sword-r { animation: fxSwordRight 0.55s cubic-bezier(0.16,1,0.3,1) forwards; }
+    .fx-blood-splat { animation: fxBloodSplatter 1.4s ease-out forwards; }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: rgba(15,10,18,0.6); }
     ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.35); border-radius: 9999px; }
@@ -212,12 +230,13 @@
                   class="w-full pl-10 pr-4 py-3 rounded-xl bg-court-950/90 border border-amber-500/40 focus:border-amber-400 focus:outline-none text-amber-50 placeholder-amber-200/30 font-medium" />
               </div>
             </div>
+            <div id="myRankPanel" class="rounded-2xl bg-court-950/80 border border-amber-500/25 p-3"></div>
             <div>
               <div class="flex items-center justify-between mb-1.5">
                 <label class="block text-xs font-semibold uppercase tracking-wider text-amber-300/90">Escolha Seu Personagem na Corte</label>
-                <span class="text-[11px] text-amber-200/60">16 Nobres & Lendas (Role p/ ver mais)</span>
+                <span id="avatarCountLabel" class="text-[11px] text-amber-200/60">Nobres & Lendas</span>
               </div>
-              <div id="avatarSelectorGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-52 overflow-y-auto pr-1"></div>
+              <div id="avatarSelectorGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
             </div>
           </div>
         </div>
@@ -249,7 +268,7 @@
               </h3>
               <span class="text-[11px] text-amber-200/60">18 Cartas (3 de cada)</span>
             </div>
-            <div id="lobbyCharactersPreview" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
+            <div id="lobbyCharactersPreview" class="space-y-2"></div>
           </div>
           <div class="mt-4 pt-3 border-t border-amber-500/20 flex items-center justify-between text-xs text-amber-200/70">
             <span><i class="fa-solid fa-video text-emerald-400 mr-1"></i> Vídeo & Voz P2P</span>
@@ -334,16 +353,16 @@
             </div>
           </div>
 
-          <div id="reactionBanner" class="hidden bg-gradient-to-r from-amber-950/95 via-court-900/95 to-amber-950/95 border-2 border-amber-400 rounded-2xl p-3.5 sm:p-4 shadow-2xl z-20 transition-all">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-3">
-              <div class="text-center md:text-left">
-                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[11px] font-bold uppercase tracking-wider mb-1">
+          <div id="reactionBanner" class="hidden bg-gradient-to-r from-amber-950/95 via-court-900/95 to-amber-950/95 border-2 border-amber-400 rounded-2xl p-3 sm:p-4 shadow-2xl z-20 transition-all">
+            <div class="flex flex-col gap-2.5">
+              <div class="text-center">
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold uppercase tracking-wider mb-0.5">
                   <i class="fa-solid fa-scale-balanced"></i><span id="reactionPhaseTag">Janela de Reação da Corte</span>
                 </div>
-                <h4 id="reactionTitleText" class="font-renaissance font-bold text-sm sm:text-lg text-white">Jogador declarou Duque (Taxar +3 moedas)</h4>
+                <h4 id="reactionTitleText" class="font-renaissance font-bold text-sm sm:text-base text-white">Jogador declarou Duque (Taxar +3 moedas)</h4>
                 <p id="reactionSubtitleText" class="text-xs text-amber-200/80 mt-0.5">Alguém deseja contestar ou bloquear esta ação?</p>
               </div>
-              <div id="reactionButtonsContainer" class="flex flex-wrap items-center justify-center gap-2 shrink-0"></div>
+              <div id="reactionButtonsContainer" class="w-full flex flex-wrap items-center justify-center gap-1.5 sm:gap-2"></div>
             </div>
           </div>
 
@@ -738,19 +757,33 @@
         colorClass: 'from-amber-900 via-yellow-950 to-court-950', borderClass: 'border-amber-400/80',
         badgeClass: 'bg-amber-500/25 text-amber-200 border-amber-400/50', accentHex: '#f59e0b', icon: 'fa-eye',
         svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
-          <defs><linearGradient id="fuxBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#78350f"/><stop offset="100%" stop-color="#1c1917"/></linearGradient></defs>
+          <defs>
+            <linearGradient id="fuxBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#451a03"/><stop offset="100%" stop-color="#0c0a09"/></linearGradient>
+            <linearGradient id="maqRobe" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7f1d1d"/><stop offset="100%" stop-color="#1c1917"/></linearGradient>
+          </defs>
           <circle cx="50" cy="50" r="46" fill="url(#fuxBg)" stroke="#f59e0b" stroke-width="2.5"/>
-          <path d="M14 90 C18 65, 32 60, 50 60 C68 60, 82 65, 86 90 Z" fill="#451a03" stroke="#fbbf24" stroke-width="1.6"/>
-          <path d="M24 58 L34 42 L66 42 L76 58 Z" fill="#292524" stroke="#f59e0b" stroke-width="1.2"/>
-          <path d="M35 36 C35 23, 65 23, 65 36 C65 52, 58 60, 50 60 C42 60, 35 52, 35 36 Z" fill="#f3c6a5"/>
-          <path d="M38 34 Q43 30 47 35" fill="none" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round"/>
-          <path d="M53 35 Q57 31 62 34" fill="none" stroke="#1c1917" stroke-width="2.2" stroke-linecap="round"/>
-          <circle cx="43" cy="39" r="2.2" fill="#1c1917"/><circle cx="57" cy="39" r="2.2" fill="#1c1917"/>
-          <path d="M43 50 Q51 54 58 47" fill="none" stroke="#7c2d12" stroke-width="2.2" stroke-linecap="round"/>
-          <path d="M22 27 L50 13 L78 27 Q50 32 22 27 Z" fill="#1c1917" stroke="#fbbf24" stroke-width="1.6"/>
-          <circle cx="67" cy="64" r="10" fill="rgba(251,191,36,0.22)" stroke="#fbbf24" stroke-width="2.5"/>
-          <line x1="74" y1="71" x2="83" y2="80" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-          <circle cx="67" cy="64" r="3" fill="#fef08a"/>
+          <!-- Cabelo renascentista escuro repartido ao meio típico de Maquiavel -->
+          <path d="M27 34 C24 46, 26 58, 32 62 L68 62 C74 58, 76 46, 73 34 C70 18, 30 18, 27 34 Z" fill="#18181b"/>
+          <!-- Túnica florentina de diplomata com gola alta -->
+          <path d="M15 90 C19 66, 33 60, 50 60 C67 60, 81 66, 85 90 Z" fill="url(#maqRobe)" stroke="#fbbf24" stroke-width="1.5"/>
+          <path d="M36 56 L50 68 L64 56 L60 90 L40 90 Z" fill="#18181b" stroke="#d97706" stroke-width="1"/>
+          <!-- Pescoço e Rosto fino/anguloso -->
+          <rect x="44" y="51" width="12" height="12" rx="4" fill="#eab68c"/>
+          <path d="M35 33 C35 21, 65 21, 65 33 C65 49, 57 58, 50 58 C43 58, 35 49, 35 33 Z" fill="#f3c6a5"/>
+          <!-- Cabelo emoldurando a testa -->
+          <path d="M34 32 Q50 22 66 32 C65 20, 35 20, 34 32 Z" fill="#18181b"/>
+          <!-- Sobrancelhas arqueadas e olhar astuto -->
+          <path d="M38 35 Q43 32 47 36" fill="none" stroke="#18181b" stroke-width="2" stroke-linecap="round"/>
+          <path d="M53 36 Q58 31 63 34" fill="none" stroke="#18181b" stroke-width="2.2" stroke-linecap="round"/>
+          <ellipse cx="43" cy="39" rx="2.5" ry="1.7" fill="#1c1917"/><ellipse cx="57" cy="39" rx="2.5" ry="1.7" fill="#1c1917"/>
+          <circle cx="43.5" cy="38.7" r="0.7" fill="#fef08a"/><circle cx="57.5" cy="38.7" r="0.7" fill="#fef08a"/>
+          <!-- Nariz afilado e sorriso maquiavélico sutil -->
+          <path d="M50 38 L48 46 L51 47" fill="none" stroke="#b47b56" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M43 50 Q50 53 58 48" fill="none" stroke="#7c2d12" stroke-width="2" stroke-linecap="round"/>
+          <!-- Livro "O Príncipe" / Pergaminho Secreto com Olho Dourado -->
+          <rect x="56" y="66" width="20" height="22" rx="2" transform="rotate(-10 56 66)" fill="#450a0a" stroke="#fbbf24" stroke-width="1.6"/>
+          <ellipse cx="66" cy="75" rx="4.5" ry="2.8" transform="rotate(-10 66 75)" fill="none" stroke="#fbbf24" stroke-width="1.3"/>
+          <circle cx="66" cy="75" r="1.4" fill="#fbbf24"/>
         </svg>`
       }
     };
@@ -915,6 +948,120 @@
       'Capitão Jack (Bot)'
     ];
 
+    // Quantidade de avatares "normais" (bots só usam esses, nunca os lendários)
+    const BASE_AVATARS_COUNT = AVATARS.length;
+
+    // Avatares Lendários desbloqueáveis por vitórias
+    AVATARS.push(
+      {
+        id: 'espectro_real', label: 'Espectro Real', roleTitle: 'Lendário • 3+ Vitórias', requiredWins: 3, bg: 'from-cyan-900 to-slate-950',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="46" fill="#083344" stroke="#22d3ee" stroke-width="2.5"/><path d="M16 90 C20 64, 34 58, 50 58 C66 58, 80 64, 84 90 Z" fill="#0f172a" stroke="#22d3ee" stroke-width="1.5"/><path d="M28 58 C24 26, 36 14, 50 14 C64 14, 76 26, 72 58 Z" fill="#164e63" stroke="#67e8f9" stroke-width="1.5"/><circle cx="42" cy="40" r="3.5" fill="#22d3ee"/><circle cx="58" cy="40" r="3.5" fill="#22d3ee"/><path d="M35 20 L42 10 L50 18 L58 10 L65 20 Z" fill="#67e8f9"/></svg>`
+      },
+      {
+        id: 'inquisidor_supremo', label: 'Inquisidor Supremo', roleTitle: 'Lendário • 7+ Vitórias', requiredWins: 7, bg: 'from-orange-900 to-red-950',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="46" fill="#450a0a" stroke="#f97316" stroke-width="2.5"/><path d="M14 90 C18 66, 32 60, 50 60 C68 60, 82 66, 86 90 Z" fill="#7f1d1d" stroke="#facc15" stroke-width="1.8"/><path d="M34 35 C34 22, 66 22, 66 35 C66 51, 58 58, 50 58 C42 58, 34 51, 34 35 Z" fill="#fde68a"/><circle cx="42" cy="39" r="3" fill="#ef4444"/><circle cx="58" cy="39" r="3" fill="#ef4444"/><path d="M28 28 L50 10 L72 28 Z" fill="#991b1b" stroke="#facc15" stroke-width="2"/><circle cx="50" cy="22" r="4" fill="#facc15"/></svg>`
+      },
+      {
+        id: 'imperador_dourado', label: 'Imperador Dourado', roleTitle: 'Lendário • 15+ Vitórias', requiredWins: 15, bg: 'from-yellow-600 to-amber-950',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="46" fill="#78350f" stroke="#fde047" stroke-width="3"/><path d="M14 90 C18 66, 32 60, 50 60 C68 60, 82 66, 86 90 Z" fill="#eab308" stroke="#fef08a" stroke-width="2"/><path d="M35 34 C35 20, 65 20, 65 34 L62 56 L50 62 L38 56 Z" fill="#facc15" stroke="#fef08a" stroke-width="1.8"/><rect x="39" y="36" width="9" height="4" rx="1" fill="#09090b"/><rect x="52" y="36" width="9" height="4" rx="1" fill="#09090b"/><path d="M30 26 L38 12 L50 22 L62 12 L70 26 Z" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5"/></svg>`
+      },
+      {
+        id: 'lorde_fofomilio', label: 'Lorde Fofomilio', roleTitle: 'Mítico • 30+ Vitórias', requiredWins: 30, bg: 'from-fuchsia-700 via-rose-900 to-amber-950',
+        svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="46" fill="#3b0764" stroke="#facc15" stroke-width="3"/><circle cx="50" cy="50" r="41" fill="none" stroke="#f43f5e" stroke-width="1.2" stroke-dasharray="4 2"/><path d="M14 90 C18 65, 32 60, 50 60 C68 60, 82 65, 86 90 Z" fill="#881337" stroke="#fde047" stroke-width="2"/><path d="M35 35 C35 22, 65 22, 65 35 C65 51, 58 58, 50 58 C42 58, 35 51, 35 35 Z" fill="#fef3c7"/><circle cx="42" cy="38" r="3" fill="#e11d48"/><circle cx="58" cy="38" r="3" fill="#e11d48"/><path d="M42 49 Q50 55 58 49" fill="none" stroke="#be123c" stroke-width="2.5" stroke-linecap="round"/><path d="M26 28 L34 10 L45 22 L50 8 L55 22 L66 10 L74 28 Z" fill="#fde047" stroke="#f43f5e" stroke-width="1.5"/></svg>`
+      }
+    );
+
+    const RANK_TITLES = [
+      { minWins: 0,  title: 'Plebeu da Corte',          badgeClass: 'text-amber-200/70' },
+      { minWins: 1,  title: 'Sussurrador de Salão',     badgeClass: 'text-amber-300' },
+      { minWins: 3,  title: 'Língua de Prata',          badgeClass: 'text-sky-300' },
+      { minWins: 5,  title: 'Conspirador das Sombras',  badgeClass: 'text-emerald-300' },
+      { minWins: 10, title: 'Mestre dos Blefes',        badgeClass: 'text-purple-300 font-bold' },
+      { minWins: 15, title: 'Terror da Renascença',     badgeClass: 'text-rose-400 font-bold' },
+      { minWins: 25, title: 'Soberano Maquiavélico',    badgeClass: 'text-yellow-300 font-extrabold' },
+      { minWins: 40, title: '👑 FOFOMILIO',             badgeClass: 'text-amber-300 font-black animate-pulse' }
+    ];
+
+    // true  = só conta vitória/derrota em salas com 2+ jogadores humanos (anti-farm de bots)
+    // false = conta todas as partidas, inclusive "Partida Rápida (c/ Bots)"
+    const RANK_REQUIRE_HUMAN_OPPONENT = true;
+
+    const RANK_STORAGE_KEY = 'intrigas_corte_rank_v1';
+    function loadRankStats() {
+      const fallback = { wins: 0, streak: 0, bestStreak: 0 };
+      try {
+        const parsed = JSON.parse(localStorage.getItem(RANK_STORAGE_KEY) || 'null');
+        return parsed && typeof parsed === 'object' ? { ...fallback, ...parsed } : fallback;
+      } catch (e) { return fallback; }
+    }
+    let myRankStats = loadRankStats();
+
+    function getRankTitleObj(wins = 0) {
+      let current = RANK_TITLES[0];
+      for (const t of RANK_TITLES) {
+        if (wins >= t.minWins) current = t;
+      }
+      return current;
+    }
+
+    function isAvatarUnlocked(av, wins = (myRankStats.wins || 0)) {
+      return (av.requiredWins || 0) <= wins;
+    }
+
+    // Linha com o título de rank exibida abaixo do nome na mesa
+    function seatRankHtml(player, isMe) {
+      if (player.isBot) return '';
+      const w = isMe ? (myRankStats.wins || 0) : player.wins;
+      if (typeof w !== 'number') return '';
+      const t = getRankTitleObj(w);
+      return `<div class="text-[10px] ${t.badgeClass} truncate"><i class="fa-solid fa-award mr-1"></i>${escapeHtml(t.title)}</div>`;
+    }
+
+    const _cs = (t) => { let a = 0xdeadbeef ^ 7, b = 0x41c6ce57 ^ 7; for (let i = 0; i < t.length; i++) { const c = t.charCodeAt(i); a = Math.imul(a ^ c, 2654435761); b = Math.imul(b ^ c, 1597334677); } a = Math.imul(a ^ (a >>> 16), 2246822507) ^ Math.imul(b ^ (b >>> 13), 3266489909); b = Math.imul(b ^ (b >>> 16), 2246822507) ^ Math.imul(a ^ (a >>> 13), 3266489909); return (4294967296 * (2097151 & b) + (a >>> 0)).toString(36); };
+    const _SEAL = 'hz332djxuw';
+    function applyCourtSeal(code) {
+      if (_cs(String(code)) !== _SEAL) { showToast('Código inválido.', 'info'); return false; }
+      const maxWins = Math.max(...RANK_TITLES.map(t => t.minWins), ...AVATARS.map(a => a.requiredWins || 0));
+      myRankStats.wins = Math.max(myRankStats.wins || 0, maxWins);
+      try { localStorage.setItem(RANK_STORAGE_KEY, JSON.stringify(myRankStats)); } catch (e) {}
+      showToast('Selo da Corte aceito: tudo liberado!', 'info');
+      renderInitialStaticViews();
+      return true;
+    }
+    let rankTapCount = 0, rankTapTimer = null;
+    function onRankTitleTap() {
+      rankTapCount++;
+      clearTimeout(rankTapTimer);
+      rankTapTimer = setTimeout(() => { rankTapCount = 0; }, 1500);
+      if (rankTapCount >= 5) {
+        rankTapCount = 0;
+        const code = prompt('Código de administrador:');
+        if (code) applyCourtSeal(code.trim());
+      }
+    }
+
+    function recordMatchResult(didWin) {
+      const prevWins = myRankStats.wins || 0;
+      if (didWin) {
+        myRankStats.wins = prevWins + 1;
+        myRankStats.streak = (myRankStats.streak || 0) + 1;
+        if (myRankStats.streak > (myRankStats.bestStreak || 0)) {
+          myRankStats.bestStreak = myRankStats.streak;
+        }
+      } else {
+        myRankStats.streak = 0;
+      }
+      try { localStorage.setItem(RANK_STORAGE_KEY, JSON.stringify(myRankStats)); } catch (e) {}
+
+      if (didWin) {
+        const newWins = myRankStats.wins;
+        const newTitle = RANK_TITLES.find(t => t.minWins === newWins);
+        if (newTitle) showToast(`Novo título conquistado: ${newTitle.title}!`, 'info');
+        AVATARS.filter(a => a.requiredWins === newWins).forEach(a => showToast(`Avatar lendário desbloqueado: ${a.label}!`, 'info'));
+      }
+      renderInitialStaticViews();
+    }
+
     /*************************************************************************
      * 2. EFEITOS SONOROS (WEB AUDIO)
      *************************************************************************/
@@ -927,7 +1074,7 @@
         }
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume().catch(() => {});
       }
-      playTone(freq, type = 'sine', duration = 0.15, delay = 0, gainVal = 0.12) {
+      playTone(freq, type = 'sine', duration = 0.15, delay = 0, gainVal = 0.12, endFreq = null) {
         if (!this.enabled) return;
         try {
           this.init();
@@ -937,20 +1084,89 @@
           const gain = this.ctx.createGain();
           osc.type = type;
           osc.frequency.setValueAtTime(freq, now);
+          if (endFreq) osc.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
           gain.gain.setValueAtTime(gainVal, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
           osc.connect(gain); gain.connect(this.ctx.destination);
           osc.start(now); osc.stop(now + duration);
         } catch (e) {}
       }
-      coin() { this.playTone(1318.5, 'triangle', 0.14, 0, 0.12); this.playTone(1975.5, 'sine', 0.22, 0.06, 0.1); }
-      cardFlip() { this.playTone(320, 'triangle', 0.08, 0, 0.1); this.playTone(480, 'sine', 0.1, 0.04, 0.08); }
-      challenge() { this.playTone(220, 'sawtooth', 0.35, 0, 0.11); this.playTone(277.18, 'sawtooth', 0.35, 0.04, 0.11); this.playTone(329.63, 'sawtooth', 0.45, 0.08, 0.13); }
-      block() { this.playTone(392, 'triangle', 0.16, 0, 0.14); this.playTone(523.25, 'triangle', 0.24, 0.08, 0.14); }
-      eliminate() { this.playTone(196, 'sawtooth', 0.25, 0, 0.14); this.playTone(146.83, 'sawtooth', 0.4, 0.15, 0.14); }
+      playNoise(duration = 0.2, delay = 0, filterType = 'bandpass', freq = 1200, q = 1.5, gainVal = 0.18, endFreq = null) {
+        if (!this.enabled) return;
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime + delay;
+          const bufferSize = Math.floor(this.ctx.sampleRate * duration);
+          const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+          const noise = this.ctx.createBufferSource();
+          noise.buffer = buffer;
+          const filter = this.ctx.createBiquadFilter();
+          filter.type = filterType;
+          filter.frequency.setValueAtTime(freq, now);
+          if (endFreq) filter.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
+          filter.Q.value = q;
+          const gain = this.ctx.createGain();
+          gain.gain.setValueAtTime(gainVal, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+          noise.connect(filter); filter.connect(gain); gain.connect(this.ctx.destination);
+          noise.start(now); noise.stop(now + duration);
+        } catch (e) {}
+      }
+      // Tilintar de moedas
+      coin(count = 1) {
+        for (let i = 0; i < count; i++) {
+          const d = i * 0.09;
+          this.playTone(1567.98, 'triangle', 0.12, d, 0.13);
+          this.playTone(2349.32, 'sine', 0.22, d + 0.035, 0.11);
+          this.playTone(3135.96, 'sine', 0.15, d + 0.06, 0.06);
+        }
+      }
+      // Espada desembainhando + corte + sangue espirrando
+      swordAndBlood() {
+        this.playNoise(0.18, 0, 'bandpass', 2800, 3.5, 0.22, 900); // Swoosh da lâmina
+        this.playTone(920, 'sawtooth', 0.14, 0, 0.1, 210);         // Brilho metálico
+        this.playTone(150, 'sine', 0.22, 0.14, 0.25, 42);          // Golpe no corpo
+        this.playNoise(0.28, 0.16, 'lowpass', 650, 2.0, 0.22, 180);// Sangue espirrando
+      }
+      // Explosão + lâmina pesada (Golpe de Estado)
+      coupBlast() {
+        this.playNoise(0.45, 0, 'lowpass', 380, 1.2, 0.3, 60);
+        this.playTone(110, 'sawtooth', 0.4, 0, 0.22, 35);
+        this.swordAndBlood();
+      }
+      // Escudo metálico (Bloqueio)
+      block() {
+        this.playTone(280, 'triangle', 0.18, 0, 0.18, 180);
+        this.playTone(587.33, 'sine', 0.3, 0.03, 0.14);
+        this.playNoise(0.12, 0, 'bandpass', 1800, 4, 0.14);
+      }
+      // Embaralhar / virar cartas
+      cardFlip() {
+        this.playNoise(0.08, 0, 'bandpass', 2200, 1.8, 0.14, 1200);
+        this.playNoise(0.08, 0.09, 'bandpass', 2500, 1.8, 0.12, 1400);
+      }
+      // Sussurro / Lupa do Fuxiqueiro
+      whisper() {
+        this.playNoise(0.32, 0, 'bandpass', 1600, 3.0, 0.12, 900);
+        this.playTone(523.25, 'sine', 0.2, 0.08, 0.07, 659.25);
+      }
+      // Contestação / Raios
+      challenge() {
+        this.playNoise(0.35, 0, 'bandpass', 900, 1.0, 0.22, 220);
+        this.playTone(220, 'sawtooth', 0.3, 0, 0.14);
+        this.playTone(311.13, 'sawtooth', 0.38, 0.06, 0.15);
+      }
+      // Eliminação / Morte
+      eliminate() {
+        this.swordAndBlood();
+        this.playTone(164.81, 'sawtooth', 0.35, 0.2, 0.15, 98);
+      }
       yourTurn() { this.playTone(523.25, 'sine', 0.15, 0, 0.11); this.playTone(659.25, 'sine', 0.18, 0.1, 0.11); this.playTone(783.99, 'sine', 0.25, 0.2, 0.12); }
-      victory() { [523.25, 659.25, 783.99, 1046.5].forEach((f, idx) => this.playTone(f, 'triangle', 0.3, idx * 0.11, 0.14)); }
-      emojiPop() { this.playTone(680, 'sine', 0.09, 0, 0.08); }
+      victory() { [523.25, 659.25, 783.99, 1046.5].forEach((f, idx) => this.playTone(f, 'triangle', 0.32, idx * 0.11, 0.15)); }
+      emojiPop() { this.playTone(680, 'sine', 0.09, 0, 0.08, 920); }
     }
     const sfx = new SoundEngine();
 
@@ -966,6 +1182,7 @@
     let isRoomHost = false;
     let lastProcessedEmojiId = null;
     let lastProcessedFxId = null;
+    let lastProcessedLossId = null;
     let previousTurnUid = null;
     let botThinkingTimer = null;
     let isPlayingCinematicFx = false;
@@ -1170,28 +1387,78 @@
     }
 
     function renderInitialStaticViews() {
+      const wins = myRankStats.wins || 0;
+      const currentAv = AVATARS.find(a => a.id === myAvatar);
+      if (!currentAv || !isAvatarUnlocked(currentAv, wins)) myAvatar = AVATARS[0].id;
+
+      const countLabel = document.getElementById('avatarCountLabel');
+      if (countLabel) {
+        const legendaryTotal = AVATARS.filter(a => a.requiredWins).length;
+        const legendaryUnlocked = AVATARS.filter(a => a.requiredWins && isAvatarUnlocked(a, wins)).length;
+        countLabel.textContent = `${AVATARS.length} Nobres & Lendas • Lendários ${legendaryUnlocked}/${legendaryTotal}`;
+      }
+
+      const rankPanel = document.getElementById('myRankPanel');
+      if (rankPanel) {
+        const rankObj = getRankTitleObj(wins);
+        const nextRank = RANK_TITLES.find(t => t.minWins > wins);
+        const nextAvatar = AVATARS.filter(a => a.requiredWins > wins).sort((a, b) => a.requiredWins - b.requiredWins)[0];
+        rankPanel.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <div id="rankTitleTapLabel" class="text-[10px] uppercase tracking-wider text-amber-300/70 font-semibold select-none">Seu Título na Corte</div>
+              <div class="font-renaissance text-sm sm:text-base ${rankObj.badgeClass} truncate"><i class="fa-solid fa-award mr-1.5"></i>${escapeHtml(rankObj.title)}</div>
+            </div>
+            <div class="flex items-center gap-3 shrink-0 text-center">
+              <div><div class="text-base font-bold text-amber-200 leading-none">${wins}</div><div class="text-[9px] uppercase text-amber-300/60">Vitórias</div></div>
+              <div><div class="text-base font-bold text-emerald-300 leading-none">${myRankStats.streak || 0}</div><div class="text-[9px] uppercase text-amber-300/60">Sequência</div></div>
+              <div><div class="text-base font-bold text-rose-300 leading-none">${myRankStats.bestStreak || 0}</div><div class="text-[9px] uppercase text-amber-300/60">Recorde</div></div>
+            </div>
+          </div>
+          <div class="mt-1.5 text-[10px] text-amber-200/60 leading-snug">
+            ${nextRank ? `Próximo título: <b class="text-amber-300">${escapeHtml(nextRank.title)}</b> em ${nextRank.minWins - wins} vitória(s).` : 'Você alcançou o título máximo da Corte!'}
+            ${nextAvatar ? ` Próximo avatar: <b class="text-amber-300">${escapeHtml(nextAvatar.label)}</b> em ${nextAvatar.requiredWins - wins}.` : ''}
+          </div>`;
+      }
+
+      const tapLabel = document.getElementById('rankTitleTapLabel');
+      if (tapLabel) tapLabel.addEventListener('click', onRankTitleTap);
+
       const avatarGrid = document.getElementById('avatarSelectorGrid');
-      avatarGrid.innerHTML = AVATARS.map(av => `
-        <button type="button" data-avatar="${av.id}"
-          class="avatar-pick-btn p-2 rounded-2xl border transition flex items-center gap-2.5 text-left ${
-            av.id === myAvatar
-              ? 'bg-amber-500/25 border-amber-400 text-amber-100 shadow-lg ring-1 ring-amber-300/50'
-              : 'bg-court-950/85 border-amber-500/20 text-amber-100/70 hover:border-amber-500/45'
-          }">
-          <div class="w-11 h-11 rounded-xl overflow-hidden bg-gradient-to-br ${av.bg} shrink-0 shadow-md border border-amber-300/40">${av.svg}</div>
+      avatarGrid.innerHTML = AVATARS.map(av => {
+        const locked = !isAvatarUnlocked(av, wins);
+        const selected = av.id === myAvatar;
+        const legendary = !!av.requiredWins;
+        const stateCls = selected
+          ? 'bg-amber-500/25 border-amber-400 text-amber-100 shadow-lg ring-1 ring-amber-300/50'
+          : locked
+            ? 'bg-court-950/60 border-amber-500/10 text-amber-100/40 cursor-not-allowed'
+            : legendary
+              ? 'bg-court-950/85 border-yellow-300/50 text-amber-100/80 hover:border-yellow-300'
+              : 'bg-court-950/85 border-amber-500/20 text-amber-100/70 hover:border-amber-500/45';
+        return `
+        <button type="button" data-avatar="${av.id}" data-locked="${locked ? '1' : '0'}"
+          class="avatar-pick-btn relative p-2 rounded-2xl border transition flex items-center gap-2.5 text-left ${stateCls}">
+          <div class="w-11 h-11 rounded-xl overflow-hidden bg-gradient-to-br ${av.bg} shrink-0 shadow-md border border-amber-300/40 ${locked ? 'grayscale opacity-40' : ''}">${av.svg}</div>
           <div class="min-w-0 flex-1">
             <div class="font-renaissance font-bold text-xs text-amber-100 truncate">${av.label}</div>
-            <div class="text-[10px] text-amber-300/75 truncate">${av.roleTitle}</div>
+            <div class="text-[10px] text-amber-300/75 truncate">${locked ? `🔒 ${av.requiredWins} vitórias` : av.roleTitle}</div>
           </div>
-        </button>
-      `).join('');
+          ${locked ? '<i class="fa-solid fa-lock absolute top-1.5 right-1.5 text-[10px] text-amber-300/60"></i>' : ''}
+        </button>`;
+      }).join('');
 
       avatarGrid.querySelectorAll('.avatar-pick-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          myAvatar = btn.dataset.avatar;
-          const picked = AVATARS.find(a => a.id === myAvatar);
+          const picked = AVATARS.find(a => a.id === btn.dataset.avatar);
+          if (!picked) return;
+          if (!isAvatarUnlocked(picked)) {
+            showToast(`Avatar bloqueado: vença ${picked.requiredWins} partidas (você tem ${myRankStats.wins || 0}).`, 'info');
+            return;
+          }
+          myAvatar = picked.id;
           const nameInput = document.getElementById('playerNameInput');
-          if (picked && (!nameInput.value.trim() || AVATARS.some(a => a.label === nameInput.value.trim()))) {
+          if (!nameInput.value.trim() || AVATARS.some(a => a.label === nameInput.value.trim())) {
             nameInput.value = picked.label;
           }
           renderInitialStaticViews();
@@ -1327,6 +1594,24 @@
       isPlayingCinematicFx = true;
       setTimeout(() => { isPlayingCinematicFx = false; }, 1900);
 
+      // 1. Dispara o efeito sonoro sincronizado com a animação da tela
+      switch (fxData.fxType) {
+        case 'INCOME': sfx.coin(1); break;
+        case 'FOREIGN_AID':
+        case 'STEAL': sfx.coin(2); break;
+        case 'TAX': sfx.coin(3); break;
+        case 'ASSASSINATE': sfx.swordAndBlood(); break;
+        case 'COUP': sfx.coupBlast(); break;
+        case 'PLAYER_DEATH': sfx.eliminate(); break;
+        case 'BLOCK': sfx.block(); break;
+        case 'CHALLENGE': sfx.challenge(); break;
+        case 'GOSSIP_INVESTIGATE': sfx.whisper(); break;
+        case 'DEAL_CARDS':
+        case 'SHUFFLE_DRAW':
+        case 'EXCHANGE':
+        case 'GOSSIP_SWAP': sfx.cardFlip(); break;
+      }
+
       if (['DEAL_CARDS', 'SHUFFLE_DRAW', 'EXCHANGE', 'GOSSIP_SWAP'].includes(fxData.fxType)) {
         const deckEl = document.getElementById('courtDeckVisualIcon');
         if (deckEl) {
@@ -1343,37 +1628,64 @@
         emerald: 'from-emerald-950/95 via-court-900/95 to-teal-950/95 border-emerald-400 text-emerald-200'
       };
       const themeClass = themes[fxData.accent] || themes.amber;
-      const coin = (label, delay = 0, size = 'w-12 h-12') =>
-        `<div class="fx-coin-anim ${size} rounded-full bg-gradient-to-br from-yellow-300 via-amber-500 to-amber-700 border-2 border-yellow-100 flex items-center justify-center text-court-950 font-black shadow-xl" style="animation-delay:${delay}s">${label}</div>`;
-      const cardBack = (icon, delay = 0) =>
-        `<div class="fx-card-shuffle-anim w-10 h-14 rounded-lg card-back-pattern border-2 border-amber-400 flex items-center justify-center shadow-lg" style="animation-delay:${delay}s"><i class="fa-solid ${icon} text-amber-300 text-xs"></i></div>`;
 
-      let extraVisualHtml = '';
-      if (fxData.fxType === 'INCOME') {
-        extraVisualHtml = `<div class="flex justify-center my-2">${coin('+1', 0, 'w-14 h-14')}</div>`;
-      } else if (fxData.fxType === 'FOREIGN_AID') {
-        extraVisualHtml = `<div class="flex justify-center gap-3 my-2">${coin('+1')}${coin('+1', 0.12)}</div>`;
-      } else if (fxData.fxType === 'TAX') {
-        extraVisualHtml = `<div class="flex justify-center gap-2 my-2">${coin('+1', 0, 'w-11 h-11')}${coin('+1', 0.1)}${coin('+1', 0.2, 'w-11 h-11')}</div>`;
-      } else if (['DEAL_CARDS', 'SHUFFLE_DRAW', 'EXCHANGE', 'GOSSIP_SWAP'].includes(fxData.fxType)) {
-        extraVisualHtml = `<div class="flex justify-center gap-2 my-2">${cardBack('fa-fleur-de-lis')}${cardBack('fa-crown', 0.15)}</div>`;
-      } else if (fxData.fxType === 'ASSASSINATE' || fxData.fxType === 'COUP') {
-        extraVisualHtml = `
-          <div class="relative h-8 w-full overflow-hidden my-1">
-            <div class="fx-slash-line absolute inset-x-0 top-1/2 h-1.5 bg-gradient-to-r from-transparent via-rose-400 to-white rounded-full shadow-[0_0_20px_#f43f5e]"></div>
+      const coinSvg = (label, delay = 0) => `
+        <div class="fx-coin-anim w-14 h-14 rounded-full bg-gradient-to-br from-yellow-200 via-amber-400 to-amber-700 border-2 border-yellow-100 flex flex-col items-center justify-center text-court-950 font-black shadow-[0_0_25px_rgba(251,191,36,0.7)]" style="animation-delay:${delay}s">
+          <i class="fa-solid fa-crown text-[10px] opacity-80"></i>
+          <span class="text-sm leading-none">${label}</span>
+        </div>`;
+
+      let sceneHtml = '';
+      if (['INCOME', 'FOREIGN_AID', 'TAX', 'STEAL'].includes(fxData.fxType)) {
+        const qty = fxData.fxType === 'TAX' ? 3 : (fxData.fxType === 'INCOME' ? 1 : 2);
+        const coinsArr = Array.from({ length: qty }, (_, i) => coinSvg('+1', i * 0.1));
+        sceneHtml = `<div class="flex items-center justify-center gap-3 my-3 h-20">${coinsArr.join('')}</div>`;
+      } else if (['ASSASSINATE', 'COUP', 'PLAYER_DEATH'].includes(fxData.fxType)) {
+        sceneHtml = `
+          <div class="relative flex items-center justify-center h-28 my-2">
+            <!-- Espirro de sangue animado -->
+            <svg viewBox="0 0 120 120" class="fx-blood-splat absolute w-36 h-36 pointer-events-none">
+              <circle cx="60" cy="60" r="22" fill="#dc2626" opacity="0.85"/>
+              <circle cx="32" cy="40" r="8" fill="#991b1b"/><circle cx="88" cy="36" r="10" fill="#b91c1c"/>
+              <circle cx="26" cy="76" r="6" fill="#dc2626"/><circle cx="92" cy="78" r="9" fill="#991b1b"/>
+              <circle cx="58" cy="22" r="5" fill="#ef4444"/><circle cx="64" cy="96" r="7" fill="#7f1d1d"/>
+              <path d="M60 60 L20 25 M60 60 L100 25 M60 60 L15 80 M60 60 L105 85" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            <!-- Lâminas cruzando -->
+            <div class="fx-sword-l text-5xl text-slate-100 drop-shadow-[0_0_18px_#f43f5e] z-10">🗡️</div>
+            <div class="fx-sword-r text-5xl text-slate-100 drop-shadow-[0_0_18px_#f43f5e] z-10 -ml-4">⚔️</div>
+            <div class="fx-slash-line absolute inset-x-4 top-1/2 h-1.5 bg-gradient-to-r from-transparent via-rose-300 to-white rounded-full shadow-[0_0_25px_#f43f5e]"></div>
           </div>`;
-      } else if (fxData.fxType === 'CHALLENGE' || fxData.fxType === 'PLAYER_DEATH') {
-        extraVisualHtml = `<div class="fx-flash-bg absolute inset-0 rounded-3xl bg-rose-500/30 pointer-events-none"></div>`;
+      } else if (fxData.fxType === 'BLOCK') {
+        sceneHtml = `
+          <div class="relative flex items-center justify-center h-24 my-2">
+            <div class="w-20 h-20 rounded-full bg-amber-400/20 border-2 border-amber-300 animate-ping absolute"></div>
+            <i class="fa-solid fa-shield-halved text-6xl text-amber-300 drop-shadow-[0_0_25px_rgba(251,191,36,0.9)]"></i>
+          </div>`;
+      } else if (fxData.fxType === 'CHALLENGE') {
+        sceneHtml = `
+          <div class="fx-flash-bg absolute inset-0 rounded-3xl bg-rose-500/35 pointer-events-none"></div>
+          <div class="relative flex items-center justify-center gap-3 h-24 my-2">
+            <i class="fa-solid fa-bolt text-5xl text-yellow-300 animate-bounce drop-shadow-[0_0_20px_#facc15]"></i>
+            <i class="fa-solid fa-masks-theater text-6xl text-rose-300 drop-shadow-[0_0_25px_#f43f5e]"></i>
+          </div>`;
+      } else {
+        sceneHtml = `
+          <div class="relative flex items-center justify-center gap-2 h-24 my-2">
+            <div class="fx-card-shuffle-anim w-12 h-16 rounded-xl card-back-pattern border-2 border-amber-300 flex items-center justify-center shadow-xl">
+              <i class="fa-solid ${escapeHtml(fxData.icon || 'fa-crown')} text-amber-300 text-lg"></i>
+            </div>
+            <div class="fx-card-shuffle-anim w-12 h-16 rounded-xl card-back-pattern border-2 border-amber-300 flex items-center justify-center shadow-xl" style="animation-delay:0.15s">
+              <i class="fa-solid fa-eye text-amber-300 text-lg"></i>
+            </div>
+          </div>`;
       }
 
       const wrapper = document.createElement('div');
-      wrapper.className = 'fx-stage-card relative max-w-md w-full rounded-3xl border-2 px-6 py-5 text-center shadow-[0_0_60px_rgba(0,0,0,0.9)] bg-gradient-to-br ' + themeClass;
+      wrapper.className = 'fx-stage-card relative max-w-md w-full rounded-3xl border-2 px-6 py-5 text-center shadow-[0_0_70px_rgba(0,0,0,0.95)] bg-gradient-to-br overflow-hidden ' + themeClass;
       wrapper.innerHTML = `
-        <div class="w-14 h-14 mx-auto mb-2 rounded-2xl bg-black/40 border border-white/20 flex items-center justify-center shadow-inner">
-          <i class="fa-solid ${escapeHtml(fxData.icon || 'fa-crown')} text-2xl sm:text-3xl"></i>
-        </div>
-        ${extraVisualHtml}
-        <h3 class="font-renaissance font-extrabold text-base sm:text-xl tracking-wide text-white drop-shadow">${escapeHtml(fxData.title)}</h3>
+        ${sceneHtml}
+        <h3 class="font-renaissance font-extrabold text-lg sm:text-2xl tracking-wide text-white drop-shadow">${escapeHtml(fxData.title)}</h3>
         ${fxData.subtitle ? `<p class="text-xs sm:text-sm opacity-90 mt-1 font-medium">${escapeHtml(fxData.subtitle)}</p>` : ''}
       `;
 
@@ -1388,7 +1700,7 @@
       isRoomHost = true;
 
       const hostPlayer = {
-        uid: myUid, name: myName, avatar: myAvatar, isBot: false, coins: 2, cards: [], alive: true,
+        uid: myUid, name: myName, avatar: myAvatar, wins: myRankStats.wins || 0, isBot: false, coins: 2, cards: [], alive: true,
         camOn: camEnabled, micOn: micEnabled, peerId: `${PEER_ROOM_PREFIX}${roomCode}`
       };
       const players = [hostPlayer];
@@ -1397,7 +1709,7 @@
         for (let i = 0; i < 3; i++) {
           players.push({
             uid: `bot_${crypto.randomUUID().slice(0, 6)}`, name: BOT_NAMES[i],
-            avatar: AVATARS[(i + 1) % AVATARS.length].id, isBot: true, coins: 2, cards: [], alive: true, camOn: false, micOn: false
+            avatar: AVATARS[(i + 1) % BASE_AVATARS_COUNT].id, isBot: true, coins: 2, cards: [], alive: true, camOn: false, micOn: false
           });
         }
       }
@@ -1456,6 +1768,7 @@
                 } else {
                   currentRoomData.players[existsIdx].name = joining.name;
                   currentRoomData.players[existsIdx].avatar = joining.avatar;
+                  currentRoomData.players[existsIdx].wins = joining.wins;
                   currentRoomData.players[existsIdx].peerId = joining.peerId;
                 }
                 await saveRoomState(currentRoomCode, currentRoomData);
@@ -1513,7 +1826,7 @@
           conn.send({
             type: 'JOIN_REQUEST',
             player: {
-              uid: myUid, name: myName, avatar: myAvatar, isBot: false, coins: 2, cards: [], alive: true,
+              uid: myUid, name: myName, avatar: myAvatar, wins: myRankStats.wins || 0, isBot: false, coins: 2, cards: [], alive: true,
               camOn: camEnabled, micOn: micEnabled, peerId: clientPeerId
             }
           });
@@ -1611,7 +1924,7 @@
 
       currentRoomData.players.push({
         uid: `bot_${Math.random().toString(36).slice(2, 8)}`, peerId: null, name: availableName,
-        avatar: AVATARS[currentRoomData.players.length % AVATARS.length].id,
+        avatar: AVATARS[currentRoomData.players.length % BASE_AVATARS_COUNT].id,
         isBot: true, coins: 2, cards: [], alive: true, camOn: false, micOn: false
       });
 
@@ -1695,7 +2008,6 @@
       emitRoomFX(currentRoomData, 'DEAL_CARDS', 'Cartas Distribuídas na Corte!',
         `18 cartas embaralhadas • Turno inicial de ${starter.name}`, 'amber', 'fa-layer-group');
 
-      sfx.cardFlip();
       document.getElementById('victoryModal').classList.add('hidden');
       await saveRoomState(currentRoomCode, currentRoomData);
     }
@@ -1775,7 +2087,6 @@
         actor.coins += 1;
         appendLogEntry(room, `🪙 ${actor.name} pegou Renda (+1 moeda).`, 'action');
         emitRoomFX(room, 'INCOME', `${actor.name}: Renda (+1 Moeda)`, 'Ação básica livre de bloqueios', 'amber', 'fa-coins');
-        sfx.coin();
         advanceToNextAliveTurn(room);
         await saveRoomState(currentRoomCode, room);
         return;
@@ -1786,7 +2097,6 @@
         actor.coins -= 7;
         appendLogEntry(room, `💥 ${actor.name} pagou 7 moedas e lançou um GOLPE DE ESTADO contra ${target.name}!`, 'danger');
         emitRoomFX(room, 'COUP', `GOLPE DE ESTADO!`, `${actor.name} derruba 1 influência de ${target.name}`, 'rose', 'fa-bolt-lightning');
-        sfx.eliminate();
         triggerInfluenceLoss(room, target.uid, `Golpe de Estado de ${actor.name}`, 'END_TURN', false);
         await saveRoomState(currentRoomCode, room);
         return;
@@ -1903,7 +2213,6 @@
       pa.passedUids = [blocker.uid];
       currentRoomData.phase = 'AWAIT_BLOCK_REACTION';
 
-      sfx.block();
       appendLogEntry(currentRoomData, `🛡️ ${blocker.name} declarou ${ROLES[blockRole].name} para BLOQUEAR a ação de ${actor ? actor.name : ''}!`, 'highlight');
       emitRoomFX(currentRoomData, 'BLOCK', `BLOQUEIO DE ${ROLES[blockRole].name.toUpperCase()}!`,
         `${blocker.name} bloqueou ${actor ? actor.name : ''}`, 'amber', 'fa-shield-halved');
@@ -1989,7 +2298,7 @@
         } else {
           appendLogEntry(room, `🎲 ${victim.name} perdeu 1 influência aleatória (${ROLES[pickedCard.role].name}) por errar a contestação!`, 'danger');
         }
-        sfx.eliminate();
+        if (remainingAfter !== 0) room.lastLoss = { id: Math.random().toString(36).slice(2), uid: victim.uid };
         resumeAfterInfluenceLoss(room, nextStepAfterLoss);
         return;
       }
@@ -2016,7 +2325,7 @@
       const remaining = getUnrevealedCardsCount(player);
       if (remaining === 0) player.alive = false;
 
-      sfx.eliminate();
+      if (remaining !== 0) currentRoomData.lastLoss = { id: Math.random().toString(36).slice(2), uid: player.uid };
       appendLogEntry(currentRoomData,
         `💔 ${player.name} perdeu 1 influência e revelou ${ROLES[card.role].name}${remaining === 0 ? ' (Eliminado!)' : ''}.`, 'danger');
 
@@ -2053,7 +2362,7 @@
 
       if (pa.type === 'FOREIGN_AID') {
         actor.coins += 2;
-        sfx.coin();
+        sfx.coin(2);
         appendLogEntry(room, `💰 ${actor.name} recebeu Ajuda Externa (+2 moedas).`, 'action');
         advanceToNextAliveTurn(room);
         return;
@@ -2061,7 +2370,7 @@
 
       if (pa.type === 'TAX') {
         actor.coins += 3;
-        sfx.coin();
+        sfx.coin(3);
         appendLogEntry(room, `👑 ${actor.name} taxou a Corte como Duque (+3 moedas).`, 'action');
         advanceToNextAliveTurn(room);
         return;
@@ -2072,7 +2381,7 @@
           const amount = Math.min(2, target.coins);
           target.coins -= amount;
           actor.coins += amount;
-          sfx.coin();
+          sfx.coin(Math.max(1, amount));
           appendLogEntry(room, `🧭 ${actor.name} extorquiu ${amount} moeda(s) de ${target.name}.`, 'action');
         }
         advanceToNextAliveTurn(room);
@@ -2197,7 +2506,6 @@
       const card = target.cards.find(c => c.id === pi.cardId && !c.revealed);
       if (card && forceReplace) {
         swapCardWithDeck(currentRoomData, card);
-        sfx.cardFlip();
         appendLogEntry(currentRoomData, `🔄 ${actor.name} investigou ${target.name} com o Fuxiqueiro e FORÇOU a troca da carta no Baralho da Corte!`, 'highlight');
         emitRoomFX(currentRoomData, 'SHUFFLE_DRAW', `Carta Trocada pelo Fuxiqueiro!`,
           `${target.name} embaralhou sua carta e comprou uma nova`, 'amber', 'fa-shuffle');
@@ -2439,6 +2747,11 @@
         spawnFloatingEmojiOnSeat(roomData.lastEmoji.uid, roomData.lastEmoji.emoji, roomData.lastEmoji.name);
       }
 
+      if (roomData.lastLoss && roomData.lastLoss.id !== lastProcessedLossId) {
+        lastProcessedLossId = roomData.lastLoss.id;
+        if (roomData.lastLoss.uid === myUid) sfx.swordAndBlood(); // só quem perdeu a influência ouve
+      }
+
       if (roomData.lastFX && roomData.lastFX.id !== lastProcessedFxId) {
         lastProcessedFxId = roomData.lastFX.id;
         playCinematicFX(roomData.lastFX);
@@ -2458,6 +2771,7 @@
         if (winner && victoryModal.classList.contains('hidden') && lastVictoryShownFor !== roomData.lastFX?.id) {
           lastVictoryShownFor = roomData.lastFX ? roomData.lastFX.id : 'x';
           const didIWin = winner.uid === myUid;
+          if (!RANK_REQUIRE_HUMAN_OPPONENT || roomData.players.filter(p => !p.isBot).length >= 2) recordMatchResult(didIWin);
           const modalCard = document.getElementById('victoryModalCard');
           const iconBox = document.getElementById('victoryModalIconBox');
           const iconEl = document.getElementById('victoryModalIcon');
@@ -2551,6 +2865,7 @@
                   <span class="font-renaissance font-bold text-xs sm:text-sm text-amber-100 truncate">${escapeHtml(player.name)}</span>
                   ${isMe ? `<span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/25 text-amber-300 font-bold">VOCÊ</span>` : ''}
                 </div>
+                ${seatRankHtml(player, isMe)}
                 <div class="text-[10px] text-amber-300/70 truncate">${escapeHtml(avatarObj.roleTitle || 'Nobre da Corte')}</div>
                 <div class="flex items-center gap-2 mt-1">
                   <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-400/35 text-amber-300 text-[11px] font-bold">
@@ -2666,9 +2981,9 @@
           b.onclick = onclick;
           btnContainer.appendChild(b);
         };
-        const passCls = 'px-4 py-2.5 rounded-xl bg-court-800 hover:bg-court-700 border border-amber-500/40 text-amber-100 font-semibold text-xs sm:text-sm transition flex items-center gap-1.5';
-        const chalCls = 'px-4 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-red-700 hover:from-rose-500 hover:to-red-600 text-white font-bold text-xs sm:text-sm shadow-lg transition flex items-center gap-1.5';
-        const blockCls = 'px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-court-950 font-bold text-xs sm:text-sm shadow-lg transition flex items-center gap-1.5';
+        const passCls = 'px-3 py-1.5 rounded-xl bg-court-800 hover:bg-court-700 border border-amber-500/40 text-amber-100 font-semibold text-xs transition flex items-center gap-1.5';
+        const chalCls = 'px-3 py-1.5 rounded-xl bg-gradient-to-r from-rose-600 to-red-700 hover:from-rose-500 hover:to-red-600 text-white font-bold text-xs shadow-lg transition flex items-center gap-1.5';
+        const blockCls = 'px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-court-950 font-bold text-xs shadow-lg transition flex items-center gap-1.5';
         const meAlive = me && me.alive && getUnrevealedCardsCount(me) > 0;
 
         if (room.phase === 'AWAIT_REACTION') {
@@ -3027,34 +3342,25 @@
     function spawnFloatingEmojiOnSeat(uid, emoji, playerName = '') {
       sfx.emojiPop();
 
-      const anchor = document.getElementById(`emoji-anchor-${uid}`);
-      if (anchor) {
-        const el = document.createElement('div');
-        el.className = 'floating-emoji text-4xl sm:text-5xl drop-shadow-[0_6px_12px_rgba(0,0,0,0.85)] select-none';
-        el.textContent = emoji;
-        anchor.appendChild(el);
-        setTimeout(() => el.remove(), 2600);
-      }
-
       const seatCard = document.getElementById(`seat-card-${uid}`);
       const globalLayer = document.getElementById('globalEmojiLayer');
-      if (globalLayer) {
-        const badge = document.createElement('div');
-        badge.className = 'floating-emoji fixed flex flex-col items-center pointer-events-none z-50';
-        if (seatCard) {
-          const rect = seatCard.getBoundingClientRect();
-          badge.style.left = `${Math.max(40, Math.min(window.innerWidth - 80, rect.left + rect.width / 2 - 28))}px`;
-          badge.style.top = `${Math.max(60, rect.top + 10)}px`;
-        } else {
-          badge.style.left = '50%';
-          badge.style.top = '45%';
-        }
-        badge.innerHTML = `
-          <span class="text-4xl sm:text-5xl drop-shadow-[0_8px_16px_rgba(0,0,0,0.9)]">${escapeHtml(emoji)}</span>
-          ${playerName ? `<span class="mt-0.5 px-2 py-0.5 rounded-full bg-court-950/90 border border-amber-400/60 text-[10px] font-bold text-amber-200 shadow-lg whitespace-nowrap">${escapeHtml(playerName)}</span>` : ''}`;
-        globalLayer.appendChild(badge);
-        setTimeout(() => badge.remove(), 2600);
+      if (!globalLayer) return;
+
+      const badge = document.createElement('div');
+      badge.className = 'floating-emoji fixed flex flex-col items-center pointer-events-none z-50';
+      if (seatCard) {
+        const rect = seatCard.getBoundingClientRect();
+        badge.style.left = `${Math.max(40, Math.min(window.innerWidth - 80, rect.left + rect.width / 2 - 28))}px`;
+        badge.style.top = `${Math.max(50, rect.top + 6)}px`;
+      } else {
+        badge.style.left = '50%';
+        badge.style.top = '45%';
       }
+      badge.innerHTML = `
+        <span class="text-4xl sm:text-5xl drop-shadow-[0_8px_16px_rgba(0,0,0,0.9)]">${escapeHtml(emoji)}</span>
+        ${playerName ? `<span class="mt-0.5 px-2 py-0.5 rounded-full bg-court-950/90 border border-amber-400/60 text-[10px] font-bold text-amber-200 shadow-lg whitespace-nowrap">${escapeHtml(playerName)}</span>` : ''}`;
+      globalLayer.appendChild(badge);
+      setTimeout(() => badge.remove(), 2600);
     }
 
     /*************************************************************************
