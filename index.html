@@ -148,6 +148,21 @@
     ::-webkit-scrollbar-thumb:hover {
       background: rgba(212, 175, 55, 0.65);
     }
+    .log-in{animation:logIn .55s ease-out}
+    @keyframes logIn{from{opacity:0;transform:translateX(26px) scale(.96);background:rgba(212,175,55,.4)}to{opacity:1;transform:none}}
+    .log-toast{padding:10px 16px;border-radius:14px;font-size:13px;font-weight:600;text-align:center;border:1px solid rgba(212,175,55,.6);background:rgba(20,13,24,.96);color:#f5e19c;box-shadow:0 10px 30px rgba(0,0,0,.6);animation:toastIn .45s cubic-bezier(.2,1.4,.4,1) both,toastOut .5s ease-in 2.7s forwards}
+    .lt-danger{border-color:#f43f5e;color:#fecdd3;background:rgba(76,5,25,.96)}
+    .lt-victory{border-color:#34d399;color:#a7f3d0;background:rgba(2,44,34,.96)}
+    .lt-system{opacity:.85}
+    @keyframes toastIn{from{opacity:0;transform:translateY(-18px) scale(.85)}to{opacity:1;transform:none}}
+    @keyframes toastOut{to{opacity:0;transform:translateY(-12px) scale(.95)}}
+    .fx-card{position:fixed;width:40px;height:56px;margin:-28px 0 0 -20px;border-radius:8px;border:2px solid #d4af37;background:radial-gradient(circle,#5a1d3a,#1c0b15);box-shadow:0 6px 18px rgba(0,0,0,.6);z-index:9998;pointer-events:none}
+    .dealing #mySecretCardsContainer,.dealing #seatsGridContainer [id^="seat-card-"]>div:last-child{opacity:0}
+    #gameLogContainer,#chatMessagesContainer{min-height:0;overscroll-behavior:contain}
+    @media(min-width:1024px){
+      #rightSidebarDrawer{height:100dvh}
+      #gameRoomView>div:first-child{max-height:100dvh}
+    }
     /* Mirror local webcam video */
     .mirror-video {
       transform: scaleX(-1);
@@ -343,7 +358,7 @@
                 </label>
                 <span class="text-[11px] text-amber-200/60">8 Nobres Ilustrados</span>
               </div>
-              <div id="avatarSelectorGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div id="avatarSelectorGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-h-80 overflow-y-auto pr-1">
                 <!-- Populated dynamically by JS -->
               </div>
             </div>
@@ -502,7 +517,7 @@
                 </div>
                 <div>
                   <div class="text-[10px] uppercase tracking-wider text-amber-200/60">Baralho da Corte</div>
-                  <div class="text-sm font-bold text-amber-300"><span id="deckCountDisplay">15</span> cartas</div>
+                  <div class="text-sm font-bold text-amber-300"><span id="deckCountDisplay">18</span> cartas</div>
                 </div>
               </div>
 
@@ -656,8 +671,8 @@
             </button>
           </div>
 
-          <!-- Character Actions Row (4 Active Character Powers) -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <!-- Character Actions Row -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
             <button data-action="TAX" class="action-btn p-2.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/75 border border-purple-400/40 text-left transition disabled:opacity-40 disabled:pointer-events-none">
               <div class="flex items-center justify-between">
                 <span class="text-[11px] font-bold uppercase tracking-wider text-purple-300">Duque</span>
@@ -692,6 +707,22 @@
               </div>
               <div class="font-semibold text-xs text-white mt-0.5">Trocar Cartas</div>
               <div class="text-[10px] text-emerald-200/70">Olha 2 do baralho</div>
+            </button>
+            <button data-action="INQ_EXCHANGE" class="action-btn p-2.5 rounded-xl bg-orange-950/60 hover:bg-orange-900/75 border border-orange-400/40 text-left transition disabled:opacity-40 disabled:pointer-events-none">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-orange-300">Inquisidor</span>
+                <i class="fa-solid fa-magnifying-glass text-orange-400 text-xs"></i>
+              </div>
+              <div class="font-semibold text-xs text-white mt-0.5">Trocar 1 Carta</div>
+              <div class="text-[10px] text-orange-200/70">Pega 1 e devolve 1</div>
+            </button>
+            <button data-action="INVESTIGATE" class="action-btn p-2.5 rounded-xl bg-orange-950/60 hover:bg-orange-900/75 border border-orange-400/40 text-left transition disabled:opacity-40 disabled:pointer-events-none">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-orange-300">Inquisidor</span>
+                <i class="fa-solid fa-magnifying-glass text-orange-400 text-xs"></i>
+              </div>
+              <div class="font-semibold text-xs text-white mt-0.5">Investigar</div>
+              <div class="text-[10px] text-orange-200/70">Vê 1 carta do alvo</div>
             </button>
           </div>
         </div>
@@ -797,7 +828,7 @@
             Troca do Embaixador
           </h3>
           <p id="ambassadorModalInstruction" class="text-xs text-amber-100/80">
-            Selecione exatamente <strong class="text-amber-300">2</strong> cartas para manter em sua mão secreta. As outras 2 voltarão ao Baralho da Corte.
+            Selecione exatamente <strong class="text-amber-300">2</strong> cartas para manter em sua mão secreta. As outras ${pe.poolRoles.length - pe.keepCount} voltarão ao Baralho da Corte.
           </p>
         </div>
       </div>
@@ -1182,114 +1213,177 @@
       }
     };
 
-    const AVATARS = [
-      {
-        id: 'lorenzo',
-        label: 'Dom Lorenzo',
-        roleTitle: 'Aristocrata Calculista',
-        bg: 'from-amber-700 to-yellow-950',
-        svg: ROLES.DUQUE.svg
-      },
-      {
-        id: 'caterina',
-        label: 'Lady Caterina',
-        roleTitle: 'Dama de Ferro',
-        bg: 'from-rose-700 to-red-950',
-        svg: ROLES.CONDESSA.svg
-      },
-      {
-        id: 'ezio',
-        label: 'Ezio Valenti',
-        roleTitle: 'Sombra de Florença',
-        bg: 'from-slate-800 to-rose-950',
-        svg: ROLES.ASSASSINO.svg
-      },
-      {
-        id: 'vittoria',
-        label: 'Capitã Vittoria',
-        roleTitle: 'Corsária do Adriático',
-        bg: 'from-sky-700 to-blue-950',
-        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
-          <circle cx="50" cy="50" r="46" fill="#0c4a6e" stroke="#38bdf8" stroke-width="2.5"/>
-          <path d="M24 38 C20 65, 28 84, 34 88 L66 88 C72 84, 80 65, 76 38 Z" fill="#7c2d12"/>
-          <path d="M16 90 C20 68, 34 63, 50 63 C66 63, 80 68, 84 90 Z" fill="#0284c7" stroke="#facc15" stroke-width="1.5"/>
-          <path d="M36 36 C36 24, 64 24, 64 36 C64 51, 57 58, 50 58 C43 58, 36 51, 36 36 Z" fill="#f3c6a5"/>
-          <circle cx="65" cy="46" r="4" fill="none" stroke="#facc15" stroke-width="2"/>
-          <circle cx="43" cy="39" r="2.2" fill="#0f172a"/>
-          <circle cx="57" cy="39" r="2.2" fill="#0f172a"/>
-          <path d="M45 49 Q50 52 55 49" fill="none" stroke="#be123c" stroke-width="2.2" stroke-linecap="round"/>
-          <path d="M18 30 L50 15 L82 30 Q50 35 18 30 Z" fill="#1e293b" stroke="#facc15" stroke-width="2"/>
-          <path d="M26 24 Q38 10 54 16" fill="none" stroke="#f43f5e" stroke-width="4" stroke-linecap="round"/>
-        </svg>`
-      },
-      {
-        id: 'borgia',
-        label: 'Cardeal Borgia',
-        roleTitle: 'Eminência Parda',
-        bg: 'from-red-800 to-rose-950',
-        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
-          <circle cx="50" cy="50" r="46" fill="#450a0a" stroke="#f87171" stroke-width="2.5"/>
-          <path d="M14 90 C18 66, 32 60, 50 60 C68 60, 82 66, 86 90 Z" fill="#991b1b" stroke="#facc15" stroke-width="1.5"/>
-          <line x1="50" y1="64" x2="50" y2="84" stroke="#facc15" stroke-width="3"/>
-          <line x1="43" y1="72" x2="57" y2="72" stroke="#facc15" stroke-width="3"/>
-          <path d="M35 36 C35 23, 65 23, 65 36 C65 52, 58 60, 50 60 C42 60, 35 52, 35 36 Z" fill="#f5d0b5"/>
-          <path d="M32 32 L35 45 M68 32 L65 45" stroke="#e2e8f0" stroke-width="4" stroke-linecap="round"/>
-          <path d="M39 36 L46 38 M61 36 L54 38" stroke="#475569" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="43" cy="40" r="2" fill="#0f172a"/>
-          <circle cx="57" cy="40" r="2" fill="#0f172a"/>
-          <path d="M44 50 Q50 48 56 50" fill="none" stroke="#7f1d1d" stroke-width="2" stroke-linecap="round"/>
-          <path d="M31 28 C34 15, 66 15, 69 28 Z" fill="#dc2626" stroke="#facc15" stroke-width="1.5"/>
-        </svg>`
-      },
-      {
-        id: 'marco',
-        label: 'Lorde Marco',
-        roleTitle: 'Banqueiro Veneziano',
-        bg: 'from-purple-800 to-indigo-950',
-        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
-          <circle cx="50" cy="50" r="46" fill="#2e1065" stroke="#c084fc" stroke-width="2.5"/>
-          <path d="M16 90 C20 68, 34 62, 50 62 C66 62, 80 68, 84 90 Z" fill="#4c1d95" stroke="#facc15" stroke-width="1.5"/>
-          <path d="M34 35 C34 22, 66 22, 66 35 C66 51, 58 59, 50 59 C42 59, 34 51, 34 35 Z" fill="#f3c6a5"/>
-          <path d="M32 32 C32 16, 68 16, 68 32 C62 24, 38 24, 32 32 Z" fill="#271c19"/>
-          <circle cx="43" cy="39" r="2.2" fill="#1e1b4b"/>
-          <circle cx="57" cy="39" r="2.2" fill="#1e1b4b"/>
-          <path d="M44 49 Q51 53 57 48" fill="none" stroke="#7c2d12" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="70" cy="74" r="6" fill="#facc15" stroke="#fef08a" stroke-width="1.2"/>
-        </svg>`
-      },
-      {
-        id: 'isabella',
-        label: 'Condessa Isabella',
-        roleTitle: 'Rosa Negra',
-        bg: 'from-fuchsia-900 to-slate-950',
-        svg: `<svg viewBox="0 0 100 100" class="w-full h-full">
-          <circle cx="50" cy="50" r="46" fill="#3b0764" stroke="#f472b6" stroke-width="2.5"/>
-          <path d="M24 30 C18 58, 24 82, 30 90 L70 90 C76 82, 82 58, 76 30 Z" fill="#09090b"/>
-          <path d="M18 90 C22 70, 35 64, 50 64 C65 64, 78 70, 82 90 Z" fill="#831843" stroke="#f472b6" stroke-width="1.5"/>
-          <path d="M36 35 C36 23, 64 23, 64 35 C64 51, 57 58, 50 58 C43 58, 36 51, 36 35 Z" fill="#fde6d2"/>
-          <circle cx="43" cy="38" r="2.3" fill="#831843"/>
-          <circle cx="57" cy="38" r="2.3" fill="#831843"/>
-          <path d="M45 49 Q50 47 55 49 Q50 53 45 49 Z" fill="#881337"/>
-          <circle cx="38" cy="22" r="5" fill="#e11d48"/>
-          <circle cx="45" cy="20" r="4" fill="#be123c"/>
-        </svg>`
-      },
-      {
-        id: 'dante',
-        label: 'Mestre Dante',
-        roleTitle: 'Emissário Real',
-        bg: 'from-emerald-700 to-teal-950',
-        svg: ROLES.EMBAIXADOR.svg
-      }
-    ];
+    ROLES.INQUISIDOR = {
+      id: 'INQUISIDOR',
+      name: 'Inquisidor',
+      blockAlias: 'Fuxiqueiro',
+      actionName: 'Trocar 1 / Investigar',
+      blocksText: 'Bloqueia Extorsão (como Fuxiqueiro)',
+      description: 'Trocar: pega 1 carta do baralho, escolhe 1 para ficar e devolve a outra. Investigar: o alvo mostra 1 carta em segredo; você pode forçá-lo a trocá-la. Também bloqueia o Capitão (como Fuxiqueiro).',
+      colorClass: 'from-orange-900 via-amber-950 to-court-950',
+      borderClass: 'border-orange-400/70',
+      badgeClass: 'bg-orange-500/20 text-orange-200 border-orange-400/40',
+      accentHex: '#fb923c',
+      icon: 'fa-magnifying-glass',
+      svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="46" fill="#431407" stroke="#fb923c" stroke-width="2.5"/><path d="M14 90C18 66 32 60 50 60S82 66 86 90Z" fill="#7c2d12" stroke="#fdba74" stroke-width="1.5"/><path d="M26 66C18 36 32 12 50 10S82 36 74 66C66 56 34 56 26 66Z" fill="#292524" stroke="#fb923c" stroke-width="1.5"/><path d="M36 38C36 26 64 26 64 38C64 52 58 60 50 60S36 52 36 38Z" fill="#e8bd9a"/><path d="M34 30Q50 40 66 30Q64 22 50 22Q36 22 34 30Z" fill="#1c1917" opacity=".7"/><circle cx="43" cy="40" r="2.2" fill="#1c1917"/><circle cx="57" cy="40" r="2.2" fill="#1c1917"/><path d="M44 51Q50 49 56 51" stroke="#7c2d12" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="68" cy="68" r="9" fill="rgba(254,215,170,.25)" stroke="#facc15" stroke-width="3"/><line x1="74" y1="75" x2="84" y2="86" stroke="#facc15" stroke-width="4" stroke-linecap="round"/></svg>`
+    };
 
-    const BOT_NAMES = [
-      'Lady Caterina (Bot)',
-      'Ezio Valenti (Bot)',
-      'Cardeal Borgia (Bot)',
-      'Capitã Vittoria (Bot)',
-      'Mestre Dante (Bot)'
-    ];
+    function makeAvatar(o) {
+      const skin = o.skin || '#f3c6a5', hair = o.hair || '#271c19', st = o.style || 'short';
+      const cloth = o.cloth || '#7c2d12', trim = o.trim || '#facc15', bg = o.bg || '#3b0764';
+      let back = '', front = '', hat = '', acc = '';
+      if (st === 'long') back = `<path d="M26 34C24 62 28 84 34 90L66 90C72 84 76 62 74 34Z" fill="${hair}"/>`;
+      if (st === 'bun') back = `<circle cx="50" cy="14" r="8" fill="${hair}"/>`;
+      if (st === 'curly') back = [30, 42, 50, 58, 70].map((x, i) => `<circle cx="${x}" cy="${i % 2 ? 24 : 28}" r="9" fill="${hair}"/>`).join('') + `<circle cx="27" cy="40" r="7" fill="${hair}"/><circle cx="73" cy="40" r="7" fill="${hair}"/>`;
+      if (st !== 'bald') front = `<path d="M34 35C34 20 66 20 66 35C60 28 40 28 34 35Z" fill="${hair}"/>`;
+      const hc = o.hatC || '#1e293b';
+      if (o.hat === 'beret') hat = `<ellipse cx="46" cy="22" rx="24" ry="9" fill="${hc}" stroke="${trim}" stroke-width="1.2"/>`;
+      if (o.hat === 'tricorn') hat = `<path d="M16 32L50 14L84 32Q50 38 16 32Z" fill="${hc}" stroke="${trim}" stroke-width="2"/>`;
+      if (o.hat === 'crown') hat = `<path d="M33 28L36 16L44 24L50 14L56 24L64 16L67 28Z" fill="${trim}"/><circle cx="50" cy="22" r="2" fill="#dc2626"/>`;
+      if (o.hat === 'turban') hat = `<path d="M30 32C28 12 72 12 70 32C60 26 40 26 30 32Z" fill="${hc}" stroke="${trim}" stroke-width="1.2"/><circle cx="50" cy="20" r="3" fill="${trim}"/>`;
+      if (o.hat === 'hood') hat = `<path d="M24 62C20 34 34 12 50 10S80 34 76 62C70 40 60 28 50 28S30 40 24 62Z" fill="${hc}"/>`;
+      if (o.acc === 'glasses') acc = `<circle cx="43" cy="40" r="5" fill="rgba(255,255,255,.15)" stroke="${trim}" stroke-width="1.5"/><circle cx="57" cy="40" r="5" fill="rgba(255,255,255,.15)" stroke="${trim}" stroke-width="1.5"/>`;
+      if (o.acc === 'eyepatch') acc = `<line x1="35" y1="33" x2="65" y2="41" stroke="#111" stroke-width="2"/><circle cx="43" cy="40" r="4.5" fill="#111"/>`;
+      if (o.acc === 'scar') acc = `<line x1="60" y1="33" x2="55" y2="47" stroke="#be123c" stroke-width="1.8" stroke-linecap="round"/>`;
+      if (o.acc === 'mask') acc = `<path d="M34 37C34 31 44 32 50 36C56 32 66 31 66 37C66 44 56 46 50 42C44 46 34 44 34 37Z" fill="${trim}" opacity=".95"/>`;
+      if (o.acc === 'earring') acc = `<circle cx="35" cy="48" r="2.5" fill="${trim}"/><circle cx="65" cy="48" r="2.5" fill="${trim}"/>`;
+      if (o.acc === 'monocle') acc = `<circle cx="57" cy="40" r="5" fill="rgba(254,240,138,.2)" stroke="${trim}" stroke-width="1.5"/>`;
+      const beard = o.beard ? `<path d="M35 46Q50 56 65 46Q62 62 50 64Q38 62 35 46Z" fill="${o.beard}"/><path d="M41 49Q50 45 59 49" stroke="${o.beard}" stroke-width="2.5" fill="none"/>` : '';
+      const lips = o.beard ? '' : `<path d="M44 50Q50 54 56 50" stroke="${o.lips || '#9f1239'}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+      return `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="46" fill="${bg}" stroke="${trim}" stroke-width="2.5"/>${back}<path d="M14 90C18 68 32 62 50 62S82 68 86 90Z" fill="${cloth}" stroke="${trim}" stroke-width="1.5"/><path d="M38 64Q50 76 62 64" stroke="${trim}" stroke-width="2.5" fill="none"/><rect x="43" y="52" width="14" height="14" rx="5" fill="${skin}"/><path d="M35 35C35 22 65 22 65 35C65 51 58 59 50 59S35 51 35 35Z" fill="${skin}"/>${beard}<circle cx="43" cy="40" r="2.2" fill="#1c1917"/><circle cx="57" cy="40" r="2.2" fill="#1c1917"/>${lips}${acc}${front}${hat}</svg>`;
+    }
+
+    const AVATARS = [
+      ['lorenzo','Dom Lorenzo','Aristocrata Calculista','from-amber-700 to-yellow-950',{bg:'#78350f',cloth:'#6b21a8',beard:'#271c19',acc:'monocle',hat:'crown'}],
+      ['caterina','Lady Caterina','Dama de Ferro','from-rose-700 to-red-950',{bg:'#881337',cloth:'#be123c',skin:'#fde4cf',style:'long',acc:'mask',hat:'crown'}],
+      ['ezio','Ezio Valenti','Sombra de Florença','from-slate-800 to-rose-950',{bg:'#1e1b2e',cloth:'#18181b',trim:'#fb7185',acc:'scar',hat:'hood',hatC:'#27272a',style:'bald'}],
+      ['vittoria','Capitã Vittoria','Corsária do Adriático','from-sky-700 to-blue-950',{bg:'#0c4a6e',cloth:'#0284c7',trim:'#38bdf8',hair:'#7c2d12',style:'long',hat:'tricorn',acc:'earring'}],
+      ['borgia','Cardeal Borgia','Eminência Parda','from-red-800 to-rose-950',{bg:'#450a0a',cloth:'#991b1b',hair:'#cbd5e1',hat:'beret',hatC:'#dc2626',beard:'#cbd5e1'}],
+      ['marco','Lorde Marco','Banqueiro Veneziano','from-purple-800 to-indigo-950',{bg:'#2e1065',cloth:'#4c1d95',trim:'#c084fc',acc:'glasses'}],
+      ['isabella','Condessa Isabella','Rosa Negra','from-fuchsia-900 to-slate-950',{bg:'#3b0764',cloth:'#831843',trim:'#f472b6',skin:'#fde6d2',hair:'#09090b',style:'bun'}],
+      ['dante','Mestre Dante','Emissário Real','from-emerald-700 to-teal-950',{bg:'#065f46',cloth:'#047857',hair:'#cbd5e1',beard:'#cbd5e1',acc:'glasses',hat:'beret',hatC:'#064e3b'}],
+      ['leonardo','Leonardo','Inventor Excêntrico','from-yellow-700 to-amber-950',{bg:'#713f12',cloth:'#a16207',hair:'#e5e7eb',beard:'#e5e7eb',style:'long',hat:'beret',hatC:'#7f1d1d'}],
+      ['sofia','Sofia Medici','Banqueira Implacável','from-pink-700 to-rose-950',{bg:'#831843',cloth:'#9d174d',skin:'#fde4cf',hair:'#92400e',style:'curly',trim:'#fbcfe8',acc:'earring'}],
+      ['mustafa','Almirante Mustafa','Lobo do Mediterrâneo','from-teal-700 to-cyan-950',{bg:'#134e4a',cloth:'#0f766e',skin:'#c68642',hair:'#111',beard:'#111',hat:'turban',hatC:'#f5f5f4',trim:'#fde047'}],
+      ['amara','Rainha Amara','Soberana do Sul','from-orange-700 to-red-950',{bg:'#7c2d12',cloth:'#c2410c',skin:'#8d5524',hair:'#0a0a0a',style:'curly',hat:'crown',trim:'#fde047'}],
+      ['giovanni','Frei Giovanni','Monge Enigmático','from-stone-700 to-stone-950',{bg:'#292524',cloth:'#78350f',trim:'#d6d3d1',skin:'#e0ac82',style:'bald',beard:'#57534e',hat:'hood',hatC:'#57534e'}],
+      ['raven','Corvina','Espiã da Meia-Noite','from-indigo-800 to-black',{bg:'#1e1b4b',cloth:'#111827',trim:'#a5b4fc',skin:'#fde4cf',hair:'#020617',style:'long',acc:'mask'}],
+      ['takeshi','Takeshi','Mercador de Seda','from-red-700 to-stone-950',{bg:'#7f1d1d',cloth:'#b91c1c',skin:'#f1c9a5',hair:'#0a0a0a',style:'bun',trim:'#fef08a',beard:'#0a0a0a'}],
+      ['bianca','Bianca','Alquimista do Veneno','from-lime-700 to-green-950',{bg:'#14532d',cloth:'#166534',trim:'#bef264',hair:'#be185d',style:'long',acc:'glasses'}],
+      ['barba','Barba Ruiva','Pirata Aposentado','from-orange-800 to-amber-950',{bg:'#431407',cloth:'#92400e',hair:'#c2410c',beard:'#c2410c',acc:'eyepatch',hat:'tricorn',hatC:'#292524'}],
+      ['zuri','Zuri','Embaixadora de Mali','from-yellow-600 to-emerald-950',{bg:'#064e3b',cloth:'#ca8a04',skin:'#5c3a21',hair:'#0a0a0a',style:'curly',trim:'#fef08a',acc:'earring'}],
+      ['cassius','Cassius','Gladiador Banido','from-zinc-700 to-neutral-950',{bg:'#27272a',cloth:'#52525b',skin:'#d4a373',hair:'#1c1917',style:'short',acc:'scar',trim:'#e4e4e7'}],
+      ['viktor','Duque Viktor','Barão do Norte','from-blue-800 to-slate-950',{bg:'#1e3a8a',cloth:'#1d4ed8',trim:'#e5e7eb',skin:'#fde4cf',hair:'#fbbf24',beard:'#fbbf24',hat:'beret',hatC:'#1e293b'}]
+    ].map(([id, label, roleTitle, bg, o]) => ({ id, label, roleTitle, bg, svg: makeAvatar(o) }));
+
+    const rid = () => Math.random().toString(36).slice(2);
+    function rnd(n) { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; }
+    function botDelay(a, b) { return a + Math.floor(Math.random() * (b - a)); }
+    function rn(role, blocking) { const r = ROLES[role]; return r ? ((blocking && r.blockAlias) || r.name) : ''; }
+    function setFx(room, type, uid) { room.fx = { id: rid(), type, uid: uid || null }; }
+    function pickBotAvatar(players) {
+      const used = new Set(players.map(p => p.avatar));
+      const free = AVATARS.filter(a => !used.has(a.id));
+      const pool = free.length ? free : AVATARS;
+      return pool[rnd(pool.length)];
+    }
+
+    /* ---- Animações: log em tela, deal / shuffle / compra ---- */
+    let lastFxId = null, lastLogId = null, lastLogRoom = null, toastQ = [], toastBusy = false;
+    function queueLogToast(e) {
+      toastQ.push(e);
+      if (toastBusy) return;
+      toastBusy = true;
+      (function next() {
+        const it = toastQ.shift();
+        if (!it) { toastBusy = false; return; }
+        let L = document.getElementById('logToastLayer');
+        if (!L) {
+          L = document.createElement('div');
+          L.id = 'logToastLayer';
+          L.style.cssText = 'position:fixed;top:64px;left:50%;transform:translateX(-50%);z-index:9990;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;width:min(92vw,520px)';
+          document.body.appendChild(L);
+        }
+        const t = document.createElement('div');
+        t.className = 'log-toast lt-' + it.type;
+        t.textContent = it.text;
+        L.appendChild(t);
+        while (L.children.length > 3) L.firstChild.remove();
+        setTimeout(() => t.remove(), 3300);
+        setTimeout(next, 900);
+      })();
+    }
+
+    function playFx(fx, room) {
+      const view = document.getElementById('gameRoomView');
+      const rc = el => { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; };
+      const deckPt = rc(document.getElementById('deckCountDisplay').parentElement.parentElement);
+      const centerPt = { x: innerWidth / 2, y: innerHeight / 2 };
+      const seatPt = uid => {
+        const el = uid === myUid ? document.getElementById('mySecretCardsContainer') : document.getElementById('seat-card-' + uid);
+        return el ? rc(el) : centerPt;
+      };
+      const mk = p => { const c = document.createElement('div'); c.className = 'fx-card'; c.style.left = p.x + 'px'; c.style.top = p.y + 'px'; document.body.appendChild(c); return c; };
+      const fly = (from, to, delay, dur, rot) => {
+        const c = mk(from);
+        const a = c.animate([
+          { transform: 'translate(0,0) rotate(0deg) scale(1.1)', opacity: 1 },
+          { transform: `translate(${to.x - from.x}px,${to.y - from.y}px) rotate(${rot}deg) scale(.8)`, opacity: .9 }
+        ], { duration: dur, delay, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' });
+        a.onfinish = () => c.remove();
+        setTimeout(() => sfx.cardFlip(), delay);
+      };
+      if (fx.type === 'deal') {
+        let k = 0;
+        view.classList.add('dealing');
+        for (let r = 0; r < 2; r++) room.players.forEach(p => { fly(deckPt, seatPt(p.uid), k * 170, 560, rnd(21) - 10); k++; });
+        setTimeout(() => view.classList.remove('dealing'), k * 170 + 700);
+        return;
+      }
+      // shuffle / swap: baralho é embaralhado no centro; se houver uid, uma carta nova vai para o jogador
+      const cards = [0, 1, 2, 3].map(i => {
+        const c = mk(centerPt), d = i % 2 ? -1 : 1;
+        c.animate([
+          { transform: 'translateX(0) rotate(0)' }, { transform: `translateX(${d * 50}px) rotate(${d * 12}deg)` },
+          { transform: 'translateX(0) rotate(0)' }, { transform: `translateX(${-d * 50}px) rotate(${-d * 12}deg)` },
+          { transform: 'translateX(0) rotate(0)' }
+        ], { duration: 1300, delay: i * 70, easing: 'ease-in-out' });
+        return c;
+      });
+      const lb = document.createElement('div');
+      lb.textContent = '🔀 Embaralhando o Baralho da Corte...';
+      lb.style.cssText = 'position:fixed;left:50%;top:' + (centerPt.y + 62) + 'px;transform:translateX(-50%);z-index:9998;color:#f5e19c;font-weight:700;font-size:13px;pointer-events:none;text-shadow:0 2px 8px #000';
+      document.body.appendChild(lb);
+      [0, 350, 700, 1050].forEach(t => setTimeout(() => sfx.cardFlip(), t));
+      setTimeout(() => {
+        cards.forEach(c => c.remove()); lb.remove();
+        if (fx.uid) fly(centerPt, seatPt(fx.uid), 0, 650, 0);
+      }, 1500);
+    }
+
+    function afterRenderFx(room) {
+      if (lastLogRoom !== room.code) {
+        lastLogRoom = room.code;
+        const l = room.logs || [];
+        lastLogId = l.length ? l[l.length - 1].id : null;
+        lastFxId = room.fx ? room.fx.id : null;
+        lastProcessedEmojiId = room.lastEmoji ? room.lastEmoji.id : null;
+        return;
+      }
+      const logs = room.logs || [];
+      const i = logs.findIndex(l => l.id === lastLogId);
+      const fresh = i >= 0 ? logs.slice(i + 1) : logs.slice(-2);
+      if (logs.length) lastLogId = logs[logs.length - 1].id;
+      fresh.slice(-4).forEach(queueLogToast);
+      if (room.lastEmoji && room.lastEmoji.id !== lastProcessedEmojiId) {
+        lastProcessedEmojiId = room.lastEmoji.id;
+        spawnFloatingEmojiOnSeat(room.lastEmoji.uid, room.lastEmoji.emoji);
+      }
+      if (room.fx && room.fx.id !== lastFxId) {
+        lastFxId = room.fx.id;
+        playFx(room.fx, room);
+      }
+    }
 
     /*************************************************************************
      * 2. WEB AUDIO SYNTHESIZER (RENAISSANCE SOUND EFFECTS, ZERO EXTERNAL URLS)
@@ -1459,6 +1553,12 @@
           break;
         case 'AMBASSADOR_COMPLETE':
           await completeAmbassadorExchangeForPlayer(senderUid, payload.keptIndices);
+          break;
+        case 'INV_SHOW':
+          await invShowCardFor(senderUid, payload.cardId);
+          break;
+        case 'INV_DECIDE':
+          await invDecideFor(senderUid, !!payload.force);
           break;
         case 'CHAT_MSG':
           await sendChatMessageFromPlayer(senderUid, payload.name, payload.text);
@@ -1736,7 +1836,7 @@
     function shuffleArray(arr) {
       const copy = [...arr];
       for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = rnd(i + 1);
         [copy[i], copy[j]] = [copy[j], copy[i]];
       }
       return copy;
@@ -1764,10 +1864,11 @@
 
       if (withInstantBots) {
         for (let i = 0; i < 3; i++) {
+          const ba = pickBotAvatar(players);
           players.push({
             uid: `bot_${crypto.randomUUID().slice(0, 6)}`,
-            name: BOT_NAMES[i],
-            avatar: AVATARS[(i + 1) % AVATARS.length].id,
+            name: ba.label + ' (Bot)',
+            avatar: ba.id,
             isBot: true,
             coins: 2,
             cards: [],
@@ -2041,14 +2142,14 @@
         showToast('A mesa já possui o máximo de 6 jogadores.', 'info');
         return;
       }
-      const usedNames = new Set(currentRoomData.players.map(p => p.name));
-      const availableName = BOT_NAMES.find(n => !usedNames.has(n)) || `Nobre Autômato ${currentRoomData.players.length}`;
+      const ba = pickBotAvatar(currentRoomData.players);
+      const availableName = ba.label + ' (Bot)';
 
       currentRoomData.players.push({
         uid: `bot_${Math.random().toString(36).slice(2, 8)}`,
         peerId: null,
         name: availableName,
-        avatar: AVATARS[currentRoomData.players.length % AVATARS.length].id,
+        avatar: ba.id,
         isBot: true,
         coins: 2,
         cards: [],
@@ -2124,6 +2225,7 @@
         'highlight'
       );
 
+      setFx(currentRoomData, 'deal');
       sfx.cardFlip();
       document.getElementById('victoryModal').classList.add('hidden');
       await saveRoomState(currentRoomCode, currentRoomData);
@@ -2284,13 +2386,36 @@
           targetUid: target.uid,
           claimedRole: 'CAPITAO',
           challengeable: true,
-          blockableRoles: ['CAPITAO', 'EMBAIXADOR'],
+          blockableRoles: ['CAPITAO', 'EMBAIXADOR', 'INQUISIDOR'],
           blockableBy: 'TARGET',
           passedUids: [actor.uid],
           blockerUid: null,
           blockRole: null
         };
         appendLogEntry(currentRoomData, `🧭 ${actor.name} declarou CAPITÃO para extorquir 2 moedas de ${target.name}!`, 'action');
+        await saveRoomState(currentRoomCode, currentRoomData);
+        return;
+      }
+
+      // 6b. INQUISIDOR: Trocar 1 carta / Investigar
+      if (actionType === 'INQ_EXCHANGE' || actionType === 'INVESTIGATE') {
+        if (actionType === 'INVESTIGATE' && !target) return;
+        currentRoomData.phase = 'AWAIT_REACTION';
+        currentRoomData.pendingAction = {
+          type: actionType,
+          actorUid: actor.uid,
+          targetUid: actionType === 'INVESTIGATE' ? target.uid : null,
+          claimedRole: 'INQUISIDOR',
+          challengeable: true,
+          blockableRoles: [],
+          blockableBy: 'NONE',
+          passedUids: [actor.uid],
+          blockerUid: null,
+          blockRole: null
+        };
+        appendLogEntry(currentRoomData, actionType === 'INVESTIGATE'
+          ? `🔎 ${actor.name} declarou INQUISIDOR para investigar ${target.name}!`
+          : `🔎 ${actor.name} declarou INQUISIDOR para trocar 1 carta com o Baralho da Corte.`, 'action');
         await saveRoomState(currentRoomCode, currentRoomData);
         return;
       }
@@ -2339,7 +2464,7 @@
           const blocker = getPlayerByUid(currentRoomData, pa.blockerUid);
           appendLogEntry(
             currentRoomData,
-            `🛡️ O bloqueio de ${blocker ? blocker.name : 'Nobre'} (${ROLES[pa.blockRole]?.name}) não foi contestado. Ação impedida!`,
+            `🛡️ O bloqueio de ${blocker ? blocker.name : 'Nobre'} (${rn(pa.blockRole, true)}) não foi contestado. Ação impedida!`,
             'action'
           );
           advanceToNextAliveTurn(currentRoomData);
@@ -2366,7 +2491,7 @@
       sfx.block();
       appendLogEntry(
         currentRoomData,
-        `🛡️ ${blocker.name} declarou ${ROLES[blockRole].name} para BLOQUEAR a ação de ${actor ? actor.name : ''}!`,
+        `🛡️ ${blocker.name} declarou ${rn(blockRole, true)} para BLOQUEAR a ação de ${actor ? actor.name : ''}!`,
         'highlight'
       );
 
@@ -2395,7 +2520,7 @@
 
       appendLogEntry(
         currentRoomData,
-        `⚡ CONTESTAÇÃO! ${challenger.name} duvidou que ${challengedPlayer.name} possui ${ROLES[claimedRole].name}!`,
+        `⚡ CONTESTAÇÃO! ${challenger.name} duvidou que ${challengedPlayer.name} possui ${rn(claimedRole, isChallengingBlock)}!`,
         'danger'
       );
 
@@ -2409,6 +2534,7 @@
         currentRoomData.deck.push(oldCard.role);
         currentRoomData.deck = shuffleArray(currentRoomData.deck);
         const replacementRole = currentRoomData.deck.pop();
+        setFx(currentRoomData, 'swap', challengedPlayer.uid);
         challengedPlayer.cards[matchingCardIdx] = {
           id: crypto.randomUUID(),
           role: replacementRole,
@@ -2417,7 +2543,7 @@
 
         appendLogEntry(
           currentRoomData,
-          `✅ ${challengedPlayer.name} PROVOU ter ${ROLES[claimedRole].name}! Devolveu a carta ao baralho e comprou uma nova. ${challenger.name} perdeu a contestação!`,
+          `✅ ${challengedPlayer.name} PROVOU ter ${rn(claimedRole, isChallengingBlock)}! Devolveu a carta ao baralho e comprou uma nova. ${challenger.name} perdeu a contestação!`,
           'victory'
         );
 
@@ -2428,14 +2554,15 @@
         triggerInfluenceLoss(
           currentRoomData,
           challenger.uid,
-          `Contestou ${challengedPlayer.name} (${ROLES[claimedRole].name}) e errou!`,
-          nextStep
+          `Contestou ${challengedPlayer.name} (${rn(claimedRole, isChallengingBlock)}) e errou!`,
+          nextStep,
+          true // quem erra a contestação perde uma carta ALEATÓRIA
         );
       } else {
         // CHALLENGED PLAYER WAS BLUFFING!
         appendLogEntry(
           currentRoomData,
-          `🤥 BLEFE DESMASCARADO! ${challengedPlayer.name} NÃO possui ${ROLES[claimedRole].name} e perde 1 influência!`,
+          `🤥 BLEFE DESMASCARADO! ${challengedPlayer.name} NÃO possui ${rn(claimedRole, isChallengingBlock)} e perde 1 influência!`,
           'danger'
         );
 
@@ -2446,7 +2573,7 @@
         triggerInfluenceLoss(
           currentRoomData,
           challengedPlayer.uid,
-          `Foi pego blefando ${ROLES[claimedRole].name} por ${challenger.name}!`,
+          `Foi pego blefando ${rn(claimedRole, isChallengingBlock)} por ${challenger.name}!`,
           nextStep
         );
       }
@@ -2454,7 +2581,7 @@
       await saveRoomState(currentRoomCode, currentRoomData);
     }
 
-    function triggerInfluenceLoss(room, losingPlayerUid, reason, nextStepAfterLoss) {
+    function triggerInfluenceLoss(room, losingPlayerUid, reason, nextStepAfterLoss, randomPick = false) {
       const victim = getPlayerByUid(room, losingPlayerUid);
       if (!victim) {
         advanceToNextAliveTurn(room);
@@ -2478,6 +2605,15 @@
           'danger'
         );
         sfx.eliminate();
+        resumeAfterInfluenceLoss(room, nextStepAfterLoss);
+        return;
+      }
+
+      if (randomPick) {
+        const lost = unrevealed[rnd(unrevealed.length)];
+        lost.revealed = true;
+        sfx.eliminate();
+        appendLogEntry(room, `🎲 ${victim.name} errou a contestação e perdeu uma influência ALEATÓRIA: ${ROLES[lost.role].name}.`, 'danger');
         resumeAfterInfluenceLoss(room, nextStepAfterLoss);
         return;
       }
@@ -2592,10 +2728,26 @@
         return;
       }
 
-      if (pa.type === 'EXCHANGE') {
+      if (pa.type === 'INVESTIGATE') {
+        room.pendingAction = null;
+        const act = target ? target.cards.filter(c => !c.revealed) : [];
+        if (!target || !target.alive || !act.length) { advanceToNextAliveTurn(room); return; }
+        room.pendingInv = { actorUid: actor.uid, targetUid: target.uid, cardId: null };
+        if (act.length === 1 || target.isBot) {
+          room.pendingInv.cardId = act[rnd(act.length)].id;
+          room.phase = 'AWAIT_INV_DECIDE';
+          appendLogEntry(room, `🔎 ${target.name} mostrou uma carta em segredo a ${actor.name}.`, 'action');
+        } else {
+          room.phase = 'AWAIT_INV_SHOW';
+          appendLogEntry(room, `🔎 ${actor.name} investiga ${target.name}. Uma carta será mostrada em segredo...`, 'action');
+        }
+        return;
+      }
+
+      if (pa.type === 'EXCHANGE' || pa.type === 'INQ_EXCHANGE') {
         // Draw 2 cards from deck for Ambassador exchange
         room.deck = shuffleArray(room.deck);
-        const drawn = [room.deck.pop(), room.deck.pop()].filter(Boolean);
+        const drawn = Array.from({ length: pa.type === 'INQ_EXCHANGE' ? 1 : 2 }, () => room.deck.pop()).filter(Boolean);
         const activeCards = actor.cards.filter(c => !c.revealed).map(c => c.role);
         const pool = [...activeCards, ...drawn];
 
@@ -2613,14 +2765,17 @@
           });
           room.deck.push(...returned);
           room.deck = shuffleArray(room.deck);
-          appendLogEntry(room, `📜 ${actor.name} trocou cartas com o Baralho da Corte usando o Embaixador.`, 'action');
+          setFx(room, 'swap', actor.uid);
+          appendLogEntry(room, `📜 ${actor.name} trocou cartas com o Baralho da Corte (${pa.type === 'EXCHANGE' ? 'Embaixador' : 'Inquisidor'}).`, 'action');
           advanceToNextAliveTurn(room);
         } else {
           room.phase = 'AWAIT_EXCHANGE';
           room.pendingExchange = {
             actorUid: actor.uid,
             keepCount: activeCards.length,
-            poolRoles: pool
+            poolRoles: pool,
+            returnCount: drawn.length,
+            id: rid()
           };
         }
         return;
@@ -2628,6 +2783,46 @@
 
       advanceToNextAliveTurn(room);
     }
+
+    async function invShowCard(cardId) {
+      if (!currentRoomData || sendIntentToHost('INV_SHOW', { cardId })) return;
+      await invShowCardFor(myUid, cardId);
+    }
+    async function invShowCardFor(uid, cardId) {
+      const room = currentRoomData, pi = room && room.pendingInv;
+      if (!room || room.phase !== 'AWAIT_INV_SHOW' || !pi || pi.targetUid !== uid) return;
+      const tg = getPlayerByUid(room, uid);
+      if (!tg || !tg.cards.some(c => c.id === cardId && !c.revealed)) return;
+      pi.cardId = cardId;
+      room.phase = 'AWAIT_INV_DECIDE';
+      appendLogEntry(room, `🔎 ${tg.name} mostrou uma carta em segredo ao Inquisidor.`, 'action');
+      await saveRoomState(currentRoomCode, room);
+    }
+    async function invDecide(force) {
+      if (!currentRoomData || sendIntentToHost('INV_DECIDE', { force })) return;
+      await invDecideFor(myUid, force);
+    }
+    async function invDecideFor(uid, force) {
+      const room = currentRoomData, pi = room && room.pendingInv;
+      if (!room || room.phase !== 'AWAIT_INV_DECIDE' || !pi || pi.actorUid !== uid) return;
+      const actor = getPlayerByUid(room, pi.actorUid), tg = getPlayerByUid(room, pi.targetUid);
+      const card = tg && tg.cards.find(c => c.id === pi.cardId && !c.revealed);
+      if (force && card) {
+        room.deck.push(card.role);
+        room.deck = shuffleArray(room.deck);
+        card.role = room.deck.pop();
+        card.id = rid();
+        setFx(room, 'swap', tg.uid);
+        appendLogEntry(room, `🔄 ${actor.name} forçou ${tg.name} a trocar a carta mostrada por uma nova do baralho!`, 'highlight');
+      } else if (tg) {
+        appendLogEntry(room, `🔎 ${actor.name} deixou ${tg.name} manter a carta mostrada.`, 'action');
+      }
+      room.pendingInv = null;
+      advanceToNextAliveTurn(room);
+      await saveRoomState(currentRoomCode, room);
+    }
+    window.invShowCard = invShowCard;
+    window.invDecide = invDecide;
 
     async function completeAmbassadorExchange(keptIndices) {
       document.getElementById('ambassadorModal').classList.add('hidden');
@@ -2667,7 +2862,8 @@
       currentRoomData.pendingExchange = null;
 
       sfx.cardFlip();
-      appendLogEntry(currentRoomData, `📜 ${actor.name} concluiu a troca secreta do Embaixador com a Corte.`, 'action');
+      appendLogEntry(currentRoomData, `📜 ${actor.name} concluiu a troca secreta com a Corte.`, 'action');
+      setFx(currentRoomData, 'swap', actor.uid);
       advanceToNextAliveTurn(currentRoomData);
       await saveRoomState(currentRoomCode, currentRoomData);
     }
@@ -2688,7 +2884,7 @@
         if (current && current.isBot && current.alive) {
           botThinkingTimer = setTimeout(() => {
             executeBotTurnDecision(room, current);
-          }, 1300);
+          }, botDelay(2800, 4300));
         }
         return;
       }
@@ -2700,9 +2896,24 @@
           botThinkingTimer = setTimeout(() => {
             const unrevealed = victim.cards.filter(c => !c.revealed);
             if (unrevealed.length > 0) {
-              selectCardToLose(victim.uid, unrevealed[0].id);
+              selectCardToLose(victim.uid, unrevealed[rnd(unrevealed.length)].id);
             }
-          }, 1100);
+          }, botDelay(2200, 3200));
+        }
+        return;
+      }
+
+      // 2b. Bot Inquisidor decides after seeing the investigated card
+      if (room.phase === 'AWAIT_INV_DECIDE' && room.pendingInv) {
+        const pi = room.pendingInv;
+        const a = getPlayerByUid(room, pi.actorUid);
+        if (a && a.isBot) {
+          botThinkingTimer = setTimeout(() => {
+            const tg = getPlayerByUid(currentRoomData, pi.targetUid);
+            const c = tg && tg.cards.find(x => x.id === pi.cardId);
+            const force = c && (['DUQUE', 'ASSASSINO', 'CAPITAO'].includes(c.role) ? Math.random() < 0.8 : Math.random() < 0.25);
+            invDecideFor(a.uid, !!force);
+          }, botDelay(2600, 3800));
         }
         return;
       }
@@ -2716,7 +2927,7 @@
         if (pendingBots.length > 0) {
           botThinkingTimer = setTimeout(() => {
             executeBotReactionDecision(room, pendingBots[0]);
-          }, 1100);
+          }, botDelay(3200, 4800));
         }
       }
     }
@@ -2757,7 +2968,11 @@
         await declareTurnAction(bot.uid, 'EXCHANGE');
         return;
       }
-      if (roll < 0.86) {
+      if ((myRoles.includes('INQUISIDOR') && roll < 0.8) || roll < 0.76) {
+        await declareTurnAction(bot.uid, Math.random() < 0.5 ? 'INVESTIGATE' : 'INQ_EXCHANGE', mainTarget.uid);
+        return;
+      }
+      if (roll < 0.9) {
         await declareTurnAction(bot.uid, 'FOREIGN_AID');
         return;
       }
@@ -2806,6 +3021,10 @@
           }
           if (myRoles.includes('EMBAIXADOR')) {
             await submitBlockAction(bot.uid, 'EMBAIXADOR');
+            return;
+          }
+          if (myRoles.includes('INQUISIDOR')) {
+            await submitBlockAction(bot.uid, 'INQUISIDOR');
             return;
           }
           if (Math.random() < 0.28) {
@@ -2864,21 +3083,16 @@
         }
       }
 
-      // Floating Emoji Trigger
-      if (roomData.lastEmoji && roomData.lastEmoji.id !== lastProcessedEmojiId) {
-        lastProcessedEmojiId = roomData.lastEmoji.id;
-        spawnFloatingEmojiOnSeat(roomData.lastEmoji.uid, roomData.lastEmoji.emoji);
-      }
-
       // Render components
       renderSeatsGrid(roomData);
       renderCenterStageAndBanners(roomData);
       renderMySecretHandAndControls(roomData);
       renderLogsAndChat(roomData);
+      afterRenderFx(roomData);
 
       // Ambassador Modal Check
       if (roomData.phase === 'AWAIT_EXCHANGE' && roomData.pendingExchange && roomData.pendingExchange.actorUid === myUid) {
-        openAmbassadorExchangeModal(roomData.pendingExchange);
+        if (window._exId !== roomData.pendingExchange.id) { window._exId = roomData.pendingExchange.id; openAmbassadorExchangeModal(roomData.pendingExchange); }
       } else {
         document.getElementById('ambassadorModal').classList.add('hidden');
       }
@@ -3056,7 +3270,27 @@
       if (room.phase === 'AWAIT_EXCHANGE' && room.pendingExchange) {
         const actor = getPlayerByUid(room, room.pendingExchange.actorUid);
         headline.textContent = `📜 ${actor ? actor.name : 'Nobre'} está trocando cartas com o Baralho da Corte...`;
-        subtext.textContent = 'O Embaixador examina secretamente 2 cartas da Corte.';
+        subtext.textContent = 'Examinando secretamente cartas do Baralho da Corte.';
+        return;
+      }
+
+      if ((room.phase === 'AWAIT_INV_SHOW' || room.phase === 'AWAIT_INV_DECIDE') && room.pendingInv) {
+        const pi = room.pendingInv, ia = getPlayerByUid(room, pi.actorUid), tg = getPlayerByUid(room, pi.targetUid);
+        const T = document.getElementById('lossBannerTitle'), box = document.getElementById('lossCardsSelectionContainer');
+        const bcls = 'px-4 py-2.5 rounded-xl text-white font-bold text-xs sm:text-sm shadow-lg border border-amber-300 ';
+        const wait = '<span class="text-xs text-rose-200 animate-pulse">Aguardando...</span>';
+        lossBanner.classList.remove('hidden');
+        document.getElementById('lossBannerReason').textContent = `🔎 ${ia ? ia.name : ''} investiga ${tg ? tg.name : ''}`;
+        if (room.phase === 'AWAIT_INV_SHOW') {
+          if (pi.targetUid === myUid && tg) {
+            T.textContent = 'O Inquisidor investiga você! Escolha qual carta mostrar em segredo:';
+            box.innerHTML = tg.cards.filter(c => !c.revealed).map(c => `<button onclick="window.invShowCard('${c.id}')" class="${bcls}bg-amber-600 hover:bg-amber-500">Mostrar ${ROLES[c.role].name}</button>`).join('');
+          } else { T.textContent = `Aguardando ${tg ? tg.name : 'o alvo'} escolher qual carta mostrar...`; box.innerHTML = wait; }
+        } else if (pi.actorUid === myUid && tg) {
+          const cd = tg.cards.find(c => c.id === pi.cardId);
+          T.textContent = `Você viu: ${cd ? ROLES[cd.role].name : '?'} de ${tg.name}. O que fazer?`;
+          box.innerHTML = `<button onclick="window.invDecide(false)" class="${bcls}bg-court-800 hover:bg-court-700">Deixar manter</button><button onclick="window.invDecide(true)" class="${bcls}bg-rose-600 hover:bg-rose-500">Forçar troca</button>`;
+        } else { T.textContent = `Aguardando ${ia ? ia.name : 'o Inquisidor'} decidir...`; box.innerHTML = wait; }
         return;
       }
 
@@ -3109,7 +3343,9 @@
             TAX: `declarou DUQUE para Taxar (+3 moedas)`,
             ASSASSINATE: `declarou ASSASSINO para atacar ${target ? target.name : ''}`,
             STEAL: `declarou CAPITÃO para extorquir 2 moedas de ${target ? target.name : ''}`,
-            EXCHANGE: `declarou EMBAIXADOR para trocar cartas com a Corte`
+            EXCHANGE: `declarou EMBAIXADOR para trocar cartas com a Corte`,
+            INQ_EXCHANGE: `declarou INQUISIDOR para trocar 1 carta com a Corte`,
+            INVESTIGATE: `declarou INQUISIDOR para investigar ${target ? target.name : ''}`
           };
           document.getElementById('reactionPhaseTag').textContent = 'Janela de Reação da Corte';
           document.getElementById('reactionTitleText').textContent = `${actor ? actor.name : 'Jogador'} ${actionLabels[pa.type] || ''}`;
@@ -3147,7 +3383,7 @@
               pa.blockableRoles.forEach(bRole => {
                 const blockBtn = document.createElement('button');
                 blockBtn.className = 'px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-court-950 font-bold text-xs sm:text-sm shadow-lg transition flex items-center gap-1.5';
-                blockBtn.innerHTML = `<i class="fa-solid fa-shield-halved"></i><span>Bloquear c/ ${ROLES[bRole].name}</span>`;
+                blockBtn.innerHTML = `<i class="fa-solid fa-shield-halved"></i><span>Bloquear c/ ${rn(bRole, true)}</span>`;
                 blockBtn.onclick = () => submitBlockAction(myUid, bRole);
                 btnContainer.appendChild(blockBtn);
               });
@@ -3155,7 +3391,7 @@
           }
         } else if (room.phase === 'AWAIT_BLOCK_REACTION') {
           document.getElementById('reactionPhaseTag').textContent = 'Bloqueio Declarado!';
-          document.getElementById('reactionTitleText').textContent = `${blocker ? blocker.name : 'Jogador'} bloqueou declarando ${ROLES[pa.blockRole]?.name || ''}!`;
+          document.getElementById('reactionTitleText').textContent = `${blocker ? blocker.name : 'Jogador'} bloqueou declarando ${rn(pa.blockRole, true)}!`;
 
           const alreadyPassed = (pa.passedUids || []).includes(myUid);
           if (!me || !me.alive) {
@@ -3175,7 +3411,7 @@
 
             const chalBlockBtn = document.createElement('button');
             chalBlockBtn.className = 'px-4 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-red-700 hover:from-rose-500 hover:to-red-600 text-white font-bold text-xs sm:text-sm shadow-lg transition flex items-center gap-1.5';
-            chalBlockBtn.innerHTML = `<i class="fa-solid fa-bolt"></i><span>Contestar ${ROLES[pa.blockRole]?.name}!</span>`;
+            chalBlockBtn.innerHTML = `<i class="fa-solid fa-bolt"></i><span>Contestar ${rn(pa.blockRole, true)}!</span>`;
             chalBlockBtn.onclick = () => submitChallenge(myUid);
             btnContainer.appendChild(chalBlockBtn);
           }
@@ -3270,7 +3506,8 @@
       const titles = {
         COUP: 'Escolha o Alvo do Golpe de Estado (-7 moedas)',
         ASSASSINATE: 'Escolha o Alvo do Assassino (-3 moedas)',
-        STEAL: 'Escolha de Quem Extorquir 2 Moedas (Capitão)'
+        STEAL: 'Escolha de Quem Extorquir 2 Moedas (Capitão)',
+        INVESTIGATE: 'Escolha Quem Investigar (Inquisidor)'
       };
       document.getElementById('targetModalTitle').textContent = titles[actionType] || 'Escolha o Alvo';
       const listEl = document.getElementById('targetPlayersList');
@@ -3376,7 +3613,9 @@
     function renderLogsAndChat(room) {
       const logBox = document.getElementById('gameLogContainer');
       const logs = room.logs || [];
-      logBox.innerHTML = logs.map(item => {
+      const prevIdx = logs.findIndex(l => l.id === window._lrId);
+      window._lrId = logs.length ? logs[logs.length - 1].id : null;
+      logBox.innerHTML = logs.map((item, li) => {
         const styleMap = {
           system: 'bg-court-950/70 border-amber-500/20 text-amber-200/75',
           action: 'bg-court-950/90 border-amber-500/30 text-amber-100',
@@ -3385,13 +3624,13 @@
           victory: 'bg-emerald-950/70 border-emerald-400/50 text-emerald-200 font-bold'
         };
         return `
-          <div class="p-2.5 rounded-xl border ${styleMap[item.type] || styleMap.action} leading-relaxed">
+          <div class="p-2.5 rounded-xl border ${styleMap[item.type] || styleMap.action} leading-relaxed ${prevIdx >= 0 && li > prevIdx ? 'log-in' : ''}">
             <span class="text-[10px] opacity-60 mr-1.5 font-mono">[${escapeHtml(item.time)}]</span>
             <span>${escapeHtml(item.text)}</span>
           </div>
         `;
       }).join('');
-      logBox.scrollTop = logBox.scrollHeight;
+      logBox.scrollTo({ top: logBox.scrollHeight, behavior: 'smooth' });
 
       const chatBox = document.getElementById('chatMessagesContainer');
       const chats = room.chats || [];
@@ -3459,13 +3698,14 @@
 
     function spawnFloatingEmojiOnSeat(uid, emoji) {
       sfx.emojiPop();
-      const anchor = document.getElementById(`emoji-anchor-${uid}`);
-      if (!anchor) return;
+      const seat = document.getElementById('seat-card-' + uid);
+      const r = seat ? seat.getBoundingClientRect() : { left: innerWidth / 2 - 20, top: innerHeight / 2, width: 40 };
       const el = document.createElement('div');
-      el.className = 'floating-emoji text-3xl sm:text-4xl drop-shadow-lg select-none';
+      el.className = 'floating-emoji';
       el.textContent = emoji;
-      anchor.appendChild(el);
-      setTimeout(() => el.remove(), 2600);
+      el.style.cssText = `position:fixed;left:${r.left + r.width / 2 - 20}px;top:${r.top + 10}px;font-size:2.6rem;z-index:9999;pointer-events:none`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 2700);
     }
 
     /*************************************************************************
@@ -3789,7 +4029,7 @@
       document.querySelectorAll('.action-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const action = btn.dataset.action;
-          if (action === 'COUP' || action === 'ASSASSINATE' || action === 'STEAL') {
+          if (action === 'COUP' || action === 'ASSASSINATE' || action === 'STEAL' || action === 'INVESTIGATE') {
             openTargetSelectionModal(action);
           } else {
             declareTurnAction(myUid, action);
