@@ -209,8 +209,8 @@
   <div id="toastContainer" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-none w-11/12 max-w-md"></div>
 
   <!-- LOBBY -->
-  <main id="lobbyView" class="flex-1 flex flex-col items-center justify-center p-4 sm:p-6">
-    <div class="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+  <main id="lobbyView" class="flex-1 min-h-0 overflow-y-auto flex flex-col items-center p-4 sm:p-6">
+    <div class="w-full max-w-4xl my-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
       <div class="lg:col-span-7 bg-court-900/90 backdrop-blur-xl rounded-3xl p-6 sm:p-8 gold-border flex flex-col justify-between relative overflow-hidden">
         <div class="absolute -right-12 -top-12 w-44 h-44 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
         <div>
@@ -1004,6 +1004,39 @@
       return current;
     }
 
+    // Título escolhido pelo jogador (entre os desbloqueados); se nenhum foi escolhido, usa o mais alto
+    function getEquippedTitleObj(wins = (myRankStats.wins || 0)) {
+      const eq = myRankStats.equippedTitle;
+      if (typeof eq === 'number' && eq <= wins) {
+        const t = RANK_TITLES.find(x => x.minWins === eq);
+        if (t) return t;
+      }
+      return getRankTitleObj(wins);
+    }
+
+    // Prévia de como o perfil aparece na mesa
+    function renderProfilePreview() {
+      const box = document.getElementById('profilePreviewBox');
+      if (!box) return;
+      const av = AVATARS.find(a => a.id === myAvatar) || AVATARS[0];
+      const nameInput = document.getElementById('playerNameInput');
+      const name = ((nameInput && nameInput.value.trim()) || av.label).slice(0, 18);
+      const t = getEquippedTitleObj();
+      box.innerHTML = `
+        <div class="rounded-2xl p-2.5 bg-court-950/90 border border-amber-500/30 flex items-center gap-2.5">
+          <div class="w-14 h-14 rounded-2xl overflow-hidden bg-gradient-to-br ${av.bg} border-2 border-amber-400/60 shrink-0 shadow-lg"><div class="w-full h-full">${av.svg}</div></div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="font-renaissance font-bold text-sm text-amber-100 truncate">${escapeHtml(name)}</span>
+              <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/25 text-amber-300 font-bold">VOCÊ</span>
+            </div>
+            <div class="text-[10px] ${t.badgeClass} truncate"><i class="fa-solid fa-award mr-1"></i>${escapeHtml(t.title)}</div>
+            <div class="text-[10px] text-amber-300/70 truncate">${escapeHtml(av.roleTitle || 'Nobre da Corte')}</div>
+            <div class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-400/35 text-amber-300 text-[11px] font-bold"><i class="fa-solid fa-coins text-amber-400 text-[10px]"></i><span>2</span></div>
+          </div>
+        </div>`;
+    }
+
     function isAvatarUnlocked(av, wins = (myRankStats.wins || 0)) {
       return (av.requiredWins || 0) <= wins;
     }
@@ -1011,9 +1044,13 @@
     // Linha com o título de rank exibida abaixo do nome na mesa
     function seatRankHtml(player, isMe) {
       if (player.isBot) return '';
-      const w = isMe ? (myRankStats.wins || 0) : player.wins;
-      if (typeof w !== 'number') return '';
-      const t = getRankTitleObj(w);
+      let t;
+      if (isMe) {
+        t = getEquippedTitleObj(myRankStats.wins || 0);
+      } else {
+        if (typeof player.wins !== 'number') return '';
+        t = (typeof player.titleMin === 'number' && RANK_TITLES.find(x => x.minWins === player.titleMin)) || getRankTitleObj(player.wins);
+      }
       return `<div class="text-[10px] ${t.badgeClass} truncate"><i class="fa-solid fa-award mr-1"></i>${escapeHtml(t.title)}</div>`;
     }
 
@@ -1056,7 +1093,11 @@
       if (didWin) {
         const newWins = myRankStats.wins;
         const newTitle = RANK_TITLES.find(t => t.minWins === newWins);
-        if (newTitle) showToast(`Novo título conquistado: ${newTitle.title}!`, 'info');
+        if (newTitle) {
+          myRankStats.equippedTitle = newTitle.minWins;
+          try { localStorage.setItem(RANK_STORAGE_KEY, JSON.stringify(myRankStats)); } catch (e) {}
+          showToast(`Novo título conquistado: ${newTitle.title}!`, 'info');
+        }
         AVATARS.filter(a => a.requiredWins === newWins).forEach(a => showToast(`Avatar lendário desbloqueado: ${a.label}!`, 'info'));
       }
       renderInitialStaticViews();
@@ -1400,9 +1441,17 @@
 
       const rankPanel = document.getElementById('myRankPanel');
       if (rankPanel) {
-        const rankObj = getRankTitleObj(wins);
+        const rankObj = getEquippedTitleObj(wins);
         const nextRank = RANK_TITLES.find(t => t.minWins > wins);
         const nextAvatar = AVATARS.filter(a => a.requiredWins > wins).sort((a, b) => a.requiredWins - b.requiredWins)[0];
+        const titleChips = RANK_TITLES.map(t => {
+          const locked = t.minWins > wins;
+          const equipped = t.minWins === rankObj.minWins;
+          const stateCls = equipped
+            ? 'bg-amber-500/25 border-amber-400 ring-1 ring-amber-300/50'
+            : locked ? 'bg-court-950/60 border-amber-500/10 opacity-60 cursor-not-allowed' : 'bg-court-950/85 border-amber-500/30 hover:border-amber-400';
+          return `<button type="button" data-title-min="${t.minWins}" class="title-pick-btn px-2 py-1 rounded-lg border text-[10px] transition flex items-center gap-1 ${stateCls} ${locked ? 'text-amber-100/40' : t.badgeClass}">${locked ? '<i class="fa-solid fa-lock text-[9px]"></i>' : equipped ? '<i class="fa-solid fa-check text-[9px]"></i>' : ''}<span>${escapeHtml(t.title)}</span>${locked ? `<span class="text-amber-200/40">(${t.minWins})</span>` : ''}</button>`;
+        }).join('');
         rankPanel.innerHTML = `
           <div class="flex items-center justify-between gap-2">
             <div class="min-w-0">
@@ -1415,10 +1464,40 @@
               <div><div class="text-base font-bold text-rose-300 leading-none">${myRankStats.bestStreak || 0}</div><div class="text-[9px] uppercase text-amber-300/60">Recorde</div></div>
             </div>
           </div>
-          <div class="mt-1.5 text-[10px] text-amber-200/60 leading-snug">
-            ${nextRank ? `Próximo título: <b class="text-amber-300">${escapeHtml(nextRank.title)}</b> em ${nextRank.minWins - wins} vitória(s).` : 'Você alcançou o título máximo da Corte!'}
+          <div class="mt-2.5">
+            <div class="text-[10px] uppercase tracking-wider text-amber-300/70 font-semibold mb-1">Prévia na mesa</div>
+            <div id="profilePreviewBox"></div>
+          </div>
+          <div class="mt-2.5">
+            <div class="text-[10px] uppercase tracking-wider text-amber-300/70 font-semibold mb-1">Escolha seu título (toque para equipar)</div>
+            <div id="titlePickerGrid" class="flex flex-wrap gap-1.5">${titleChips}</div>
+          </div>
+          <div class="mt-2 text-[10px] text-amber-200/60 leading-snug">
+            ${nextRank ? `Próximo título: <b class="text-amber-300">${escapeHtml(nextRank.title)}</b> em ${nextRank.minWins - wins} vitória(s).` : 'Você desbloqueou todos os títulos da Corte!'}
             ${nextAvatar ? ` Próximo avatar: <b class="text-amber-300">${escapeHtml(nextAvatar.label)}</b> em ${nextAvatar.requiredWins - wins}.` : ''}
           </div>`;
+
+        rankPanel.querySelectorAll('.title-pick-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const min = Number(btn.dataset.titleMin);
+            const t = RANK_TITLES.find(x => x.minWins === min);
+            if (!t) return;
+            if (t.minWins > (myRankStats.wins || 0)) {
+              showToast(`Título bloqueado: vença ${t.minWins} partidas (você tem ${myRankStats.wins || 0}).`, 'info');
+              return;
+            }
+            myRankStats.equippedTitle = t.minWins;
+            try { localStorage.setItem(RANK_STORAGE_KEY, JSON.stringify(myRankStats)); } catch (e) {}
+            renderInitialStaticViews();
+          });
+        });
+
+        const nameEl = document.getElementById('playerNameInput');
+        if (nameEl && !nameEl.dataset.previewBound) {
+          nameEl.addEventListener('input', renderProfilePreview);
+          nameEl.dataset.previewBound = '1';
+        }
+        renderProfilePreview();
       }
 
       const tapLabel = document.getElementById('rankTitleTapLabel');
@@ -1700,7 +1779,7 @@
       isRoomHost = true;
 
       const hostPlayer = {
-        uid: myUid, name: myName, avatar: myAvatar, wins: myRankStats.wins || 0, isBot: false, coins: 2, cards: [], alive: true,
+        uid: myUid, name: myName, avatar: myAvatar, wins: myRankStats.wins || 0, titleMin: getEquippedTitleObj().minWins, isBot: false, coins: 2, cards: [], alive: true,
         camOn: camEnabled, micOn: micEnabled, peerId: `${PEER_ROOM_PREFIX}${roomCode}`
       };
       const players = [hostPlayer];
@@ -1769,6 +1848,7 @@
                   currentRoomData.players[existsIdx].name = joining.name;
                   currentRoomData.players[existsIdx].avatar = joining.avatar;
                   currentRoomData.players[existsIdx].wins = joining.wins;
+                  currentRoomData.players[existsIdx].titleMin = joining.titleMin;
                   currentRoomData.players[existsIdx].peerId = joining.peerId;
                 }
                 await saveRoomState(currentRoomCode, currentRoomData);
@@ -1826,7 +1906,7 @@
           conn.send({
             type: 'JOIN_REQUEST',
             player: {
-              uid: myUid, name: myName, avatar: myAvatar, wins: myRankStats.wins || 0, isBot: false, coins: 2, cards: [], alive: true,
+              uid: myUid, name: myName, avatar: myAvatar, wins: myRankStats.wins || 0, titleMin: getEquippedTitleObj().minWins, isBot: false, coins: 2, cards: [], alive: true,
               camOn: camEnabled, micOn: micEnabled, peerId: clientPeerId
             }
           });
