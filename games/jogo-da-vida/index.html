@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="robots" content="noindex,nofollow">
+<title>Jogo da Vida BR</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<style>
+html,body{height:100%}
+body{margin:0;background:radial-gradient(ellipse at 50% 0%,#134e4a,#091e1c 65%,#05100f);color:#f8f1dc;font-family:Inter,sans-serif;user-select:none;overflow-x:hidden}
+.f{font-family:'Alfa Slab One',serif;font-weight:400}
+.lousa{background:#112926;border:4px solid #d4af37;border-radius:16px;box-shadow:inset 0 0 30px #0009,0 8px 20px #0009}
+.card-loc{background:linear-gradient(160deg,#183834,#0d211f);border:2px solid #2dd4bf44;border-radius:14px;padding:10px;transition:transform .15s,border-color .15s;cursor:pointer}
+.card-loc:hover{transform:translateY(-3px);border-color:#fbbf24}
+.bt{padding:9px 14px;border-radius:11px;font-weight:700;transition:opacity .15s}.bt:disabled{opacity:.38;cursor:not-allowed}
+.bar{height:8px;background:#091917;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;transition:width .35s}
+.tst{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#000e;border:1px solid #fbbf24;padding:7px 14px;border-radius:10px;font-size:13px;z-index:90;max-width:92vw;text-align:center}
+button{cursor:pointer}
+</style>
+</head>
+<body>
+<div id="tc"></div>
+<div id="app" class="max-w-3xl mx-auto p-3 pb-10 min-h-full"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+let ac;function bp(f=440,d=.1,ty='sine'){try{ac=ac||new AudioContext();const o=ac.createOscillator(),v=ac.createGain();o.type=ty;o.frequency.value=f;v.gain.value=.07;o.connect(v);v.connect(ac.destination);o.start();v.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}}
+function toast(t){const d=document.createElement('div');d.className='tst';d.textContent=t;$('tc').appendChild(d);setTimeout(()=>d.remove(),2800)}
+
+/* ============ DADOS DO JOGO DA VIDA BR ============ */
+const ORIGINS=[
+{id:'padrao',i:'🎒',n:'Recém-Formado',d:'Equilibrado: começa com R$ 350 na mão e 60h por semana.',req:'Inicial',ok:()=>true},
+{id:'bolsista',i:'🎓',n:'Bolsista Dedicado',d:'Já começa com o Curso de Informática/Inglês concluído.',req:'Chegar aos 40 anos 1 vez',ok:m=>m.plays>=1},
+{id:'correria',i:'⚡',n:'Rei da Correria',d:'Tem +6h extras toda semana (66h) e ganha +R$ 2/h em bicos.',req:'Conquistar 2 Troféus',ok:m=>m.tr.length>=2},
+{id:'herdeiro',i:'👵',n:'Xodó da Vó',d:'Começa com R$ 800 na Poupança e uma AirFryer em casa.',req:'Conquistar 4 Troféus',ok:m=>m.tr.length>=4},
+{id:'faria',i:'📈',n:'Faria Limer Mirim',d:'Poupança rende 16% por turno (em vez de 12%) e já tem Roupa Social.',req:'Vencer 1 partida',ok:m=>m.wins>=1}
+];
+
+const JOBS=[
+{id:0,n:'Entregador de App',w:14,edu:0,suit:0,xp:0},
+{id:1,n:'Atendente de Lanchonete',w:18,edu:0,suit:0,xp:12},
+{id:2,n:'Auxiliar de Escritório',w:25,edu:1,suit:1,xp:28},
+{id:3,n:'Analista Técnico',w:35,edu:2,suit:1,xp:50},
+{id:4,n:'Coordenador Pleno',w:48,edu:3,suit:1,xp:80},
+{id:5,n:'Gerente / Concursado',w:65,edu:4,suit:1,xp:115},
+{id:6,n:'Diretor / Sócio da Firma',w:88,edu:5,suit:1,xp:155}
+];
+
+const COURSES=[
+{id:1,n:'Informática & Inglês',cost:180,hrs:18,pts:15},
+{id:2,n:'Curso Técnico (SENAI)',cost:350,hrs:24,pts:20},
+{id:3,n:'Faculdade (Graduação)',cost:650,hrs:32,pts:25},
+{id:4,n:'Pós-Graduação / MBA',cost:950,hrs:28,pts:20},
+{id:5,n:'Mentoria Executiva / Concurso',cost:1300,hrs:30,pts:20}
+];
+
+const HOMES=[
+{id:0,n:'Quarto em República',rent:140,buy:0,hap:0,str:0,hlth:0,d:'Beliche, banheiro dividido e miojo na pia.'},
+{id:1,n:'Quitinete no Centro',rent:300,buy:0,hap:5,str:-5,hlth:2,d:'Pequena, mas é seu cantinho sem bagunça.'},
+{id:2,n:'Apê de 2 Quartos',rent:560,buy:0,hap:12,str:-10,hlth:5,d:'Sacada com churrasqueira e portaria 24h.'},
+{id:3,n:'Casa Própria Quitada',rent:0,buy:5800,hap:22,str:-15,hlth:8,d:'Sem aluguel nunca mais! Patrimônio garantido.'}
+];
+
+const ITEMS=[
+{id:'suit',i:'👔',n:'Roupa de Entrevista',p:240,val:200,d:'Obrigatória para cargos de Escritório ou maiores.'},
+{id:'air',i:'🍟',n:'AirFryer Inox',p:380,val:300,d:'Economiza +4h toda semana e libera a Feira Completa.'},
+{id:'bed',i:'🛏️',n:'Colchão Ortopédico',p:620,val:500,d:'Recupera +6 Saúde e -8 Estresse todo fim de turno.'},
+{id:'pc',i:'💻',n:'Notebook Turbo',p:1150,val:900,d:'Estudar rende +50% mais rápido e dá +4 Feliz/turno.'},
+{id:'moto',i:'🏍️',n:'Moto CG 160',p:2300,val:1900,d:'+8h livres toda semana e imune a Greve de Ônibus.'},
+{id:'car',i:'🚗',n:'Carro Hatch Quitado',p:4800,val:4000,d:'+14h livres toda semana e +8 Feliz todo turno.'}
+];
+
+const EVENTS=[
+{n:'🦁 Restituição do Imposto de Renda!',d:'Caiu um Pix inesperado da Receita: +R$ 220 na conta.',fn:p=>{p.cash+=220}},
+{n:'🚌 Chuva Torrencial e Ônibus Lotado',d:'Quem não tem Moto ou Carro perdeu 8h preso no trânsito.',fn:p=>{if(!p.it.includes('moto')&&!p.it.includes('car'))p.h=Math.max(20,p.h-8)}},
+{n:'🎉 Décimo Terceiro Adiantado!',d:'A firma pagou um bônus de R$ '+(160)+'.',fn:p=>{const b=JOBS[p.job].w*8;p.cash+=b}},
+{n:'🦷 Dor de Dente Surpresa',d:'Gasto de emergência no dentista (-R$ 130) ou dor de cabeça.',fn:p=>{if(p.cash>=130)p.cash-=130;else p.hlth=Math.max(10,p.hlth-12)}},
+{n:'☀️ Feriadão Prolongado!',d:'Semana mais leve: todo mundo ganhou +6h e -10 Estresse.',fn:p=>{p.h+=6;p.str=Math.max(0,p.str-10)}},
+{n:'📈 Inflação no Mercado',d:'O custo de vida apertou: +8 Estresse nesta fase.',fn:p=>{p.str=Math.min(100,p.str+8)}},
+{n:'💵 Nota de R$ 100 no Bolso da Calça!',d:'Achou dinheiro esquecido lavando roupa: +R$ 100 e +5 Feliz.',fn:p=>{p.cash+=100;p.hap=Math.min(100,p.hap+5)}}
+];
+
+const TROPHIES=[
+{id:'play1',i:'🎂',n:'Quarentou!',d:'Chegue aos 40 anos pela primeira vez'},
+{id:'win1',i:'🏆',n:'Venceu na Vida',d:'Termine aos 40 anos em 1º lugar geral'},
+{id:'casa',i:'🏡',n:'Sonho da Casa Própria',d:'Compre a Casa Própria Quitada'},
+{id:'dir',i:'💼',n:'Chefe da Firma',d:'Chegue ao cargo máximo de Diretor / Sócio'},
+{id:'phd',i:'🎓',n:'Currículo Invejável',d:'Conclua todas as 5 formações de estudo'},
+{id:'rich',i:'🤑',n:'Barão do Tesouro Selic',d:'Acumule R$ 10.000+ de Patrimônio Total'},
+{id:'car',i:'🚗',n:'Garagem Completa',d:'Tenha Moto ou Carro quitado na garagem'},
+{id:'mega',i:'🍀',n:'Premiado na Lotérica',d:'Ganhe um prêmio na Mega da Virada'},
+{id:'zen',i:'🏖️',n:'Vida Mansa',d:'Chegue aos 40 anos sem nunca sofrer Burnout'},
+{id:'clean',i:'✨',n:'Nome Limpo',d:'Termine a partida sem nenhuma dívida no SPC'}
+];
+
+let M={plays:0,wins:0,best:0,tr:[],orig:'padrao'};
+try{const sv=JSON.parse(localStorage.getItem('vida_br_meta')||'null');if(sv)M={...M,...sv}}catch(e){}
+function saveM(){try{localStorage.setItem('vida_br_meta',JSON.stringify(M))}catch(e){}}
+function unlockTr(id){if(!M.tr.includes(id)){const t=TROPHIES.find(x=>x.id==id);if(t){M.tr.push(id);toast(`🏆 Troféu Desbloqueado: ${t.n}!`);bp(880,.25,'triangle');saveM()}}}
+
+/* ============ ESTADO E MULTIPLAYER PEERJS ============ */
+const BOT_NMS=['Enzo (Faria Limer)','Valentina (Concurseira)','Cleitinho (Rei do Bico)'];
+let myUid='u'+Math.random().toString(36).slice(2,8),myName='Brasileiro',tab='play',locModal=null;
+let G=null,peer=null,conns={},hconn=null,isHost=true,offline=true,roomCode='';
+try{myName=localStorage.getItem('vida_br_nm')||'Brasileiro'}catch(e){}
+function getNm(){const el=$('nm');if(el&&el.value.trim())myName=el.value.trim().slice(0,14);try{localStorage.setItem('vida_br_nm',myName)}catch(e){}return myName}
+
+function mkPlayer(uid,name,orig='padrao',bot=0){
+ return{
+  uid,name,orig,bot,
+  cash:350,bank:orig=='herdeiro'?800:0,debt:0,
+  job:0,xp:0,edu:orig=='bolsista'?1:0,eduP:0,
+  hlth:85,hap:75,str:15,
+  home:0,it:orig=='herdeiro'?['air']:orig=='faria'?['suit']:[],
+  h:60,maxH:60,fed:0,done:0,burn:0,hadBurn:0,curse:[]
+ };
+}
+
+function calcMaxH(p){
+ let h=60+(p.orig=='correria'?6:0);
+ if(p.it.includes('air'))h+=4;
+ if(p.it.includes('moto'))h+=8;
+ if(p.it.includes('car'))h+=14;
+ if(p.burn)h-=15;
+ return Math.max(20,h);
+}
+
+function netWorth(p){
+ const itVal=p.it.reduce((a,k)=>{const it=ITEMS.find(x=>x.id==k);return a+(it?it.val:0)},0);
+ const homeVal=HOMES[p.home].buy;
+ return Math.max(0,p.cash+p.bank+itVal+homeVal-p.debt);
+}
+
+function scores(p){
+ const w=Math.min(100,Math.round(netWorth(p)/120));
+ const c=Math.min(100,p.edu*14+p.job*10);
+ const h=Math.max(0,Math.min(100,p.hlth));
+ const l=Math.max(0,Math.min(100,p.hap));
+ const tot=Math.round((w+c+h+l)/4);
+ return{w,c,h,l,tot};
+}
+
+function startSolo(nBots=2){
+ getNm();offline=true;isHost=true;
+ const pls=[mkPlayer(myUid,myName,M.orig,0)];
+ for(let i=0;i<nBots;i++){
+  const origs=['padrao','bolsista','correria'];
+  pls.push(mkPlayer('bot'+i,BOT_NMS[i],origs[i%3],1));
+ }
+ G={turn:1,maxT:12,age:18,ph:'play',ev:null,pls,log:['🎉 A vida adulta começou aos 18 anos! Gerencie suas horas, pague os boletos e chegue bem aos 40!']};
+ prepTurn(true);
+ render();
+}
+
+const PC=()=>({config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}});
+function hostOnline(){
+ getNm();offline=false;isHost=true;
+ roomCode=Array.from({length:5},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join('');
+ G={turn:1,maxT:12,age:18,ph:'lobby',ev:null,pls:[mkPlayer(myUid,myName,M.orig,0)],log:[]};
+ if(peer)try{peer.destroy()}catch(e){}
+ peer=new Peer('vidabr-'+roomCode,PC());
+ peer.on('open',()=>render());
+ peer.on('error',e=>toast('Erro P2P: '+e.type));
+ peer.on('connection',c=>{
+  c.on('data',d=>{
+   if(!G)return;
+   if(d.t=='join'&&G.ph=='lobby'&&G.pls.length<4){
+    if(!G.pls.some(x=>x.uid==d.uid))G.pls.push(mkPlayer(d.uid,String(d.name||'Amigo').slice(0,14),d.orig||'padrao',0));
+    c.uid=d.uid;conns[d.uid]=c;bcast();
+   }else if(d.t=='syncP'){
+    const idx=G.pls.findIndex(x=>x.uid==d.p.uid);
+    if(idx>=0){G.pls[idx]=d.p;if(d.curseTarget){applyCurseHost(d.p.name,d.curseTarget,d.curseType)}chkAllDone();bcast()}
+   }
+  });
+ });
+ render();
+}
+
+function joinOnline(c0){
+ getNm();const c=String(c0||'').trim().toUpperCase();if(c.length<4)return toast('Digite o código da sala');
+ offline=false;isHost=false;roomCode=c;
+ if(peer)try{peer.destroy()}catch(e){}
+ peer=new Peer('vidabr-'+c+'-'+myUid,PC());
+ peer.on('open',()=>{
+  hconn=peer.connect('vidabr-'+c,{reliable:true});
+  hconn.on('open',()=>hconn.send({t:'join',uid:myUid,name:myName,orig:M.orig}));
+  hconn.on('data',d=>{if(d.t=='st'){G=d.G;render()}});
+ });
+ peer.on('error',()=>toast('Sala não encontrada'));
+}
+
+function bcast(){
+ if(!offline&&isHost)for(const u in conns)if(conns[u]&&conns[u].open)conns[u].send({t:'st',G});
+ render();
+}
+function syncMeToHost(curseTarget=null,curseType=null){
+ if(isHost){if(curseTarget)applyCurseHost(myName,curseTarget,curseType);chkAllDone();bcast()}
+ else if(hconn&&hconn.open){const me=G.pls.find(x=>x.uid==myUid);hconn.send({t:'syncP',p:me,curseTarget,curseType});render()}
+}
+function applyCurseHost(fromNm,targetUid,k){
+ const t=G.pls.find(x=>x.uid==targetUid);if(!t)return;
+ t.curse.push({from:fromNm,k});
+ const lbl={som:'🔊 Vizinho com Som Alto (-8h)',parente:'🤑 Parente Pedindo R$ 150',obra:'🚧 Obra na Rua (-12h)'}[k];
+ G.log.unshift(`😈 ${fromNm} mandou "${lbl}" para ${t.name}!`);
+}
+
+function prepTurn(first=false){
+ G.age=18+(G.turn-1)*2;
+ const ev=first?null:EVENTS[Math.floor(Math.random()*EVENTS.length)];
+ G.ev=ev;
+ G.pls.forEach(p=>{
+  p.done=0;p.fed=0;p.maxH=calcMaxH(p);p.h=p.maxH;p.burn=0;
+  if(ev)ev.fn(p);
+  if(p.curse&&p.curse.length){
+   p.curse.forEach(c=>{
+    if(c.k=='som'){p.h=Math.max(15,p.h-8);p.str=Math.min(100,p.str+12)}
+    if(c.k=='parente'){p.cash=Math.max(0,p.cash-150)}
+    if(c.k=='obra'){p.h=Math.max(15,p.h-12)}
+   });
+   p.curse=[];
+  }
+ });
+ if(ev)G.log.unshift(`📰 Aos ${G.age} anos: ${ev.n} — ${ev.d}`);
+}
+
+/* ============ AÇÕES DO JOGADOR NOS 8 LOCAIS ============ */
+const meP=()=>G&&G.pls.find(x=>x.uid==myUid);
+function useH(p,h){if(p.h<h){toast('⏰ Horas insuficientes nesta semana!');return false}p.h-=h;return true}
+
+function actWork(hrs,over=false){
+ const p=meP();if(!p||p.done||!useH(p,hrs))return;
+ const jb=JOBS[p.job],bonus=p.orig=='correria'&&p.job<=1?2:0;
+ const pay=Math.round(hrs*(jb.w+bonus)*(over?1.35:1));
+ p.cash+=pay;p.xp+=hrs;
+ p.str=Math.min(100,p.str+(over?18:Math.round(hrs*1.1)));
+ if(over)p.hap=Math.max(0,p.hap-6);
+ bp(620,.1,'triangle');toast(`💼 +R$ ${pay} na Firma!`);
+ chkBurn(p);syncMeToHost();
+}
+
+function actPromote(){
+ const p=meP();if(!p||p.done)return;
+ const nx=JOBS[p.job+1];if(!nx)return toast('Você já é Diretor da Firma!');
+ if(p.edu<nx.edu)return toast(`Exige concluir: ${COURSES[nx.edu-1].n}`);
+ if(nx.suit&&!p.it.includes('suit'))return toast('Exige comprar Roupa de Entrevista no Magazine!');
+ if(p.xp<nx.xp)return toast(`Exige ${nx.xp}h de experiência (você tem ${p.xp}h)`);
+ if(!useH(p,4))return;
+ p.job++;bp(880,.2,'triangle');
+ toast(`🎉 Promovido para ${nx.n} (R$ ${nx.w}/h)!`);
+ if(p.job==6)unlockTr('dir');
+ syncMeToHost();
+}
+
+function actStudy(hrs){
+ const p=meP();if(!p||p.done)return;
+ const nx=COURSES[p.edu];if(!nx)return toast('Você já concluiu todas as formações!');
+ const cost=Math.round(nx.cost*(hrs/nx.hrs));
+ if(p.cash<cost)return toast(`Custa R$ ${cost} de mensalidade`);
+ if(!useH(p,hrs))return;
+ p.cash-=cost;
+ const gain=Math.round(hrs*(p.it.includes('pc')?1.5:1));
+ p.eduP+=gain;p.str=Math.min(100,p.str+Math.round(hrs*.9));
+ if(p.eduP>=nx.hrs){
+  p.edu++;p.eduP=0;p.hap=Math.min(100,p.hap+10);
+  bp(920,.25,'triangle');toast(`🎓 Formado em ${nx.n}!`);
+  if(p.edu>=5)unlockTr('phd');
+ }else{bp(540,.1);toast(`📚 +${gain}h de progresso no curso!`)}
+ chkBurn(p);syncMeToHost();
+}
+
+function actFood(k){
+ const p=meP();if(!p||p.done)return;
+ const MFD={
+  miojo:{c:25,h:2,hl:-4,hp:0,st:0,n:'Miojo com Ovo'},
+  pf:{c:70,h:3,hl:5,hp:4,st:-4,n:'PF Caprichado'},
+  feira:{c:130,h:4,hl:12,hp:6,st:-10,n:'Feira Completa',req:'air'},
+  churras:{c:220,h:6,hl:8,hp:16,st:-18,n:'Churrascão de Domingo'}
+ }[k];
+ if(MFD.req&&!p.it.includes(MFD.req))return toast('Exige ter uma AirFryer Inox em casa!');
+ if(p.cash<MFD.c)return toast('Saldo insuficiente!');
+ if(!useH(p,MFD.h))return;
+ p.cash-=MFD.c;p.fed=1;
+ p.hlth=Math.max(0,Math.min(100,p.hlth+MFD.hl));
+ p.hap=Math.max(0,Math.min(100,p.hap+MFD.hp));
+ p.str=Math.max(0,p.str+MFD.st);
+ bp(500,.12);toast(`🍽️ Mandou ver no ${MFD.n}!`);syncMeToHost();
+}
+
+function actHome(id){
+ const p=meP();if(!p||p.done)return;
+ const hm=HOMES[id];
+ if(hm.buy){
+  if(p.cash<hm.buy)return toast(`Custa R$ ${hm.buy} à vista (resgate da poupança se precisar)`);
+  if(!useH(p,4))return;
+  p.cash-=hm.buy;p.home=id;p.hap=Math.min(100,p.hap+25);
+  unlockTr('casa');bp(950,.3,'triangle');toast('🏡 Parabéns! Casa Própria Quitada!');
+ }else{
+  if(!useH(p,3))return;
+  p.home=id;bp(520,.1);toast(`🔑 Mudou-se para: ${hm.n}`);
+ }
+ syncMeToHost();
+}
+
+function actBuyItem(id){
+ const p=meP();if(!p||p.done)return;
+ if(p.it.includes(id))return;
+ const it=ITEMS.find(x=>x.id==id);
+ if(p.cash<it.p)return toast('Saldo insuficiente!');
+ if(!useH(p,3))return;
+ p.cash-=it.p;p.it.push(id);p.hap=Math.min(100,p.hap+8);
+ if(id=='moto'||id=='car')unlockTr('car');
+ bp(740,.18,'triangle');toast(`🛍️ Comprou ${it.n}!`);syncMeToHost();
+}
+
+function actHealth(k){
+ const p=meP();if(!p||p.done)return;
+ const MH={
+  gym:{c:45,h:6,hl:14,st:-14,hp:4,n:'Treino na Academia'},
+  sus:{c:0,h:10,hl:18,st:-6,hp:0,n:'Check-up no Postinho SUS'},
+  spa:{c:160,h:5,hl:14,st:-28,hp:10,n:'Terapia & Massagem'}
+ }[k];
+ if(p.cash<MH.c)return toast('Saldo insuficiente!');
+ if(!useH(p,MH.h))return;
+ p.cash-=MH.c;
+ p.hlth=Math.min(100,p.hlth+MH.hl);p.str=Math.max(0,p.str+MH.st);p.hap=Math.min(100,p.hap+MH.hp);
+ bp(600,.14);toast(`❤️ ${MH.n} concluído!`);syncMeToHost();
+}
+
+function actBank(k,amt=200){
+ const p=meP();if(!p||p.done)return;
+ if(k=='dep'){
+  const v=amt=='all'?p.cash:Math.min(p.cash,amt);
+  if(v<=0)return toast('Sem saldo para depositar');
+  if(!useH(p,2))return;
+  p.cash-=v;p.bank+=v;bp(680,.1);toast(`🏦 Aplicou R$ ${v} no Tesouro Selic!`);
+ }else if(k=='wit'){
+  const v=amt=='all'?p.bank:Math.min(p.bank,amt);
+  if(v<=0)return toast('Sem saldo na poupança');
+  if(!useH(p,2))return;
+  p.bank-=v;p.cash+=v;bp(580,.1);toast(`💵 Resgatou R$ ${v} da poupança.`);
+ }else if(k=='debt'){
+  const v=Math.min(p.cash,p.debt);
+  if(v<=0)return toast('Você não tem dívida ou saldo na mão');
+  if(!useH(p,2))return;
+  p.cash-=v;p.debt-=v;bp(760,.15);toast(`🧾 Pagou R$ ${v} da dívida do SPC!`);
+ }else if(k=='lotto'){
+  if(p.cash<35)return toast('Custa R$ 35');
+  if(!useH(p,2))return;
+  p.cash-=35;const r=Math.random();
+  if(r<.08){p.cash+=2200;p.hap=Math.min(100,p.hap+25);unlockTr('mega');bp(980,.35,'triangle');toast('🍀 ACERTOU NA MEGA! Ganhou R$ 2.200!')}
+  else if(r<.28){p.cash+=280;bp(780,.2);toast('🍀 Fez a Quadra na Lotérica! +R$ 280!')}
+  else{bp(240,.1,'sawtooth');toast('📄 Não foi dessa vez… quem sabe na próxima!')}
+ }
+ syncMeToHost();
+}
+
+function actFun(k,targetUid=null){
+ const p=meP();if(!p||p.done)return;
+ if(k=='bar'){
+  if(p.cash<60||!useH(p,6))return toast('Precisa de R$ 60 e 6h');
+  p.cash-=60;p.hap=Math.min(100,p.hap+15);p.str=Math.max(0,p.str-18);
+  bp(660,.15);toast('🍻 Gelada e sinuca com a galera! +15 Feliz');syncMeToHost();
+ }else if(k=='beach'){
+  if(p.cash<180||!useH(p,10))return toast('Precisa de R$ 180 e 10h');
+  p.cash-=180;p.hap=Math.min(100,p.hap+26);p.str=Math.max(0,p.str-32);p.hlth=Math.min(100,p.hlth+6);
+  bp(720,.2);toast('🏖️ Fim de semana na Praia Grande! Renovado!');syncMeToHost();
+ }else{
+  const cost={som:140,parente:180,obra:220}[k];
+  if(!targetUid)return toast('Escolha um adversário!');
+  if(p.cash<cost||!useH(p,3))return toast(`Precisa de R$ ${cost} e 3h`);
+  p.cash-=cost;bp(320,.2,'sawtooth');
+  toast('😈 Perrengue enviado para o adversário!');
+  syncMeToHost(targetUid,k);
+ }
+}
+
+function chkBurn(p){
+ if(p.str>=100){
+  p.str=65;p.burn=1;p.hadBurn=1;p.hlth=Math.max(10,p.hlth-15);p.hap=Math.max(10,p.hap-12);
+  bp(190,.4,'sawtooth');toast('🚑 BURNOUT! Estresse bateu 100%! Você perderá 15h no próximo turno.');
+ }
+}
+
+/* ============ FIM DE TURNO E IA DOS BOTS ============ */
+function simBotTurn(b){
+ b.fed=1;b.cash=Math.max(0,b.cash-70);
+ const nxC=COURSES[b.edu],nxJ=JOBS[b.job+1];
+ if(nxJ&&b.edu>=nxJ.edu&&b.xp>=nxJ.xp&&(!nxJ.suit||b.it.includes('suit'))){b.job++;b.h-=4}
+ if(nxJ&&nxJ.suit&&!b.it.includes('suit')&&b.cash>=300){b.cash-=240;b.it.push('suit')}
+ if(nxC&&b.cash>=nxC.cost*.6&&b.h>=16){
+  b.cash-=Math.round(nxC.cost*.5);b.eduP+=16;b.h-=16;
+  if(b.eduP>=nxC.hrs){b.edu++;b.eduP=0}
+ }
+ const workH=Math.min(b.h-8,28);
+ if(workH>0){b.cash+=workH*JOBS[b.job].w;b.xp+=workH;b.h-=workH}
+ if(!b.it.includes('moto')&&b.cash>=2800){b.cash-=2300;b.it.push('moto')}
+ else if(b.home<2&&b.cash>=1200){b.home++}
+ else if(b.home<3&&b.cash>=6200){b.cash-=5800;b.home=3}
+ if(b.cash>500){const save=Math.round((b.cash-350)*.6);b.cash-=save;b.bank+=save}
+ b.hlth=Math.min(100,Math.max(55,b.hlth+2));
+ b.hap=Math.min(100,Math.max(55,b.hap+3));
+ b.str=Math.max(15,b.str-10);
+ b.done=1;
+}
+
+function endMyTurn(){
+ const p=meP();if(!p||p.done)return;
+ p.done=1;locModal=null;bp(520,.15);
+ syncMeToHost();
+}
+
+function chkAllDone(){
+ if(!isHost||!G||G.ph!='play')return;
+ G.pls.forEach(p=>{if(p.bot&&!p.done)simBotTurn(p)});
+ if(!G.pls.every(p=>p.done))return;
+
+ G.pls.forEach(p=>{
+  const rate=p.orig=='faria'?.16:.12;
+  if(p.bank>0)p.bank+=Math.round(p.bank*rate);
+  if(p.debt>0){p.debt=Math.round(p.debt*1.25);p.hap=Math.max(0,p.hap-10)}
+  const hm=HOMES[p.home];
+  p.hap=Math.max(0,Math.min(100,p.hap+hm.hap+(p.it.includes('pc')?4:0)+(p.it.includes('car')?8:0)));
+  p.str=Math.max(0,p.str+hm.str+(p.it.includes('bed')?-8:0));
+  p.hlth=Math.max(0,Math.min(100,p.hlth+hm.hlth+(p.it.includes('bed')?6:0)));
+
+  if(!p.fed){
+   p.hlth=Math.max(5,p.hlth-18);p.hap=Math.max(5,p.hap-12);p.burn=1;
+   if(p.uid==myUid)toast('🚑 Você virou o ano sem comer e parou na UPA (-15h)!');
+  }
+  let rent=hm.rent;
+  if(rent>0){
+   if(p.cash>=rent)p.cash-=rent;
+   else{
+    rent-=p.cash;p.cash=0;
+    if(p.bank>=rent)p.bank-=rent;
+    else{rent-=p.bank;p.bank=0;p.debt+=rent;p.hap=Math.max(0,p.hap-10);if(p.uid==myUid)toast(`🧾 Aluguel atrasou! +R$ ${rent} no SPC!`)}
+   }
+  }
+ });
+
+ if(G.turn>=G.maxT){
+  G.ph='end';
+  const me=meP();
+  if(me){
+   M.plays=(M.plays||0)+1;unlockTr('play1');
+   const sc=scores(me).tot;M.best=Math.max(M.best||0,sc);
+   const rk=G.pls.slice().sort((a,b)=>scores(b).tot-scores(a).tot);
+   if(rk[0].uid==myUid){M.wins=(M.wins||0)+1;unlockTr('win1')}
+   if(netWorth(me)>=10000)unlockTr('rich');
+   if(!me.hadBurn)unlockTr('zen');
+   if(me.debt==0)unlockTr('clean');
+   saveM();
+  }
+ }else{
+  G.turn++;prepTurn(false);
+ }
+}
+
+/* ============ INTERFACE ============ */
+function rMenu(){
+ if(G&&G.ph=='lobby'){
+  return`<div class="space-y-4 pt-6">
+   <div class="flex justify-between items-center text-sm"><button onclick="G=null;render()" class="opacity-70">← Voltar</button><span class="text-amber-300 font-bold">Sala Online PeerJS</span></div>
+   <div class="lousa p-5 space-y-3 text-center">
+    <div class="text-xs opacity-70">Código da Sala</div>
+    <div class="f text-4xl text-amber-300 tracking-[.25em]">${roomCode}</div>
+    <div class="space-y-1.5 text-left pt-2">
+     <div class="text-xs opacity-70">Jogadores na cidade (${G.pls.length}/4):</div>
+     ${G.pls.map(p=>`<div class="px-3 py-2 rounded-lg bg-black/40 flex justify-between text-sm"><b>${esc(p.name)}</b><span class="text-xs text-emerald-300">${ORIGINS.find(o=>o.id==p.orig)?.n||''}</span></div>`).join('')}
+    </div>
+    ${isHost?`<button onclick="G.ph='play';prepTurn(true);bcast()" class="bt w-full bg-amber-500 text-black text-base">Começar Corrida aos 40! →</button>`:`<div class="text-xs opacity-75 animate-pulse">Aguardando o anfitrião iniciar a partida…</div>`}
+   </div>
+  </div>`;
+ }
+
+ const tabs=[['play','🏙️ Jogar'],['origins','🎒 Origens'],['trophies','🏆 Troféus ('+M.tr.length+'/10)']];
+ let body='';
+ if(tab=='play'){
+  const curO=ORIGINS.find(o=>o.id==M.orig)||ORIGINS[0];
+  body=`
+  <section class="lousa p-4 space-y-3">
+   <div class="flex justify-between items-center"><span class="f text-sm text-amber-300">SUA ORIGEM AOS 18 ANOS</span><button onclick="tab='origins';render()" class="text-xs underline text-amber-200">Trocar Origem →</button></div>
+   <div class="p-3 rounded-xl bg-black/40 border border-amber-500/30 flex items-center gap-3">
+    <div class="text-3xl">${curO.i}</div>
+    <div><div class="font-bold text-sm text-amber-300">${curO.n}</div><div class="text-xs opacity-80">${curO.d}</div></div>
+   </div>
+   <input id="nm" value="${esc(myName)}" maxlength="14" placeholder="Seu nome" class="w-full px-3 py-2 rounded-xl bg-black/50 border border-amber-500/30 outline-none text-sm">
+   <div class="grid grid-cols-3 gap-2 pt-1">
+    <button onclick="startSolo(1)" class="bt bg-emerald-700 text-xs sm:text-sm">Solo (x1 Bot)</button>
+    <button onclick="startSolo(2)" class="bt bg-amber-500 text-black text-xs sm:text-sm">Solo (x2 Bots)</button>
+    <button onclick="startSolo(3)" class="bt bg-teal-700 text-xs sm:text-sm">Solo (x3 Bots)</button>
+   </div>
+  </section>
+  <section class="lousa p-4 space-y-2.5">
+   <div class="f text-sm text-amber-300">JOGAR COM OS AMIGOS (ONLINE P2P)</div>
+   <div class="flex gap-2">
+    <button onclick="hostOnline()" class="bt bg-sky-700 text-sm flex-1">Criar Sala Online</button>
+    <input id="rc" maxlength="5" placeholder="CÓDIGO" class="w-28 px-3 py-2 rounded-xl bg-black/50 border border-amber-500/30 uppercase outline-none tracking-widest text-sm text-center">
+    <button onclick="joinOnline($('rc').value)" class="bt bg-emerald-700 text-sm">Entrar</button>
+   </div>
+  </section>`;
+ }else if(tab=='origins'){
+  body=`<section class="lousa p-4 space-y-2.5">
+   <div class="f text-sm text-amber-300">ESCOLHA SUA ORIGEM DE VIDA</div>
+   ${ORIGINS.map(o=>{const ok=o.ok(M),sel=M.orig==o.id;return`<div onclick="${ok?`M.orig='${o.id}';saveM();render()`:''}" class="p-3 rounded-xl border ${sel?'bg-amber-500/20 border-amber-400':'bg-black/40 border-white/10'} ${ok?'cursor-pointer':'opacity-45'} flex items-center justify-between gap-2">
+    <div class="flex items-center gap-3"><span class="text-2xl">${ok?o.i:'🔒'}</span><div><div class="font-bold text-sm ${sel?'text-amber-300':''}">${o.n}</div><div class="text-xs opacity-80">${o.d}</div>${!ok?`<div class="text-[11px] text-amber-300 mt-0.5">Requisito: ${o.req}</div>`:''}</div></div>
+    ${sel?'<span class="text-xs bg-amber-500 text-black font-bold px-2 py-1 rounded">Ativa</span>':''}
+   </div>`}).join('')}
+  </section>`;
+ }else{
+  body=`<section class="lousa p-4 space-y-2.5">
+   <div class="f text-sm text-amber-300">MURAL DE CONQUISTAS DA VIDA (${M.tr.length}/${TROPHIES.length})</div>
+   <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${TROPHIES.map(t=>{const ok=M.tr.includes(t.id);return`<div class="p-2.5 rounded-xl border ${ok?'bg-amber-500/15 border-amber-400/50':'bg-black/40 border-white/10 opacity-50'} flex items-center gap-2.5">
+    <div class="text-2xl">${ok?t.i:'🔒'}</div>
+    <div><div class="font-bold text-xs ${ok?'text-amber-300':''}">${t.n}</div><div class="text-[11px] opacity-80">${t.d}</div></div>
+   </div>`}).join('')}</div>
+  </section>`;
+ }
+
+ return`<div class="space-y-3 pt-3">
+  <div class="flex justify-between items-center text-sm"><a href="../../" class="opacity-75">← Sala de Jogos</a><span class="text-xs opacity-80">Melhor Nota aos 40: <b>${M.best||0} pts</b> · Vitórias: <b>${M.wins||0}</b></span></div>
+  <div class="text-center">
+   <div class="f text-5xl sm:text-6xl leading-none" style="color:#fde68a;text-shadow:0 4px 0 #b45309,0 8px 0 #000">Jogo da Vida BR</div>
+   <div class="text-xs sm:text-sm mt-1.5 text-emerald-100">Empregos, estudos, AirFryer e boletos. Quem chega melhor aos 40?</div>
+  </div>
+  <div class="grid grid-cols-3 gap-1.5 bg-black/40 p-1 rounded-xl border border-amber-500/30 text-xs font-bold">
+   ${tabs.map(([k,l])=>`<button onclick="tab='${k}';render()" class="py-2 rounded-lg ${tab==k?'bg-amber-500 text-black':'opacity-75'}">${l}</button>`).join('')}
+  </div>
+  ${body}
+ </div>`;
+}
+
+function rLocModal(p){
+ if(!locModal)return'';
+ let h='',title='';
+ if(locModal=='work'){
+  const jb=JOBS[p.job],nx=JOBS[p.job+1];
+  title='🏢 A Firma & Bicos';
+  h=`<div class="space-y-3 text-xs">
+   <div class="p-3 rounded-xl bg-black/40 border border-white/10">
+    <div>Cargo Atual: <b class="text-amber-300 text-sm">${jb.n}</b> (R$ ${jb.w}/h)</div>
+    <div class="opacity-80 mt-0.5">Experiência acumulada: <b>${p.xp}h</b></div>
+   </div>
+   <div class="grid grid-cols-3 gap-2">
+    <button onclick="actWork(6)" class="bt bg-emerald-700">Meio Período<br><span class="text-[10px] font-normal">6h · +R$ ${jb.w*6}</span></button>
+    <button onclick="actWork(12)" class="bt bg-emerald-600">Turno Forte<br><span class="text-[10px] font-normal">12h · +R$ ${jb.w*12}</span></button>
+    <button onclick="actWork(12,true)" class="bt bg-rose-700">Hora Extra!<br><span class="text-[10px] font-normal">12h · +R$ ${Math.round(jb.w*12*1.35)} (+Estresse)</span></button>
+   </div>
+   ${nx?`<div class="p-3 rounded-xl bg-amber-500/10 border border-amber-400/40 flex justify-between items-center gap-2">
+    <div><div class="font-bold text-amber-300">Próximo Cargo: ${nx.n} (R$ ${nx.w}/h)</div>
+     <div class="text-[11px] opacity-85">Req: ${nx.edu?COURSES[nx.edu-1].n:'Sem curso'} · ${nx.xp}h XP${nx.suit?' · Roupa Social':''}</div>
+    </div>
+    <button onclick="actPromote()" class="bt bg-amber-500 text-black">Pedir Promoção (4h)</button>
+   </div>`:'<div class="text-center text-emerald-300 font-bold">👑 Você já está no topo da Firma!</div>'}
+  </div>`;
+ }else if(locModal=='study'){
+  const nx=COURSES[p.edu];
+  title='🎓 Faculdade & SENAI';
+  h=`<div class="space-y-3 text-xs">
+   <div class="p-3 rounded-xl bg-black/40">Formações Concluídas: <b>${p.edu}/5</b> ${p.it.includes('pc')?'<span class="text-emerald-300 ml-1">(💻 Bônus +50% ativo!)</span>':''}</div>
+   ${nx?`<div class="p-3 rounded-xl bg-sky-950/60 border border-sky-400/40 space-y-2">
+    <div class="font-bold text-sm text-sky-300">Estudando: ${nx.n}</div>
+    <div class="bar"><i class="bg-sky-400" style="width:${Math.min(100,p.eduP/nx.hrs*100)}%"></i></div>
+    <div class="flex justify-between"><span>Progresso: <b>${p.eduP}/${nx.hrs}h</b></span><span>Custo total: R$ ${nx.cost}</span></div>
+    <div class="grid grid-cols-2 gap-2 pt-1">
+     <button onclick="actStudy(6)" class="bt bg-sky-700">Aula Rápida (6h · R$ ${Math.round(nx.cost*(6/nx.hrs))})</button>
+     <button onclick="actStudy(12)" class="bt bg-sky-600">Intensivão (12h · R$ ${Math.round(nx.cost*(12/nx.hrs))})</button>
+    </div>
+   </div>`:'<div class="text-center text-amber-300 font-bold py-4">🎓 Você já tem todos os diplomas do jogo!</div>'}
+  </div>`;
+ }else if(locModal=='food'){
+  title='🛒 Mercadinho & Podrão';
+  h=`<div class="space-y-2 text-xs">
+   <div class="opacity-85 mb-1">Status no turno: ${p.fed?'<b class="text-emerald-300">✅ Já se alimentou!</b>':'<b class="text-rose-400">⚠️ Ainda não comeu nesta fase!</b>'}</div>
+   <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+    <button onclick="actFood('miojo')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🍜 Miojo com Ovo (R$ 25 · 2h)</b><div class="text-[11px] opacity-75">Mata a fome · -4 Saúde</div></button>
+    <button onclick="actFood('pf')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🍛 PF do Boteco (R$ 70 · 3h)</b><div class="text-[11px] opacity-75">+5 Saúde · +4 Feliz · -4 Estresse</div></button>
+    <button onclick="actFood('feira')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🥦 Feira Completa (R$ 130 · 4h)</b><div class="text-[11px] opacity-75">Exige AirFryer · +12 Saúde · -10 Estresse</div></button>
+    <button onclick="actFood('churras')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🥩 Churrascão (R$ 220 · 6h)</b><div class="text-[11px] opacity-75">+8 Saúde · +16 Feliz · -18 Estresse</div></button>
+   </div>
+  </div>`;
+ }else if(locModal=='home'){
+  title='🏠 Imobiliária & Moradia';
+  h=`<div class="space-y-2 text-xs">
+   ${HOMES.map(hm=>{const cur=p.home==hm.id;return`<div class="p-3 rounded-xl border ${cur?'bg-amber-500/20 border-amber-400':'bg-black/40 border-white/10'} flex justify-between items-center gap-2">
+    <div><div class="font-bold text-sm">${hm.n}</div><div class="opacity-80 text-[11px]">${hm.d}</div>
+     <div class="text-[11px] text-amber-300 mt-0.5">${hm.buy?`Compra Única: R$ ${hm.buy} (Aluguel R$ 0)`:`Aluguel: R$ ${hm.rent}/turno`} · +${hm.hap} Feliz/turno</div>
+    </div>
+    ${cur?'<span class="px-2 py-1 rounded bg-amber-500 text-black font-bold">Morando</span>':`<button onclick="actHome(${hm.id})" class="bt bg-emerald-700">${hm.buy?'Comprar':'Mudar'}</button>`}
+   </div>`}).join('')}
+  </div>`;
+ }else if(locModal=='shop'){
+  title='🛍️ Magazine & Veículos';
+  h=`<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+   ${ITEMS.map(it=>{const has=p.it.includes(it.id);return`<div class="p-2.5 rounded-xl border ${has?'bg-emerald-950/60 border-emerald-400/50':'bg-black/40 border-white/10'} flex justify-between items-center gap-2">
+    <div><div class="font-bold">${it.i} ${it.n}</div><div class="text-[11px] opacity-80">${it.d}</div><div class="text-amber-300 font-bold mt-0.5">R$ ${it.p}</div></div>
+    ${has?'<span class="text-emerald-300 font-bold">Comprado ✓</span>':`<button onclick="actBuyItem('${it.id}')" class="bt bg-amber-500 text-black">Comprar</button>`}
+   </div>`}).join('')}
+  </div>`;
+ }else if(locModal=='health'){
+  title='🏥 Academia & Postinho SUS';
+  h=`<div class="space-y-2 text-xs">
+   <button onclick="actHealth('gym')" class="w-full p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400 flex justify-between items-center"><div><b>🏋️ Treino na Academia de Bairro (R$ 45 · 6h)</b><div class="opacity-80">+14 Saúde · -14 Estresse · +4 Feliz</div></div><span class="bt bg-emerald-700">Treinar</span></button>
+   <button onclick="actHealth('sus')" class="w-full p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400 flex justify-between items-center"><div><b>🏥 Check-up no Postinho SUS (Grátis · 10h)</b><div class="opacity-80">+18 Saúde · -6 Estresse (demora na fila, mas é de graça!)</div></div><span class="bt bg-sky-700">Ir ao SUS</span></button>
+   <button onclick="actHealth('spa')" class="w-full p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400 flex justify-between items-center"><div><b>🧘 Terapia & Massagem VIP (R$ 160 · 5h)</b><div class="opacity-80">+14 Saúde · -28 Estresse · +10 Feliz</div></div><span class="bt bg-amber-500 text-black">Relaxar</span></button>
+  </div>`;
+ }else if(locModal=='bank'){
+  title='🏦 Banco & Lotérica';
+  h=`<div class="space-y-3 text-xs">
+   <div class="grid grid-cols-3 gap-2 text-center p-2.5 rounded-xl bg-black/40">
+    <div><div class="opacity-70">Na Mão</div><div class="f text-base text-emerald-300">R$ ${p.cash}</div></div>
+    <div><div class="opacity-70">Poupança (+${p.orig=='faria'?16:12}%/t)</div><div class="f text-base text-sky-300">R$ ${p.bank}</div></div>
+    <div><div class="opacity-70">Dívida SPC</div><div class="f text-base text-rose-400">R$ ${p.debt}</div></div>
+   </div>
+   <div class="grid grid-cols-2 gap-2">
+    <button onclick="actBank('dep',200)" class="bt bg-emerald-700">Depositar R$ 200 (2h)</button>
+    <button onclick="actBank('dep','all')" class="bt bg-emerald-800">Depositar Tudo (2h)</button>
+    <button onclick="actBank('wit',200)" class="bt bg-sky-700">Resgatar R$ 200 (2h)</button>
+    <button onclick="actBank('wit','all')" class="bt bg-sky-800">Resgatar Tudo (2h)</button>
+   </div>
+   ${p.debt>0?`<button onclick="actBank('debt')" class="bt bg-rose-700 w-full">🧾 Quitar Dívida do SPC (2h)</button>`:''}
+   <button onclick="actBank('lotto')" class="bt bg-amber-500 text-black w-full">🍀 Fazer Fezinha na Mega da Virada (R$ 35 · 2h)</button>
+  </div>`;
+ }else if(locModal=='fun'){
+  const opps=G.pls.filter(x=>x.uid!=myUid);
+  title='🍻 Boteco, Praia & Perrengues';
+  h=`<div class="space-y-3 text-xs">
+   <div class="grid grid-cols-2 gap-2">
+    <button onclick="actFun('bar')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🍻 Sinuca & Gelada (R$ 60 · 6h)</b><div class="text-[11px] opacity-80">+15 Feliz · -18 Estresse</div></button>
+    <button onclick="actFun('beach')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🏖️ Praia Grande (R$ 180 · 10h)</b><div class="text-[11px] opacity-80">+26 Feliz · -32 Estresse · +6 Saúde</div></button>
+   </div>
+   <div class="p-3 rounded-xl bg-rose-950/50 border border-rose-400/40 space-y-2">
+    <div class="font-bold text-rose-300">😈 Mandar Perrengue para um Concorrente (3h):</div>
+    <select id="trg" class="w-full p-2 rounded-lg bg-black/60 border border-white/20">${opps.map(o=>`<option value="${o.uid}">${esc(o.name)} (${scores(o).tot} pts)</option>`).join('')}</select>
+    <div class="grid grid-cols-3 gap-1.5">
+     <button onclick="actFun('som',$('trg').value)" class="bt bg-rose-800 text-[11px]">🔊 Som às 3h<br>(R$ 140 · -8h)</button>
+     <button onclick="actFun('parente',$('trg').value)" class="bt bg-rose-800 text-[11px]">🤑 Parente<br>(R$ 180 · -R$150)</button>
+     <button onclick="actFun('obra',$('trg').value)" class="bt bg-rose-800 text-[11px]">🚧 Obra na Rua<br>(R$ 220 · -12h)</button>
+    </div>
+   </div>
+  </div>`;
+ }
+ return`<div class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-3" onclick="locModal=null;render()">
+  <div class="lousa max-w-lg w-full p-4 space-y-3" onclick="event.stopPropagation()">
+   <div class="flex justify-between items-center"><div class="f text-lg text-amber-300">${title}</div><button onclick="locModal=null;render()" class="px-2.5 py-1 rounded bg-rose-800 text-xs font-bold">Fechar ✕</button></div>
+   <div class="text-xs opacity-80 flex justify-between"><span>Horas restantes: <b class="text-amber-300">${p.h}h</b></span><span>Na mão: <b class="text-emerald-300">R$ ${p.cash}</b></span></div>
+   ${h}
+  </div>
+ </div>`;
+}
+
+function rPlay(){
+ const p=meP(),sc=scores(p),jb=JOBS[p.job],hm=HOMES[p.home];
+ const locs=[
+  ['work','🏢','A Firma & Bicos',`${jb.n} (R$${jb.w}/h)`],
+  ['study','🎓','Faculdade & SENAI',p.edu>=5?'Formado em tudo!':COURSES[p.edu].n],
+  ['food','🛒','Mercadinho & PF',p.fed?'✅ Alimentado':'⚠️ Coma neste turno!'],
+  ['home','🏠','Imobiliária',`${hm.n} (R$${hm.rent}/t)`],
+  ['shop','🛍️','Magazine & Bens',`${p.it.length}/6 itens comprados`],
+  ['health','🏥','Academia & SUS',`Saúde ${p.hlth}% · Estresse ${p.str}%`],
+  ['bank','🏦','Banco & Lotérica',`Poupança R$ ${p.bank}`],
+  ['fun','🍻','Boteco & Praia','Lazer e mandar Perrengues']
+ ];
+ return`<div class="space-y-2.5">
+  <div class="lousa p-3 space-y-2">
+   <div class="flex justify-between items-center flex-wrap gap-2">
+    <div><span class="f text-xl text-amber-300">🎂 ${G.age} Anos</span> <span class="text-xs opacity-75">(Turno ${G.turn}/${G.maxT} · Rumo aos 40)</span></div>
+    <div class="flex gap-2 items-center">
+     <span class="px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-400/40 text-xs font-bold text-amber-300">⏰ ${p.h}h / ${p.maxH}h livres</span>
+     <button onclick="if(confirm('Sair da partida?')){G=null;render()}" class="px-2 py-1 rounded bg-rose-950 text-xs">Sair</button>
+    </div>
+   </div>
+   <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs bg-black/35 p-2 rounded-xl">
+    <div>💰 Carteira: <b class="text-emerald-300">R$ ${p.cash}</b>${p.debt?` <span class="text-rose-400">(SPC -R$${p.debt})</span>`:''}</div>
+    <div>❤️ Saúde: <b>${p.hlth}%</b> · 😎 Feliz: <b>${p.hap}%</b></div>
+    <div>🔥 Estresse: <b class="${p.str>=80?'text-rose-400':'text-amber-300'}">${p.str}%</b></div>
+    <div>🍽️ Comida: <b class="${p.fed?'text-emerald-300':'text-rose-400'}">${p.fed?'Alimentado ✓':'Com fome!'}</b></div>
+   </div>
+   <div class="grid grid-cols-4 gap-1.5 text-[11px] text-center">
+    <div class="bg-black/30 p-1.5 rounded-lg">💰 Patrimônio <b>${sc.w}</b><div class="bar mt-1"><i class="bg-emerald-400" style="width:${sc.w}%"></i></div></div>
+    <div class="bg-black/30 p-1.5 rounded-lg">🎓 Carreira <b>${sc.c}</b><div class="bar mt-1"><i class="bg-sky-400" style="width:${sc.c}%"></i></div></div>
+    <div class="bg-black/30 p-1.5 rounded-lg">❤️ Saúde <b>${sc.h}</b><div class="bar mt-1"><i class="bg-rose-400" style="width:${sc.h}%"></i></div></div>
+    <div class="bg-black/30 p-1.5 rounded-lg">😎 Lazer <b>${sc.l}</b><div class="bar mt-1"><i class="bg-amber-400" style="width:${sc.l}%"></i></div></div>
+   </div>
+  </div>
+
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+   ${locs.map(([k,ic,nm,sub])=>`<div onclick="locModal='${k}';render()" class="card-loc flex flex-col justify-between">
+    <div class="flex items-center gap-2"><span class="text-2xl">${ic}</span><span class="font-bold text-xs sm:text-sm leading-tight">${nm}</span></div>
+    <div class="text-[11px] opacity-80 mt-2 truncate">${sub}</div>
+   </div>`).join('')}
+  </div>
+
+  <div class="flex gap-2 items-center">
+   <button onclick="endMyTurn()" ${p.done?'disabled':''} class="bt flex-1 py-3 text-sm" style="background:linear-gradient(#f5b83d,#b7791f);color:#2a1a02">
+    ${p.done?'⏳ Aguardando os outros fecharem o ano…':`Fechar os ${G.age} Anos (Pagar Aluguel R$ ${hm.rent}) →`}
+   </button>
+  </div>
+
+  <div class="lousa p-3 space-y-2 text-xs">
+   <div class="f text-xs text-amber-300">PLACAR AO VIVO DA GALERA</div>
+   <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+    ${G.pls.map(x=>{const s=scores(x);return`<div class="p-2 rounded-xl bg-black/40 border ${x.uid==myUid?'border-amber-400/60':'border-white/10'}">
+     <div class="font-bold truncate">${esc(x.name)} ${x.done?'✅':''}</div>
+     <div class="text-[10px] opacity-75">${JOBS[x.job].n}</div>
+     <div class="text-amber-300 font-bold mt-0.5">Média: ${s.tot} pts</div>
+    </div>`}).join('')}
+   </div>
+   <div class="text-[11px] opacity-80 bg-black/30 p-2 rounded-lg max-h-20 overflow-y-auto space-y-1">
+    ${G.log.slice(0,4).map(l=>`<div>${esc(l)}</div>`).join('')}
+   </div>
+  </div>
+  ${rLocModal(p)}
+ </div>`;
+}
+
+function rEnd(){
+ const rk=G.pls.slice().sort((a,b)=>scores(b).tot-scores(a).tot);
+ const win=rk[0];
+ return`<div class="space-y-4 pt-6 text-center">
+  <div class="f text-4xl sm:text-5xl text-amber-300">🎂 Chegaram aos 40 Anos!</div>
+  <div class="text-sm">🏆 <b>${esc(win.name)}</b> chegou melhor aos 40 anos com <b>${scores(win).tot} pontos de média</b>!</div>
+  <div class="lousa p-4 space-y-2.5 text-left">
+   ${rk.map((p,i)=>{const s=scores(p);return`<div class="p-3 rounded-xl bg-black/40 border ${i==0?'border-amber-400':'border-white/10'} flex justify-between items-center">
+    <div>
+     <div class="font-bold text-sm">${['🥇','🥈','🥉','4º'][i]} ${esc(p.name)} — <span class="text-amber-300">${s.tot} pts</span></div>
+     <div class="text-xs opacity-80">${JOBS[p.job].n} · Patrimônio R$ ${netWorth(p)} · ${HOMES[p.home].n}</div>
+     <div class="text-[11px] opacity-75 mt-0.5">💰 ${s.w} · 🎓 ${s.c} · ❤️ ${s.h} · 😎 ${s.l}</div>
+    </div>
+   </div>`}).join('')}
+  </div>
+  <div class="flex flex-col gap-2 max-w-xs mx-auto">
+   <button onclick="G=null;render()" class="bt bg-amber-500 text-black">Voltar ao Menu & Troféus</button>
+   <a href="../../" class="bt bg-slate-700">← Sala de Jogos</a>
+  </div>
+ </div>`;
+}
+
+function render(){
+ $('app').innerHTML=(!G||G.ph=='lobby')?rMenu():G.ph=='play'?rPlay():rEnd();
+}
+render();
+</script>
+</body>
+</html>
