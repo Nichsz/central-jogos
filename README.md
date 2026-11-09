@@ -1,68 +1,121 @@
-# 👑 Intrigas da Corte: Blefe & Influência (Fan-Made Web Project)
+# 🎲 Central de Jogos
 
-> ⚠️ **Aviso Legal / Disclaimer (Projeto Fan-Made Sem Fins Lucrativos)**  
-> Este repositório contém um projeto **fan-made, experimental e educacional**, desenvolvido com o auxílio de **IA Generativa** exclusivamente para diversão casual entre amigos.  
-> O projeto é inspirado nas mecânicas clássicas do jogo de cartas *Coup* (criado por Rikki Tahta e publicado originalmente pela Indie Boards & Cards / Galápagos Jogos no Brasil). **Não possui qualquer vínculo oficial, comercial ou endosso dos detentores da marca.** Todas as ilustrações vetoriais (SVGs), interface e efeitos sonoros sintéticos foram gerados em código próprio. Se você gosta da mecânica, apoie os criadores adquirindo o jogo físico oficial!
+Uma sala de jogos feita para jogar com os amigos direto no navegador. Sem instalar nada e sem servidor: é só abrir o link, criar uma sala e mandar o código para a galera.
 
----
-
-## 🎭 Sobre o Projeto
-
-**Intrigas da Corte** é uma aplicação web *Single-File* (`index.html`) que permite jogar partidas rápidas de blefe, dedução e eliminação com amigos diretamente pelo navegador, sem necessidade de instalar aplicativos ou manter um servidor backend dedicado.
-
-### ✨ Principais Funcionalidades
-- 🌐 **Salas Online P2P (PeerJS / WebRTC):** Conecte de **2 a 6 jogadores** em redes Wi-Fi diferentes usando apenas um código de 5 letras ou um **Link de Convite Direto**.
-- 📹 **Câmera e Chat de Voz na Mesa:** Ligue sua webcam e seu microfone se quiser! O vídeo aparece ao vivo na moldura do seu assento na mesa (com indicador luminoso de quem está falando), perfeito para tentar ler a expressão de blefe dos seus amigos.
-- 🤖 **Bots Inteligentes:** Quer testar sozinho ou completar a mesa quando faltar gente? Adicione ou remova Bots na sala de espera com um clique.
-- 🎨 **8 Personagens Renascentistas & Cartas Ilustradas em SVG:** Toda a arte dos avatares e das cartas é renderizada em SVG puro dentro do próprio código.
-- 😂 **Reações Flutuantes & Crônicas da Corte:** Envie emojis que flutuam sobre o seu assento em tempo real, converse no chat lateral e acompanhe todo o histórico de jogadas e contestações.
-- 🔐 **Portão de Acesso Privado:** Tela inicial com palavra-passe da galera (padrão: `CORTE`) e desbloqueio automático quando seus amigos entram pelo seu Link de Convite.
+> ⚠️ **Aviso legal (projeto fan-made, sem fins lucrativos)**
+> Este repositório reúne projetos **experimentais e educacionais**, criados com o auxílio de **IA generativa**, só para diversão casual entre amigos. Alguns jogos são inspirados em mecânicas clássicas (por exemplo, *Intrigas da Corte* é inspirado em *Coup*, de Rikki Tahta, publicado pela Indie Boards & Cards / Galápagos Jogos). **Não há vínculo oficial, comercial ou endosso dos detentores das marcas.** Artes, interface e sons foram gerados em código próprio. Se você curte o jogo, apoie os criadores comprando a versão física oficial!
 
 ---
 
-## 🚀 Como Jogar com Seus Amigos (GitHub Pages)
+## 🕹️ Jogos disponíveis
 
-1. **Acesse o link do GitHub Pages** deste repositório.
-2. Caso peça a senha do Portão da Corte na primeira vez, digite **`CORTE`** (ou entre diretamente pelo Link de Convite enviado pelo anfitrião).
-3. Escolha seu **Nome na Corte** e um dos **8 Nobres Ilustrados**.
-4. Clique em **"Criar Nova Sala"** (ou em **"Partida Rápida c/ Bots"** para jogar imediatamente).
-5. No topo da tela (ou no banner da Sala de Espera), clique no botão verde **"Copiar Link de Convite"** e envie no Discord ou WhatsApp para seus amigos.
-6. Quando todos estiverem na sala (e se quiserem, com **Câmera** e **Voz** ativadas no topo), o anfitrião clica em **"Iniciar Partida"**!
+| Jogo | Resumo | Jogadores | Destaques |
+| :--- | :--- | :--- | :--- |
+| 👑 [**Intrigas da Corte**](games/intrigas-da-corte/) | Blefe e influência. Engane, desafie e sobreviva na corte. | 2 a 6 | Online, bots, câmera e voz |
+| 🃏 [**Truco**](games/truco/) | Duplas, manilha pela vira, sinais secretos e modo caos. | 2x2 ou 2x2x2 (até 6) | Online, bots, voz, modo caos |
+| 💼 [**Jogo da Vida BR**](games/jogo-da-vida/) | Empregos, estudos e boletos. Quem chega melhor aos 40? | Solo ou até 4 | Online, bots, carreira, troféus |
+| 🍻 [**Fechou a Conta**](games/fechou-a-conta/) | Monte mãos de pôquer, junte amuletos e pague as contas do boteco. | Solo ou até 6 | Co-op ou disputa, chefões, relíquias, troféus |
+
+A página inicial (`index.html`) é o hub com a lista de todos os jogos.
 
 ---
 
-## 📜 Resumo das Regras e Personagens
+## 🚀 Como jogar com os amigos
 
-Cada jogador inicia a partida com **2 moedas de ouro** e **2 cartas de Influência secretas**. O objetivo é ser o último nobre com pelo menos uma carta de influência ativa.
+1. Abra o link do **GitHub Pages** deste repositório e escolha um jogo.
+2. Quem vai hospedar cria uma sala (ou escolhe o modo solo / treino com bots para testar sozinho).
+3. Copie o **código da sala** ou o **link de convite** e mande no Discord ou WhatsApp.
+4. Quando todos estiverem na sala, o anfitrião inicia a partida.
 
-### Ações Básicas (Qualquer um pode fazer no seu turno)
-| Ação | Custo / Efeito | Pode ser bloqueada? |
+Quando faltar gente, dá para completar a mesa com **bots**.
+
+> 💡 **Dica:** as salas online usam conexão P2P (PeerJS / WebRTC), então todo mundo precisa manter a aba aberta durante a partida. Se o anfitrião fechar, a sala acaba.
+
+---
+
+## 🎮 Sobre cada jogo
+
+### 👑 Intrigas da Corte: Blefe & Influência
+Jogo de blefe e dedução inspirado em *Coup*. Cada jogador começa com 2 moedas e 2 cartas de influência secretas, e vence o último nobre que ainda tiver influência.
+
+- Salas online de **2 a 6 jogadores**, com código de sala ou link de convite direto
+- **Câmera e chat de voz** na mesa, com indicador de quem está falando
+- **Bots** para completar a mesa
+- **8 personagens** renascentistas ilustrados em SVG, reações flutuantes e chat lateral
+- 🔐 Tem um **portão de acesso** com senha da galera (padrão: `CORTE`). Quem entra pelo link de convite é liberado automaticamente.
+
+**Regras resumidas**
+
+| Ação | Efeito | Pode ser bloqueada? |
 | :--- | :--- | :--- |
-| **Renda** | **+1 moeda** do Tesouro Central | ❌ Não (Ação segura) |
-| **Ajuda Externa** | **+2 moedas** do Tesouro Central | 🛡️ Sim, qualquer jogador pode declarar **Duque** para bloquear |
-| **Golpe de Estado** | Paga **-7 moedas** para forçar um alvo a perder 1 influência | ❌ Não (Defesa impossível • **Obrigatório com 10+ moedas!**) |
+| **Renda** | +1 moeda | ❌ Não |
+| **Ajuda Externa** | +2 moedas | 🛡️ Sim, pelo **Duque** |
+| **Golpe de Estado** | Paga 7 moedas e o alvo perde 1 influência (**obrigatório com 10+ moedas**) | ❌ Não |
 
-### Os 5 Personagens da Corte (15 Cartas no Baralho — 3 de cada)
-> 💡 **Regra de Ouro do Blefe:** No seu turno (ou ao bloquear), você pode declarar **qualquer personagem**, mesmo que não tenha a carta na mão! A ação acontece normalmente a menos que outro jogador clique em **Contestar (Duvidar)**.
-
-| Personagem | Ação no Turno | Habilidade de Bloqueio |
+| Personagem | Ação no turno | Bloqueio |
 | :--- | :--- | :--- |
-| 👑 **Duque** | **Taxar:** Pega **+3 moedas** do Tesouro Central. | Bloqueia a **Ajuda Externa** de qualquer jogador. |
-| 🗡️ **Assassino** | **Assassinar:** Paga **-3 moedas** para eliminar 1 influência de um alvo. | *Não bloqueia ações.* |
-| 🎭 **Condessa** | *Sem ação ativa de turno.* | Bloqueia uma tentativa de **Assassinato** contra si mesma. |
-| 🧭 **Capitão** | **Extorquir:** Rouba até **2 moedas** de outro jogador. | Bloqueia tentativas de roubo de outro **Capitão**. |
-| 📜 **Embaixador** | **Trocar c/ a Corte:** Olha 2 cartas do baralho, troca com a mão e devolve 2. | Bloqueia tentativas de roubo de outro **Capitão**. |
+| 👑 **Duque** | Taxar: +3 moedas | Bloqueia Ajuda Externa |
+| 🗡️ **Assassino** | Paga 3 moedas para eliminar 1 influência de um alvo | — |
+| 🎭 **Condessa** | — | Bloqueia Assassinato contra si |
+| 🧭 **Capitão** | Extorquir: rouba até 2 moedas de outro jogador | Bloqueia roubo |
+| 📜 **Embaixador** | Troca cartas com o baralho da corte | Bloqueia roubo |
 
-### ⚡ Como Funcionam as Contestações (Duvidar)
-Sempre que alguém declara usar a ação ou o bloqueio de um personagem:
-- **Se ninguém contestar:** A ação ou bloqueio é considerado verdadeiro e prossegue.
-- **Se alguém contestar e o jogador ESTAVA BLEFANDO:** A ação/bloqueio falha imediatamente e o blefador perde 1 carta de influência!
-- **Se alguém contestar e o jogador DIZIA A VERDADE:** O jogador revela a carta, embaralha-a de volta no Baralho da Corte, compra uma carta nova secreta, e **quem duvidou perde 1 influência**!
+Você pode declarar **qualquer personagem**, mesmo sem ter a carta. Se alguém **contestar** e você estiver blefando, perde 1 influência. Se você estiver falando a verdade, quem duvidou perde 1 influência.
+
+### 🃏 Truco
+Truco com mesa de bar, em **duplas (2x2)** ou **trios de duplas (2x2x2, até 6 jogadores)**. Os parceiros sentam sempre de frente, e as vagas vazias viram bots.
+
+- Manilha definida pela vira
+- **Sinais secretos** entre parceiros
+- **Modo caos**: às vezes a mão vem com uma regra maluca (manilha velha, truco dobrado, ordem invertida, às cegas...)
+- Voz ao vivo, sistema de **XP e níveis** salvo no seu navegador
+- Modo de **treino contra bots (offline)**
+
+### 💼 Jogo da Vida BR
+Uma corrida até os 40 anos, com empregos, cursos e boletos. Vence quem chega melhor.
+
+- Escolha sua **origem de vida**
+- Gerencie **trabalho, estudo, comida, saúde, felicidade e estresse**
+- Suba de cargo (precisa de curso, horas de experiência e até roupa social)
+- **Mural de conquistas** da vida (troféus)
+- Jogue **solo** ou **online com até 4 jogadores**, com bots
+
+### 🍻 Fechou a Conta
+Jogo de cartas em que você monta **mãos de pôquer** para pagar as contas do boteco ao longo de **12 rodadas**.
+
+- Dois modos online: **Co-op (Rachando a Conta)** e **Disputa (mesma semente para todos)**
+- Até **6 pessoas** na mesa
+- **Chefões**, pacotes de cartas e **relíquias** colecionáveis
+- **Troféus** que desbloqueiam novas toalhas e baralhos
+- Também dá para jogar **solo**
+
+> 💾 O progresso de troféus, relíquias e XP fica salvo no `localStorage` do navegador. Se você trocar de aparelho ou limpar os dados do navegador, ele é perdido.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
-- **HTML5 + Tailwind CSS (CDN):** Interface responsiva para Desktop e Mobile com estética renascentista.
-- **JavaScript Vanilla:** Motor completo de regras, estados de reação, trocas do Embaixador e IA dos Bots.
-- **PeerJS + WebRTC Nativo:** Sincronização de estado P2P entre navegadores e streaming de vídeo/voz em tempo real sem servidor intermediário de mídia.
-- **Web Audio API:** Efeitos sonoros sintetizados em tempo real diretamente pelo navegador (sem arquivos MP3 externos).
+## 🛠️ Tecnologias
+
+- **HTML5 + JavaScript puro** (cada jogo é um único arquivo `index.html`)
+- **Tailwind CSS (CDN)** em alguns jogos
+- **PeerJS + WebRTC** para salas online P2P e voz/vídeo, sem servidor de mídia
+- **Web Audio API** para efeitos sonoros sintetizados no navegador
+- **SVG** para as ilustrações
+
+---
+
+## 📁 Estrutura do repositório
+
+```
+central-jogos/
+├── index.html              # Hub com a lista de jogos
+└── games/
+    ├── intrigas-da-corte/  # Blefe e influência
+    ├── truco/              # Truco 2x2 e 2x2x2
+    ├── jogo-da-vida/       # Jogo da Vida BR
+    └── fechou-a-conta/     # Pôquer de boteco
+```
+
+### ➕ Adicionando um novo jogo
+1. Crie uma pasta em `games/<nome-do-jogo>/` com um `index.html`.
+2. Adicione uma entrada na lista `games` dentro do `index.html` da raiz (título, descrição, link e tags).
+3. Atualize a tabela de jogos deste README.
