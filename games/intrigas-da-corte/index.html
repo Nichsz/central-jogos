@@ -1175,7 +1175,7 @@
           osc.start(now); osc.stop(now + duration);
         } catch (e) {}
       }
-      playNoise(duration = 0.2, delay = 0, filterType = 'bandpass', freq = 1200, q = 1.5, gainVal = 0.18, endFreq = null) {
+      playNoise(duration = 0.2, delay = 0, filterType = 'bandpass', freq = 1200, q = 1.5, gainVal = 0.18, endFreq = null, attack = 0) {
         if (!this.enabled) return;
         try {
           this.init();
@@ -1193,7 +1193,8 @@
           if (endFreq) filter.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
           filter.Q.value = q;
           const gain = this.ctx.createGain();
-          gain.gain.setValueAtTime(gainVal, now);
+          if (attack > 0) { gain.gain.setValueAtTime(0.0001, now); gain.gain.exponentialRampToValueAtTime(gainVal, now + attack); }
+          else gain.gain.setValueAtTime(gainVal, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
           noise.connect(filter); filter.connect(gain); gain.connect(this.ctx.destination);
           noise.start(now); noise.stop(now + duration);
@@ -1228,9 +1229,12 @@
         this.playNoise(0.12, 0, 'bandpass', 1800, 4, 0.14);
       }
       // Embaralhar / virar cartas
-      cardFlip() {
-        this.playNoise(0.08, 0, 'bandpass', 2200, 1.8, 0.14, 1200);
-        this.playNoise(0.08, 0.09, 'bandpass', 2500, 1.8, 0.12, 1400);
+      cardFlip() { this.paper(0, 0.17, 1); this.paper(0.14, 0.13, 0.8); } // "shiu, shiu"
+      // Carta deslizando: ruído nos agudos com entrada suave, sem tom grave
+      paper(delay = 0, len = 0.15, vol = 1) {
+        const j = 0.92 + Math.random() * 0.16;
+        this.playNoise(len, delay, 'bandpass', 1800 * j, 0.9, 0.2 * vol, 3800 * j, len * 0.35);
+        this.playNoise(0.035, delay + len * 0.85, 'highpass', 2600, 0.7, 0.04 * vol);
       }
       // Sussurro / Lupa do Fuxiqueiro
       whisper() {
