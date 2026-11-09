@@ -59,15 +59,19 @@ button{cursor:pointer}
 <div id="lob" class="fixed inset-0 z-40 overflow-auto">
  <svg class="fixed top-0 inset-x-0 pointer-events-none" width="100%" height="48"><defs><pattern id="bd" width="124" height="48" patternUnits="userSpaceOnUse"><path d="M0 3h124" stroke="#111" stroke-width="2"/><polygon points="4,3 34,3 19,42" fill="#009c3b"/><polygon points="35,3 65,3 50,42" fill="#ffdf00"/><polygon points="66,3 96,3 81,42" fill="#002776"/><polygon points="97,3 127,3 112,42" fill="#f4f1e6"/></pattern></defs><rect width="100%" height="48" fill="url(#bd)"/></svg>
  <div class="max-w-xl mx-auto p-4 space-y-4">
-  <div class="flex items-center justify-between text-sm pt-9"><a href="../../" class="opacity-70 hover:opacity-100">← Sala de Jogos</a><span class="opacity-60">2x2 · voz ao vivo</span></div>
+  <div class="flex items-center justify-between text-sm pt-9"><a href="../../" class="opacity-70 hover:opacity-100">← Sala de Jogos</a><span class="opacity-60">2x2 ou 2x2x2 · voz ao vivo</span></div>
   <div class="text-center"><div class="neon text-4xl">Boteco do</div><div class="f text-7xl leading-none" style="color:#f6eedc;text-shadow:0 5px 0 #b3141a,0 9px 0 #000">TRUCO</div><div class="text-sm mt-3 text-amber-100">Mesa de bar · cerveja gelada · zoeira liberada</div></div>
   <section class="lousa p-4 space-y-3">
    <div class="flex gap-3 items-center"><div id="pav" class="w-16 h-16 flex-none"></div><div class="flex-1 min-w-0"><input id="nm" maxlength="14" placeholder="Seu nome" class="w-full px-3 py-2 rounded-lg bg-black/50 border border-amber-500/30 outline-none"><div id="ptt" class="f text-sm text-amber-300 mt-1"></div><select id="tts" onchange="pickTt(this.value)" class="w-full mt-1 px-2 py-1 rounded bg-black/60 border border-amber-500/30 text-xs"></select></div></div>
-   <div id="avg" class="grid grid-cols-5 sm:grid-cols-7 gap-2 justify-items-center"></div>
+   <div id="avg" class="grid grid-cols-7 gap-2 justify-items-center"></div>
    <div class="grid grid-cols-3 gap-2 text-[11px]"><label>Verso das cartas<select id="scb" onchange="pickC('cb',this.value)" class="w-full px-1 py-1 rounded bg-black/60 border border-amber-500/30"></select></label><label>Mesa<select id="smz" onchange="pickC('mz',this.value)" class="w-full px-1 py-1 rounded bg-black/60 border border-amber-500/30"></select></label><label>Grito do truco<select id="ssn" onchange="pickC('sn',this.value)" class="w-full px-1 py-1 rounded bg-black/60 border border-amber-500/30"></select></label></div>
    <div id="xpb" class="text-xs space-y-1"></div>
   </section>
   <div id="lm" class="space-y-2">
+   <div class="grid grid-cols-2 gap-2 bg-black/40 p-1.5 rounded-xl border border-amber-500/30 text-sm">
+    <button id="m2" onclick="setMd(2)" class="py-2 rounded-lg font-bold bg-amber-600 text-black">🍻 Mesa 2×2 (4 jog.)</button>
+    <button id="m3" onclick="setMd(3)" class="py-2 rounded-lg font-bold opacity-70">🔥 Mesa 2×2×2 (6 jog.)</button>
+   </div>
    <button id="bBack" class="hidden w-full py-2.5 rounded-xl bg-sky-800 font-bold"></button>
    <button id="bRes" class="hidden w-full py-2.5 rounded-xl bg-sky-800 font-bold"></button>
    <button id="bHost" class="w-full py-3 rounded-xl font-bold text-lg" style="background:linear-gradient(#f5b83d,#b7791f);color:#2a1a02">Abrir a mesa (criar sala)</button>
@@ -77,9 +81,13 @@ button{cursor:pointer}
   <div id="lr" class="hidden space-y-3">
    <div class="text-center"><div class="text-xs opacity-70">Código da sala</div><div id="rl" class="f text-4xl text-amber-300 tracking-[.3em]"></div></div>
    <div class="flex gap-2"><input id="lk" readonly class="flex-1 px-2 py-1 rounded bg-black/50 text-xs"><button id="bCp" class="px-3 rounded bg-slate-600 text-sm">Copiar link</button></div>
+   <div id="rmSw" class="hidden grid grid-cols-2 gap-2 bg-black/40 p-1 rounded-xl border border-amber-500/30 text-xs">
+    <button id="rm2" onclick="send({t:'mode',nt:2})" class="py-1.5 rounded-lg font-bold">Mesa 2×2 (2 duplas)</button>
+    <button id="rm3" onclick="send({t:'mode',nt:3})" class="py-1.5 rounded-lg font-bold">Mesa 2×2×2 (3 duplas)</button>
+   </div>
    <div id="sl"></div>
-   <label class="flex items-center gap-3 rounded-xl bg-fuchsia-950/50 border border-fuchsia-400/30 p-3 text-sm"><input type="checkbox" id="chaos" class="w-5 h-5" onchange="send({t:'opt',v:this.checked})"><span><b>🌀 Modo Caos</b><br><span class="opacity-70 text-xs">Às vezes a mão vem com uma regra maluca: ordem invertida, sem manilha, às cegas...</span></span></label>
-   <p class="text-xs opacity-70 text-center">Parceiros sentam de frente. Vagas vazias viram bots.</p>
+   <label class="flex items-center gap-3 rounded-xl bg-fuchsia-950/50 border border-fuchsia-400/30 p-3 text-sm"><input type="checkbox" id="chaos" class="w-5 h-5" onchange="send({t:'opt',v:this.checked})"><span><b>🌀 Modo Caos</b><br><span class="opacity-70 text-xs">Às vezes a mão vem com uma regra maluca: manilha velha, truco dobrado, ordem invertida, às cegas...</span></span></label>
+   <p class="text-xs opacity-70 text-center">Parceiros sentam sempre de frente. Vagas vazias viram bots.</p>
    <button id="bStart" class="hidden w-full py-3 rounded-xl bg-emerald-600 font-bold text-lg">Embaralhar e começar</button>
   </div>
  </div>
@@ -88,7 +96,7 @@ button{cursor:pointer}
 <div id="game" class="hidden fixed inset-0 flex flex-col">
  <div class="flex items-center justify-between px-3 py-2 bg-[#2a1608]/90 border-b-2 border-amber-900 gap-2 flex-wrap">
   <div id="vira"></div>
-  <div id="score" class="f text-lg"></div>
+  <div id="score" class="f text-sm sm:text-lg"></div>
   <div class="flex gap-2"><button id="mic" class="px-2 py-1 rounded bg-slate-700 text-xs"></button><a href="../../" class="px-2 py-1 rounded bg-slate-700 text-xs">← Central</a><button onclick="leave()" class="px-2 py-1 rounded bg-rose-900 text-xs">Sair</button></div>
  </div>
  <div class="relative flex-1 min-h-0"><div id="tbl" class="absolute inset-0"></div><div id="board" class="absolute inset-0"></div></div>
@@ -99,7 +107,7 @@ button{cursor:pointer}
  </div>
 </div>
 <div id="ov" class="hidden fixed inset-0 z-40 bg-black/75 flex flex-col items-center justify-center gap-4">
- <div id="ovt" class="f text-5xl text-amber-300"></div>
+ <div id="ovt" class="f text-5xl text-amber-300 text-center px-4"></div>
  <button id="bAgain" onclick="send({t:'again'})" class="px-6 py-2 rounded-lg bg-emerald-700 font-bold">Jogar de novo</button>
 </div>
 <div id="fxl" class="fixed inset-0 pointer-events-none z-50"><div id="tc" class="absolute top-14 inset-x-0 flex flex-col items-center gap-1"></div></div>
@@ -107,6 +115,7 @@ button{cursor:pointer}
 <script>
 const RK=['4','5','6','7','Q','J','K','A','2','3'],SU=['♦','♠','♥','♣'];
 const NX={1:3,3:6,6:9,9:12},TL={3:'TRUCO',6:'SEIS',9:'NOVE',12:'DOZE'};
+const nxV=(v,d)=>d?(v==1?6:12):NX[v];
 const SG=[['😉','Tenho ZAP'],['🤨','Tenho manilha'],['😛','Tenho um 3'],['😬','Tô fraco'],['🤫','Pede truco'],['🙈','Foge dessa']];
 const AV=[
 ['Seu Zé','Dono do Boteco','#2f855a','#14532d','#e2b184','#2b1b0e',{h:'bald',b:'mus',sh:'#f3efe6',ap:'#15803d',m:'grin'}],
@@ -118,20 +127,53 @@ const AV=[
 ['Zeca','O Embucha','#3b82f6','#16307a','#8a5a3c','#0d0d0d',{hat:'cap',b:'goat',sh:'#1d4ed8',m:'smirk'}],
 ['Carol','A Manilheira','#ef4444','#6e1010','#f0c2a0','#c2410c',{h:'curly',fr:1,sh:'#dc2626',m:'grin'}],
 ['Garçom Ligeiro','Equilibrista de Bandeja','#0ea5e9','#0c4a6e','#e8b98e','#2a1a10',{h:'short',bt:1,sh:'#f8fafc',m:'smile'}],
+['Boleiro','Camisa 10 do Várzea','#16a34a','#14532d','#c68b59','#1c1917',{h:'short',b:'goat',sh:'#facc15',st:1,m:'grin'}],
 ['Malandro','Elegante Demais','#14b8a6','#0f3d3a','#b9805a','#111111',{hat:'panama',b:'mus',sh:'#f8fafc',m:'smirk'}],
 ['Chef do Fogo','Mestre do Espeto','#f97316','#7c2d12','#e9bd96','#3b2a1a',{hat:'chef',b:'goat',sh:'#fafafa',m:'grin'}],
 ['Rei do Truco','Majestade do Zap','#a855f7','#4a1d96','#e0ac80','#2b1b0e',{hat:'crown',b:'mus',sh:'#7e22ce',ch:1,m:'grin'}],
 ['A Lenda','Lenda Viva do Boteco','#f59e0b','#78350f','#b9805a','#111111',{h:'bald',g:'sun',ch:1,sh:'#111827',m:'smirk'}]];
-const mkBot=n=>{const k=[5,6,3,7][n];return{uid:'b'+n,name:AV[k][0],av:k,bot:1,lv:{5:3,6:2,3:1,7:2}[k]}};
-let avN=0;
-const UL=[0,0,0,0,0,0,0,0,1,2,2,3,3];
-const CB=[['Azul clássico',0,'#1d4ed8','#1e3a8a'],['Verde boteco',1,'#15803d','#14532d'],['Brasil',2,'#16a34a','#facc15'],['Dourado',3,'#d4af37','#7c5a10']];
-const MZ=[['Vermelha de bar',0,'#e32a30','#b3141a','#8a0e13','#7a0d11'],['Verde feltro',1,'#1f8a48','#14532d','#0b3320','#0b3320'],['Azul sinuca',2,'#2a6fd6','#1b4a9a','#10306a','#0b2150'],['Preta VIP',3,'#3a3a40','#1c1c20','#0a0a0c','#d4af37']];
-const SN=[['Apito',0],['Soco na mesa',1],['Sino de boteco',2],['Fanfarra',3]];
+const mkBot=n=>{const k=[5,6,3,7,8,9][n%6];return{uid:'b'+n,name:AV[k][0],av:k,bot:1,lv:[3,2,1,2,1,2][n%6]}};
+let avN=0,selNt=2;
+const UL=[0,0,0,0,0,0,0,0,1,1,2,2,3,3];
+const CB=[
+['Azul clássico',0,'#1d4ed8','#1e3a8a'],
+['Verde boteco',1,'#15803d','#14532d'],
+['Vermelho cassino',1,'#b91c1c','#7f1d1d'],
+['Brasil',2,'#16a34a','#facc15'],
+['Roxo neon',2,'#7e22ce','#3b0764'],
+['Dourado',3,'#d4af37','#7c5a10'],
+['Preto imperial',3,'#27272a','#09090b']];
+const MZ=[
+['Vermelha de bar',0,'#e32a30','#b3141a','#8a0e13','#7a0d11'],
+['Verde feltro',1,'#1f8a48','#14532d','#0b3320','#0b3320'],
+['Amarela de calçada',1,'#eab308','#ca8a04','#854d0e','#713f12'],
+['Azul sinuca',2,'#2a6fd6','#1b4a9a','#10306a','#0b2150'],
+['Madeira de churrasco',2,'#78350f','#451a03','#271001','#d97706'],
+['Preta VIP',3,'#3a3a40','#1c1c20','#0a0a0c','#d4af37'],
+['Roxa clandestina',3,'#581c87','#3b0764','#1e0238','#e879f9']];
+const SN=[
+['Apito',0],
+['Soco na mesa',1],
+['Batida de dominó',1],
+['Sino de boteco',2],
+['Copo no balcão',2],
+['Fanfarra',3],
+['Sirene do caos',3]];
 const cbs=i=>{const c=CB[i|0]||CB[0];return`background:repeating-linear-gradient(45deg,${c[2]},${c[2]} 5px,${c[3]} 5px,${c[3]} 10px)`};
 const okU=(v,A,lv)=>A[v|0]&&A[v|0][1]<=lv?v|0:0;
-function shout(k){[()=>bp(140,.35,'sawtooth'),()=>{bp(70,.25,'square');setTimeout(()=>bp(55,.3,'square'),120)},()=>[880,1175,880].forEach((f,i)=>setTimeout(()=>bp(f,.35,'triangle'),i*140)),()=>[392,523,659,784].forEach((f,i)=>setTimeout(()=>bp(f,.25,'sawtooth'),i*90))][k|0]()}
-const TTL=[['Do Balcão',0],['Fiel da Casa',1],['Manilheiro',1],['Embuchador Nato',2],['Mão de Ferro',2],['Terror dos Seis',3],['Zap Supremo',3],['Lenda Viva',3]];
+function shout(k){[
+ ()=>bp(140,.35,'sawtooth'),
+ ()=>{bp(70,.25,'square');setTimeout(()=>bp(55,.3,'square'),120)},
+ ()=>{bp(920,.05,'triangle');setTimeout(()=>bp(680,.07,'square'),55)},
+ ()=>[880,1175,880].forEach((f,i)=>setTimeout(()=>bp(f,.35,'triangle'),i*140)),
+ ()=>{bp(1350,.09,'sine');setTimeout(()=>bp(1020,.18,'triangle'),80)},
+ ()=>[392,523,659,784].forEach((f,i)=>setTimeout(()=>bp(f,.25,'sawtooth'),i*90)),
+ ()=>[320,640,320,640].forEach((f,i)=>setTimeout(()=>bp(f,.16,'sawtooth'),i*100))
+][k|0]()}
+const TTL=[
+['Do Balcão',0],['Fiel da Casa',1],['Manilheiro',1],['Rei da Calçada',1],
+['Embuchador Nato',2],['Mão de Ferro',2],['Terror do Bar',2],
+['Terror dos Seis',3],['Zap Supremo',3],['Lenda Viva',3],['Imortal do Boteco',3]];
 const ttName=p=>p.tt>=0&&TTL[p.tt]?TTL[p.tt][0]:AV[p.av|0][1];
 const mkSeat=d=>{const lv=Math.max(0,Math.min(3,d.lv|0)),av=(d.av|0)%AV.length,t=d.tt|0;return{uid:d.uid,name:String(d.name).slice(0,14),lv,cb:okU(d.cb,CB,lv),sn:okU(d.sn,SN,lv),av:UL[av]<=lv?av:0,tt:d.tt>=0&&TTL[t]&&TTL[t][1]<=lv?t:-1}};
 const LV=['Novato','Freguês','Chapa','Veterano'],XT=[0,40,120,300];
@@ -139,6 +181,7 @@ const LIM=[5,4,3,2],PER=[.5,.7,.85,.95],SPY=[.06,.12,.2,.3],SLO=[1.6,1.2,.9,.7];
 let xp=0,xpDone=0,lastGain=0,myTt=-1,myCb=0,myMz=0,mySn=0;try{xp=+localStorage.getItem('truco_xp')||0}catch(e){}
 const lvOf=x=>XT.reduce((a,t,i)=>x>=t?i:a,0);
 function gainXP(n){xp+=n;try{localStorage.setItem('truco_xp',xp)}catch(e){}}
+function setMd(nt){selNt=nt;$('m2').className='py-2 rounded-lg font-bold '+(nt==2?'bg-amber-600 text-black':'opacity-70');$('m3').className='py-2 rounded-lg font-bold '+(nt==3?'bg-amber-600 text-black':'opacity-70')}
 function xpUpd(){const l=lvOf(xp),nx=XT[l+1],pc=nx?(xp-XT[l])/(nx-XT[l])*100:100;
  $('xpb').innerHTML=`<div class="flex justify-between"><span><b class="text-amber-300">${LV[l]}</b> <span class="text-amber-300">${'★'.repeat(l+1)}</span></span><span class="opacity-70">${xp} XP${nx?` · faltam ${nx-xp} p/ ${LV[l+1]}`:' · nível máximo'}</span></div><div class="h-2 rounded bg-black/50 overflow-hidden"><i class="block h-full bg-amber-400" style="width:${pc}%"></i></div><details class="opacity-80"><summary class="cursor-pointer">Como funciona a experiência?</summary><p class="mt-1">Quanto mais você joga, melhor percebe os sinais do parceiro e dos adversários. Novatos percebem menos, mas podem mandar mais sinais, e os sinais deles vazam mais. Veteranos leem tudo, mas só mandam 2 sinais por mão, e cada sinal extra deixa a dupla mais manjada. Partidas contra bots rendem metade do XP.</p></details>`}
 function avt(i,z=56,lv=0){const[,,c1,c2,sk,hr,o]=AV[i|0]||AV[0],u=++avN;
@@ -181,72 +224,96 @@ let evSeen=-1,prevT=0,lastDK='',name='';
 let ac;function bp(f=440,d=.12,ty='sine'){try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain();o.type=ty;o.frequency.value=f;g.gain.value=.08;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}}
 
 /* ============ MOTOR (roda só no host) ============ */
-function newG(){return{hostUid:myUid,seats:[null,null,null,null],pts:[0,0],phase:'lobby',dealer:3,ev:[],eid:0}}
+function newG(nt=2){return{hostUid:myUid,nt,n:nt*2,seats:Array(nt*2).fill(null),pts:Array(nt).fill(0),phase:'lobby',dealer:nt*2-1,ev:[],eid:0}}
+function setModeG(nt){if(G.phase!='lobby'||(nt!=2&&nt!=3)||G.nt==nt)return;
+ const old=G.seats.filter(p=>p&&!p.bot);G.nt=nt;G.n=nt*2;G.pts=Array(nt).fill(0);G.dealer=G.n-1;
+ G.seats=Array(G.n).fill(null);old.slice(0,G.n).forEach((p,i)=>G.seats[i]=p)}
 function fx(k,o={}){G.ev.push({id:++G.eid,k,...o});if(G.ev.length>30)G.ev.shift()}
+const oldM=c=>c.r==0&&c.s==3?3:c.r==3&&c.s==2?2:c.r==7&&c.s==1?1:c.r==3&&c.s==0?0:-1;
+const isMan=(c,v=G)=>v.oldMan?oldM(c)>=0:c.r==v.man;
+const isZap=(c,v=G)=>v.oldMan?oldM(c)==3:c.r==v.man&&c.s==3;
 const rk=c=>G.rev?9-c.r:c.r;
-const str=c=>c.r==G.man?100+c.s:rk(c);
-const sc=c=>c.r==G.man?8+c.s:rk(c)*.7;
+const str=c=>G.oldMan?(oldM(c)>=0?100+oldM(c):rk(c)):c.r==G.man?100+c.s:rk(c);
+const sc=c=>G.oldMan?(oldM(c)>=0?8+oldM(c):rk(c)*.7):c.r==G.man?8+c.s:rk(c)*.7;
 const pwr=h=>h.length?h.reduce((a,c)=>a+sc(c),0)/h.length:0;
-function startMatch(){G.seats.forEach((p,i)=>{if(!p)G.seats[i]=mkBot(i)});G.pts=[0,0];G.phase='play';G.winner=null;G.dealer=3;deal()}
+function startMatch(){G.seats.forEach((p,i)=>{if(!p)G.seats[i]=mkBot(i)});G.pts=Array(G.nt).fill(0);G.phase='play';G.winner=null;G.dealer=G.n-1;deal()}
 function deal(){
  const d=[];for(let r=0;r<10;r++)for(let s=0;s<4;s++)d.push({r,s});
  for(let i=39;i>0;i--){const j=rnd(i+1);[d[i],d[j]]=[d[j],d[i]]}
  G.seats.forEach(p=>p.hand=[d.pop(),d.pop(),d.pop()]);
  G.vira=d.pop();G.man=(G.vira.r+1)%10;
- G.dealer=(G.dealer+1)%4;G.turn=G.first=(G.dealer+1)%4;
- G.table=[];G.rs=[];G.val=1;G.pend=null;G.lastUp=-1;G.busy=0;
- G.sigN=[0,0,0,0];G.sigT=[0,0];G.flag=[0,0];G.bs=[0,0,0,0];
- const a=G.pts[0]==11,b=G.pts[1]==11;
- G.lock=a||b;G.blind=a&&b;G.p11=a!=b?(a?0:1):null;
- G.rev=0;G.chaosTxt='';
- if(G.chaos&&!G.lock&&Math.random()<.55){const k=rnd(5);
+ G.dealer=(G.dealer+1)%G.n;G.turn=G.first=(G.dealer+1)%G.n;
+ G.table=[];G.rs=[];G.val=1;G.pend=null;G.lastUp=-1;G.busy=0;G.out=Array(G.nt).fill(0);
+ G.sigN=Array(G.n).fill(0);G.sigT=Array(G.nt).fill(0);G.bs=Array(G.n).fill(0);
+ const a11=G.pts.map((p,t)=>p==11?t:-1).filter(t=>t>=0);
+ G.lock=a11.length>0;G.blind=a11.length>=2;G.p11=a11.length==1?a11[0]:null;
+ G.rev=0;G.oldMan=0;G.dbl=0;G.chaosTxt='';
+ if(G.chaos&&!G.lock&&Math.random()<.6){const k=rnd(7);
   if(k==0){G.val=3;G.chaosTxt='Mão valendo 3 desde o começo!'}
   else if(k==1){G.rev=1;G.chaosTxt='Ordem invertida: o 4 é a mais forte!'}
   else if(k==2){G.man=-1;G.chaosTxt='Sem manilha nesta mão!'}
   else if(k==3){G.blind=true;G.chaosTxt='Mão às cegas: jogue sem ver!'}
-  else{const pk=G.seats.map(p=>p.hand.splice(rnd(3),1)[0]);G.seats.forEach((p,i)=>p.hand.push(pk[(i+3)%4]));G.chaosTxt='Roda-roda: cada um passou uma carta pro próximo!'}
+  else if(k==4){const pk=G.seats.map(p=>p.hand.splice(rnd(3),1)[0]);G.seats.forEach((p,i)=>p.hand.push(pk[(i+G.n-1)%G.n]));G.chaosTxt='Roda-roda: cada um passou uma carta pro próximo!'}
+  else if(k==5){G.oldMan=1;G.man=-1;G.chaosTxt='Manilha Velha: 4♣, 7♥, A♠ e 7♦ fixos!'}
+  else{G.dbl=1;G.chaosTxt='Truco Dobrado: o grito já pula direto p/ SEIS!'}
   fx('chaos',{txt:G.chaosTxt})}
  fx('deal');
 }
-const canTruco=s=>!G.lock&&G.turn==s&&!G.pend&&G.lastUp!=s%2&&G.val<12&&G.p11==null;
-function callTruco(s){G.pend={by:s,val:NX[G.val]};G.lastUp=s%2;fx('truco',{txt:TL[NX[G.val]]+'!',team:s%2,s})}
-function respond(s,r){const pd=G.pend;
- if(r=='ok'){G.val=pd.val;G.pend=null;fx('ok',{txt:'Aceitaram! ✅'})}
- else if(r=='run'){G.pend=null;fx('ok',{txt:'Correu! 🏃'});endHand(pd.by%2)}
- else if(r=='up'&&pd.val<12){G.val=pd.val;G.lastUp=s%2;G.pend={by:s,val:NX[pd.val]};fx('truco',{txt:TL[NX[pd.val]]+'!',team:s%2,s})}}
-function decide11(t,r){G.p11=null;if(r=='play'){G.val=3;fx('ok',{txt:'Mão de onze: vale 3!'})}else{fx('ok',{txt:'Mão de onze: correram'});endHand(1-t)}}
-function playCard(s,i){const c=G.seats[s].hand.splice(i,1)[0];G.table.push({seat:s,card:c});fx('play',{zap:c.r==G.man&&c.s==3});
- if(G.table.length<4)G.turn=(s+1)%4;else{G.busy=1;setTimeout(trick,1500)}}
+const actSeats=()=>G.seats.filter((_,i)=>!G.out[i%G.nt]).length;
+function advTurn(){for(let k=0;k<G.n;k++){if(!G.out[G.turn%G.nt]&&!G.table.some(x=>x.seat==G.turn)&&G.seats[G.turn].hand.length)break;G.turn=(G.turn+1)%G.n}}
+const canTruco=s=>!G.lock&&G.turn==s&&!G.pend&&G.lastUp!=s%G.nt&&G.val<12&&G.p11==null&&!G.out[s%G.nt];
+function callTruco(s){const nv=nxV(G.val,G.dbl),t=s%G.nt;G.pend={by:s,val:nv,ok:[t]};G.lastUp=t;fx('truco',{txt:TL[nv]+'!',team:t,s})}
+function chkPend(){const pd=G.pend;if(!pd)return;
+ const alive=[];for(let t=0;t<G.nt;t++)if(!G.out[t])alive.push(t);
+ if(alive.length<=1){G.pend=null;endHand(alive[0]!==undefined?alive[0]:pd.by%G.nt);return}
+ if(alive.every(t=>pd.ok.includes(t))){G.val=pd.val;G.pend=null;fx('ok',{txt:'Aceitaram! ✅'});
+  if(G.table.length>=actSeats()){G.busy=1;setTimeout(trick,900)}else advTurn()}}
+function respond(s,r){const pd=G.pend,t=s%G.nt;if(!pd||G.out[t]||pd.ok.includes(t))return;
+ if(r=='ok'){pd.ok.push(t);chkPend()}
+ else if(r=='run'){G.out[t]=1;G.table=G.table.filter(x=>x.seat%G.nt!=t);G.seats.forEach((p,i)=>{if(i%G.nt==t)p.hand=[]});
+  fx('ok',{txt:G.nt==3?`Dupla ${['verde','vermelha','azul'][t]} correu! 🏃`:'Correu! 🏃'});chkPend()}
+ else if(r=='up'&&pd.val<12){const nv=nxV(pd.val,G.dbl);G.val=pd.val;G.lastUp=t;G.pend={by:s,val:nv,ok:[t]};fx('truco',{txt:TL[nv]+'!',team:t,s})}}
+function decide11(t,r){G.p11=null;if(r=='play'){G.val=3;fx('ok',{txt:'Mão de onze: vale 3!'})}
+ else{fx('ok',{txt:'Mão de onze: correram'});
+  if(G.nt==2)endHand(1-t);
+  else{for(let i=0;i<G.nt;i++)if(i!=t)G.pts[i]+=1;G.busy=1;
+   const w=G.pts.findIndex(p=>p>=12);if(w>=0){G.phase='over';G.winner=w;G.busy=0}else setTimeout(()=>{if(G.phase=='play'){deal();bcast()}},2000)}}}
+function playCard(s,i){const c=G.seats[s].hand.splice(i,1)[0];G.table.push({seat:s,card:c});fx('play',{zap:isZap(c)});
+ if(G.table.length<actSeats()){G.turn=(s+1)%G.n;advTurn()}else{G.busy=1;setTimeout(trick,1500)}}
 function hw(){const r=G.rs,[a,b,c]=r;if(r.length<2)return null;
- if(a!=='T'){if(b===a||b==='T')return a;if(r.length<3)return null;return c==='T'?a:c}
- if(b!=='T')return b;if(r.length<3)return null;return c==='T'?G.first%2:c}
+ for(let t=0;t<G.nt;t++)if(r.filter(x=>x===t).length>=2)return t;
+ if(a!=='T'&&b==='T')return a;
+ if(a==='T'&&b!=='T')return b;
+ if(r.length<3)return null;
+ return a!=='T'?a:c!=='T'?c:G.first%G.nt}
 function trick(){if(G.phase!='play')return;
  let best=-1,w=[];G.table.forEach(t=>{const v=str(t.card);if(v>best){best=v;w=[t]}else if(v==best)w.push(t)});
- const res=new Set(w.map(t=>t.seat%2)).size>1?'T':w[0].seat%2;
- G.rs.push(res);G.table=[];G.busy=0;G.turn=w[0].seat;fx('rnd',{team:res});
+ const res=new Set(w.map(t=>t.seat%G.nt)).size>1?'T':w[0].seat%G.nt;
+ G.rs.push(res);G.table=[];G.busy=0;G.turn=w[0].seat;advTurn();fx('rnd',{team:res});
  const win=hw();if(win!==null)endHand(win);bcast()}
 function endHand(t){G.pts[t]+=G.val;fx('hand',{team:t,v:G.val});G.busy=1;
  if(G.pts[t]>=12){G.phase='over';G.winner=t;G.busy=0}
  else setTimeout(()=>{if(G.phase=='play'){deal();bcast()}},2400)}
-function sig(s,i){const lv=G.seats[s].lv|0;if(G.phase!='play'||G.sigN[s]>=LIM[lv]||!SG[i])return;G.sigN[s]++;G.sigT[s%2]++;
- const pt=(s+2)%4,seen=Math.random()<PER[G.seats[pt].lv|0],heat=1+.15*(G.sigT[s%2]-1);
+function sig(s,i){const lv=G.seats[s].lv|0,t=s%G.nt;if(G.phase!='play'||G.sigN[s]>=LIM[lv]||!SG[i]||G.out[t])return;G.sigN[s]++;G.sigT[t]++;
+ const pt=(s+G.nt)%G.n,seen=Math.random()<PER[G.seats[pt].lv|0],heat=1+.15*(G.sigT[t]-1);
  fx('sigs',{only:[s]});fx(seen?'sig':'sigm',{from:s,i,only:[pt]});
- [(s+1)%4,(s+3)%4].forEach(o=>{if(Math.random()<Math.min(.5,SPY[G.seats[o].lv|0]*SLO[lv]*heat))fx('leak',{i,only:[o]})})}
+ for(let o=0;o<G.n;o++)if(o%G.nt!=t&&Math.random()<Math.min(.5,SPY[G.seats[o].lv|0]*SLO[lv]*heat))fx('leak',{i,only:[o]})}
 function act(u,a){
- const s=G.seats.findIndex(p=>p&&p.uid==u);if(s<0)return;const P=G.phase;
+ const s=G.seats.findIndex(p=>p&&p.uid==u);if(s<0)return;const P=G.phase,t=s%G.nt;
  if(a.t=='emo')fx('emo',{seat:s,e:String(a.e).slice(0,16)});
  else if(P=='lobby'){
-  if(a.t=='sit'&&!G.seats[a.n]){G.seats[a.n]=G.seats[s];G.seats[s]=null}
-  else if(a.t=='bot'&&u==G.hostUid){const p=G.seats[a.n];if(!p)G.seats[a.n]=mkBot(a.n);else if(p.bot)G.seats[a.n]=null}
+  if(a.t=='sit'&&a.n>=0&&a.n<G.n&&!G.seats[a.n]){G.seats[a.n]=G.seats[s];G.seats[s]=null}
+  else if(a.t=='bot'&&u==G.hostUid&&a.n>=0&&a.n<G.n){const p=G.seats[a.n];if(!p)G.seats[a.n]=mkBot(a.n);else if(p.bot)G.seats[a.n]=null}
+  else if(a.t=='mode'&&u==G.hostUid)setModeG(a.nt);
   else if(a.t=='start'&&u==G.hostUid)startMatch();
   else if(a.t=='opt'&&u==G.hostUid)G.chaos=!!a.v;
- }else if(P=='over'){if(a.t=='again'&&u==G.hostUid){G.pts=[0,0];G.winner=null;G.phase='play';deal()}}
+ }else if(P=='over'){if(a.t=='again'&&u==G.hostUid){G.pts=Array(G.nt).fill(0);G.winner=null;G.phase='play';deal()}}
  else if(a.t=='sig')sig(s,a.i);
  else if(!G.busy){
-  if(a.t=='card'&&G.turn==s&&!G.pend&&G.p11==null&&G.seats[s].hand[a.i])playCard(s,a.i);
+  if(a.t=='card'&&G.turn==s&&!G.pend&&G.p11==null&&!G.out[t]&&G.seats[s].hand[a.i])playCard(s,a.i);
   else if(a.t=='truco'&&canTruco(s))callTruco(s);
-  else if(a.t=='resp'&&G.pend&&s%2!=G.pend.by%2)respond(s,a.r);
-  else if(a.t=='p11'&&G.p11===s%2)decide11(s%2,a.r);
+  else if(a.t=='resp'&&G.pend&&!G.out[t]&&!G.pend.ok.includes(t))respond(s,a.r);
+  else if(a.t=='p11'&&G.p11===t)decide11(t,a.r);
  }
  bcast();
 }
@@ -254,27 +321,30 @@ function act(u,a){
 function botCard(s){const h=G.seats[s].hand,ix=h.map((_,i)=>i).sort((a,b)=>str(h[a])-str(h[b]));
  if(!G.table.length)return G.rs.length?ix[ix.length-1]:ix[ix.length>>1];
  let top=-1,ts=0;G.table.forEach(t=>{if(str(t.card)>top){top=str(t.card);ts=t.seat}});
- if(ts%2==s%2)return ix[0];
+ if(ts%G.nt==s%G.nt)return ix[0];
  const w=ix.find(i=>str(h[i])>top);return w===undefined?ix[0]:w}
-function botSig(s){const h=G.seats[s].hand;if(h.some(c=>c.r==G.man&&c.s==3))return 0;if(h.some(c=>c.r==G.man))return 1;if(h.some(c=>rk(c)==9))return 2;return pwr(h)<2.6?3:-1}
+function botSig(s){const h=G.seats[s].hand;if(h.some(c=>isZap(c)))return 0;if(h.some(c=>isMan(c)))return 1;if(h.some(c=>rk(c)==9))return 2;return pwr(h)<2.6?3:-1}
 function botTick(){
  if(!G||G.phase!='play'||G.busy)return;const S=G.seats;
- if(G.p11!=null){const t=G.p11;if(S[t].bot&&S[t+2].bot){decide11(t,(pwr(S[t].hand)+pwr(S[t+2].hand))/2>3.8?'play':'run');bcast()}return}
- for(let s=0;s<4;s++){const p=S[s];if(!p.bot)continue;
-  if(!G.bs[s]&&!S[(s+2)%4].bot&&Math.random()<.5){G.bs[s]=1;const i=botSig(s);if(i>=0){sig(s,i);bcast();return}}
-  }
- if(G.pend){const o=(G.pend.by+1)%4,p=S[o];if(!p.bot)return;
-  const w=G.rs.filter(x=>x===o%2).length,l=G.rs.filter(x=>x===1-o%2).length;
-  const pw=pwr(p.hand)+(w-l)*1.3+(Math.random()<.12?2:0);
-  respond(o,pw>5.6&&G.pend.val<12&&Math.random()<.3?'up':pw>3.2?'ok':'run');bcast();return}
- const s=G.turn,p=S[s];if(!p.bot)return;
+ if(G.p11!=null){const t=G.p11;if(S[t].bot&&S[t+G.nt].bot){decide11(t,(pwr(S[t].hand)+pwr(S[t+G.nt].hand))/2>3.8?'play':'run');bcast()}return}
+ for(let s=0;s<G.n;s++){const p=S[s];if(!p.bot||G.out[s%G.nt])continue;
+  if(!G.bs[s]&&!S[(s+G.nt)%G.n].bot&&Math.random()<.5){G.bs[s]=1;const i=botSig(s);if(i>=0){sig(s,i);bcast();return}}}
+ if(G.pend){
+  for(let t=0;t<G.nt;t++){if(G.out[t]||G.pend.ok.includes(t))continue;
+   const s1=t,s2=t+G.nt;if(!S[s1].bot||!S[s2].bot)continue;
+   const o=S[s1].hand.length>=S[s2].hand.length?s1:s2,p=S[o];
+   const w=G.rs.filter(x=>x===t).length,l=G.rs.filter(x=>x!=='T'&&x!==t).length;
+   const pw=Math.max(pwr(S[s1].hand),pwr(S[s2].hand))+(w-l)*1.3+(Math.random()<.12?2:0);
+   respond(o,pw>5.6&&G.pend.val<12&&Math.random()<.3?'up':pw>3.2?'ok':'run');bcast();return}
+  return}
+ const s=G.turn,p=S[s];if(!p||!p.bot)return;
  if(canTruco(s)&&pwr(p.hand)>5.4&&Math.random()<.3)callTruco(s);else playCard(s,botCard(s));
  bcast()}
 
 /* ============ REDE ============ */
 function view(u){const s=G.seats.findIndex(p=>p&&p.uid==u);
  return{...G,me:s,sigT:null,bs:null,seats:G.seats.map((p,i)=>p&&{uid:p.uid,name:p.name,bot:p.bot,pid:p.pid,av:p.av,tt:p.tt,cb:p.cb,sn:p.sn,lv:p.lv,away:p.away,n:p.hand?p.hand.length:0,
-  h:p.hand&&(i==s||(G.p11!=null&&G.p11==s%2&&i%2==s%2))?p.hand:null}),
+  h:p.hand&&(i==s||(G.p11!=null&&G.p11==s%G.nt&&i%G.nt==s%G.nt))?p.hand:null}),
   ev:G.ev.filter(e=>!e.only||e.only.includes(s))}}
 function bcast(){
  if(!offline)for(const u in conns){const c=conns[u];if(c.open)c.send({t:'st',v:view(u)})}
@@ -296,9 +366,9 @@ function pickAv(i){if(UL[i]>lvOf(xp)){toast('Libera no nível '+LV[UL[i]]);retur
 function pickTt(v){myTt=+v;profUpd();saveProf()}
 function leave(){left=1;try{localStorage.removeItem('truco_sess');localStorage.removeItem('truco_host')}catch(e){}location.href=location.pathname}
 function hostGame(online,res){getName();isHost=true;offline=!online;
- if(res){G=res.G;code=res.code;myUid=G.hostUid;G.seats.forEach(p=>{if(p&&!p.bot&&p.uid!=myUid){p.bot=1;p.away=1}});
-  if(G.phase=='play'){if(G.table.length==4){G.busy=1;setTimeout(trick,500)}else if(G.busy)deal()}}
- else{G=newG();G.seats[0]={uid:myUid,name,av:myAv,tt:myTt,cb:myCb,sn:mySn,lv:lvOf(xp)}}
+ if(res){G=res.G;if(!G.nt){G.nt=2;G.n=4;G.out=[0,0]}code=res.code;myUid=G.hostUid;G.seats.forEach(p=>{if(p&&!p.bot&&p.uid!=myUid){p.bot=1;p.away=1}});
+  if(G.phase=='play'){if(G.table.length>=actSeats()){G.busy=1;setTimeout(trick,500)}else if(G.busy)deal()}}
+ else{G=newG(selNt);G.seats[0]={uid:myUid,name,av:myAv,tt:myTt,cb:myCb,sn:mySn,lv:lvOf(xp)}}
  if(!online){startMatch();bcast();return}
  if(!res)code=Array.from({length:5},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[rnd(32)]).join('');
  hostPeer()}
@@ -359,14 +429,15 @@ function gest(i){const sk='#f2c9a0',st='#7a4b2a';
 function toast(t){const d=document.createElement('div');d.className='tst';d.textContent=t;$('tc').appendChild(d);setTimeout(()=>d.remove(),2400)}
 function big(t,col){const d=document.createElement('div');d.className='bang f';d.style.color=col;d.textContent=t;$('fxl').appendChild(d);setTimeout(()=>d.remove(),1500)}
 function bub(rel,html){const el=$('st'+rel);if(!el)return;const r=el.getBoundingClientRect(),d=document.createElement('div');d.className='fl';d.style.cssText=`left:${r.left+r.width/2}px;top:${r.top}px`;d.innerHTML=html;$('fxl').appendChild(d);setTimeout(()=>d.remove(),2600)}
-function doFx(e){const rel=s=>(s-me+4)%4,mt=me%2;
+const tCol=['#34d399','#fb7185','#38bdf8'],tDot=['🟢','🔴','🔵'],tNm=['Verde','Vermelha','Azul'];
+function doFx(e){const N=V.n||4,nt=V.nt||2,rel=s=>(s-me+N)%N,mt=me%nt;
  switch(e.k){
- case'truco':big(e.txt,e.team==mt?'#34d399':'#fb7185');document.body.animate([{transform:'translate(0)'},{transform:'translate(-9px,5px)'},{transform:'translate(9px,-5px)'},{transform:'translate(0)'}],{duration:300,iterations:2});shout(V.seats[e.s]&&V.seats[e.s].sn);break;
+ case'truco':big(e.txt,nt==3?tCol[e.team]:e.team==mt?'#34d399':'#fb7185');document.body.animate([{transform:'translate(0)'},{transform:'translate(-9px,5px)'},{transform:'translate(9px,-5px)'},{transform:'translate(0)'}],{duration:300,iterations:2});shout(V.seats[e.s]&&V.seats[e.s].sn);break;
  case'chaos':big('CAOS!','#c084fc');toast('🌀 '+e.txt);bp(200,.5,'sawtooth');break;
  case'ok':toast(e.txt);bp(500,.1);break;
  case'play':bp(260+rnd(80),.08,'square');if(e.zap){big('⚡ ZAP! ⚡','#fde047');bp(900,.4,'triangle')}break;
- case'rnd':toast(e.team==='T'?'Embuchou! 🪢':e.team==mt?'Rodada nossa 🟢':'Rodada deles 🔴');break;
- case'hand':toast((e.team==mt?'Mão nossa! +':'Mão deles +')+e.v);bp(620,.25);break;
+ case'rnd':toast(e.team==='T'?'Embuchou! 🪢':e.team==mt?'Rodada nossa '+tDot[mt]:`Rodada da dupla ${tNm[e.team]} ${tDot[e.team]}`);break;
+ case'hand':toast((e.team==mt?'Mão nossa! +':`Mão da dupla ${tNm[e.team]} +`)+e.v);bp(620,.25);break;
  case'sig':bub(rel(e.from),gest(e.i)+`<small>${SG[e.i][1]}</small>`);break;
  case'sigm':bub(rel(e.from),'<small style="font-size:15px">…fez algo?</small>');break;
  case'sigs':toast('Sinal enviado 🤝');break;
@@ -374,40 +445,60 @@ function doFx(e){const rel=s=>(s-me+4)%4,mt=me%2;
  case'emo':bub(rel(e.seat),`<small style="font-size:17px;font-weight:700;color:#fde68a">${esc(e.e)}</small>`);break;
  }}
 function render(v){
- V=v;me=v.me;const L=v.phase=='lobby',mt=me%2;
+ V=v;me=v.me;const L=v.phase=='lobby',nt=v.nt||2,N=v.n||4,mt=me%nt;
  $('lob').classList.toggle('hidden',!L);$('game').classList.toggle('hidden',L);$('ov').classList.toggle('hidden',v.phase!='over');
  if(evSeen<0)evSeen=v.ev.reduce((m,e)=>Math.max(m,e.id),0);
+ const boxCls=['bg-emerald-900/50 border-emerald-400/40','bg-rose-900/40 border-rose-400/40','bg-sky-900/45 border-sky-400/40'];
+ const txtCls=['text-emerald-300','text-rose-300','text-sky-300'];
  if(L){$('lm').classList.add('hidden');$('lr').classList.remove('hidden');$('rl').textContent=offline?'':code;
   $('lk').value=location.href.split('?')[0]+'?room='+code;
-  const slot=i=>{const p=v.seats[i],A=i%2==0;return`<div class="rounded-2xl p-3 text-center border ${A?'bg-emerald-900/50 border-emerald-400/40':'bg-rose-900/40 border-rose-400/40'}">${p?`<div class="w-14 h-14 mx-auto">${avt(p.av,56,p.lv|0)}</div><div class="font-bold text-sm mt-1 truncate">${esc(p.name)}${p.uid==myUid?' (você)':''}</div><div class="text-[11px] opacity-70">${ttName(p)} <span class="text-amber-300">${'★'.repeat((p.lv|0)+1)}</span></div>${isHost&&p.bot?`<button onclick="send({t:'bot',n:${i}})" class="text-xs mt-1 underline opacity-70">remover bot</button>`:''}`:`<div class="w-14 h-14 mx-auto rounded-full border-2 border-dashed border-white/30 flex items-center justify-center text-2xl opacity-50">+</div><div class="mt-2 flex gap-1 justify-center"><button onclick="send({t:'sit',n:${i}})" class="px-2 py-0.5 rounded bg-amber-600 text-xs font-bold">Sentar</button>${isHost?`<button onclick="send({t:'bot',n:${i}})" class="px-2 py-0.5 rounded bg-slate-600 text-xs">+🤖</button>`:''}</div>`}</div>`};
-  $('sl').innerHTML=`<div class="grid grid-cols-3 gap-2 items-center"><div></div>${slot(2)}<div></div>${slot(1)}<div class="text-center f text-amber-300 text-sm leading-tight">Dupla<br>verde × vermelha</div>${slot(3)}<div></div>${slot(0)}<div></div></div>`;
+  $('rmSw').classList.toggle('hidden',!isHost);
+  $('rm2').className='py-1.5 rounded-lg font-bold '+(nt==2?'bg-amber-600 text-black':'opacity-70');
+  $('rm3').className='py-1.5 rounded-lg font-bold '+(nt==3?'bg-amber-600 text-black':'opacity-70');
+  const slot=i=>{const p=v.seats[i],tm=i%nt;return`<div class="rounded-2xl p-2.5 text-center border ${boxCls[tm]}"><div class="text-[10px] font-bold uppercase ${txtCls[tm]}">Dupla ${tNm[tm]}</div>${p?`<div class="w-12 h-12 mx-auto mt-0.5">${avt(p.av,48,p.lv|0)}</div><div class="font-bold text-xs mt-1 truncate">${esc(p.name)}${p.uid==myUid?' (você)':''}</div><div class="text-[10px] opacity-70 truncate">${ttName(p)} <span class="text-amber-300">${'★'.repeat((p.lv|0)+1)}</span></div>${isHost&&p.bot?`<button onclick="send({t:'bot',n:${i}})" class="text-[11px] mt-0.5 underline opacity-70">remover bot</button>`:''}`:`<div class="w-12 h-12 mx-auto mt-0.5 rounded-full border-2 border-dashed border-white/30 flex items-center justify-center text-xl opacity-50">+</div><div class="mt-1.5 flex gap-1 justify-center"><button onclick="send({t:'sit',n:${i}})" class="px-2 py-0.5 rounded bg-amber-600 text-xs font-bold">Sentar</button>${isHost?`<button onclick="send({t:'bot',n:${i}})" class="px-2 py-0.5 rounded bg-slate-600 text-xs">+🤖</button>`:''}</div>`}</div>`};
+  $('sl').innerHTML=nt==2
+   ?`<div class="grid grid-cols-3 gap-2 items-center"><div></div>${slot(2)}<div></div>${slot(1)}<div class="text-center f text-amber-300 text-sm leading-tight">Mesa 2×2<br>verde × vermelha</div>${slot(3)}<div></div>${slot(0)}<div></div></div>`
+   :`<div class="grid grid-cols-3 gap-2 items-center">${slot(2)}${slot(3)}${slot(4)}${slot(1)}<div class="text-center f text-amber-300 text-xs leading-tight">Mesa 2×2×2<br>3 duplas</div>${slot(5)}<div></div>${slot(0)}<div></div></div>`;
   $('chaos').checked=!!v.chaos;$('chaos').disabled=!isHost;
   $('bStart').classList.toggle('hidden',!isHost);callAll();return}
- $('score').innerHTML=`Nós <b class="text-emerald-300">${v.pts[mt]}</b> × <b class="text-rose-300">${v.pts[1-mt]}</b> Eles <span class="text-sm ml-2">Mão vale <b class="text-amber-300">${v.val}</b> ${v.rs.map(r=>r==='T'?'🟰':r==mt?'🟢':'🔴').join('')}</span>`;
- $('vira').innerHTML=`<div class="flex items-center gap-1 text-xs">Vira ${cd(v.vira,'sm')} Manilha <b class="text-amber-300 text-lg">${RK[v.man]||'—'}</b>${v.chaosTxt?`<span class="ml-2 text-fuchsia-300">🌀 ${esc(v.chaosTxt)}</span>`:''}</div>`;
- const pos=['left:50%;bottom:4px;transform:translateX(-50%)','left:6px;top:50%;transform:translateY(-50%)','left:50%;top:4px;transform:translateX(-50%)','right:6px;top:50%;transform:translateY(-50%)'];
+ if(nt==2){
+  $('score').innerHTML=`Nós <b class="text-emerald-300">${v.pts[mt]}</b> × <b class="text-rose-300">${v.pts[1-mt]}</b> Eles <span class="text-sm ml-2">Mão vale <b class="text-amber-300">${v.val}</b> ${v.rs.map(r=>r==='T'?'🟰':r==mt?'🟢':'🔴').join('')}</span>`;
+ }else{
+  const ord=[mt,(mt+1)%3,(mt+2)%3];
+  $('score').innerHTML=ord.map((t,k)=>`<span class="${txtCls[t]}">${k==0?'Nós':tNm[t]} <b>${v.pts[t]}</b></span>`).join(' × ')+` <span class="text-xs sm:text-sm ml-1.5">Vale <b class="text-amber-300">${v.val}</b> ${v.rs.map(r=>r==='T'?'🟰':tDot[r]).join('')}</span>`;
+ }
+ $('vira').innerHTML=`<div class="flex items-center gap-1 text-xs">Vira ${cd(v.vira,'sm')} Manilha <b class="text-amber-300 text-lg">${v.oldMan?'4♣ 7♥ A♠ 7♦':RK[v.man]||'—'}</b>${v.chaosTxt?`<span class="ml-2 text-fuchsia-300">🌀 ${esc(v.chaosTxt)}</span>`:''}</div>`;
+ const pos4=['left:50%;bottom:4px;transform:translateX(-50%)','left:6px;top:50%;transform:translateY(-50%)','left:50%;top:4px;transform:translateX(-50%)','right:6px;top:50%;transform:translateY(-50%)'];
+ const pos6=['left:50%;bottom:4px;transform:translateX(-50%)','left:6px;top:68%;transform:translateY(-50%)','left:6px;top:25%;transform:translateY(-50%)','left:50%;top:4px;transform:translateX(-50%)','right:6px;top:25%;transform:translateY(-50%)','right:6px;top:68%;transform:translateY(-50%)'];
+ const pos=nt==3?pos6:pos4;
  let h='';
- for(let r=0;r<4;r++){const i=(me+r)%4,p=v.seats[i],t=i%2==mt;
-  h+=`<div id="st${r}" class="absolute text-center rounded-lg px-2 py-1 bg-black/60 ${v.turn==i&&v.phase=='play'?'turn':''}" style="${pos[r]}"><div class="flex items-center gap-1.5"><span class="w-8 h-8 flex-none">${avt(p.av,32,p.lv|0)}</span><span class="text-left leading-tight"><span class="block text-xs font-semibold ${t?'text-emerald-300':'text-rose-300'}">${i==me?'Você':esc(p.name)}${p.away?' 💤':p.bot?' 🤖':''}${t&&i!=me?' (parceiro)':''}</span><span class="block text-[10px] opacity-70">${ttName(p)} <span class="text-amber-300">${'★'.repeat((p.lv|0)+1)}</span></span></span></div>${r&&p.h?`<div class="flex gap-0.5 justify-center mt-1">${p.h.map(c=>cd(c,'sm')).join('')}</div>`:r?`<div class="flex gap-0.5 justify-center mt-1">${('<div class="card back sm" style="'+cbs(p.cb)+'"></div>').repeat(p.n)}</div>`:''}</div>`}
+ for(let r=0;r<N;r++){const i=(me+r)%N,p=v.seats[i],tm=i%nt,t=tm==mt,folded=v.out&&v.out[tm];
+  h+=`<div id="st${r}" class="absolute text-center rounded-lg px-2 py-1 bg-black/65 ${v.turn==i&&v.phase=='play'&&!folded?'turn':''} ${folded?'opacity-45':''}" style="${pos[r]}"><div class="flex items-center gap-1.5"><span class="w-8 h-8 flex-none">${avt(p.av,32,p.lv|0)}</span><span class="text-left leading-tight"><span class="block text-xs font-semibold ${nt==3?txtCls[tm]:t?'text-emerald-300':'text-rose-300'}">${i==me?'Você':esc(p.name)}${p.away?' 💤':p.bot?' 🤖':''}${t&&i!=me?' (parceiro)':''}${folded?' 🏃':''}</span><span class="block text-[10px] opacity-70">${ttName(p)} <span class="text-amber-300">${'★'.repeat((p.lv|0)+1)}</span></span></span></div>${r&&p.h?`<div class="flex gap-0.5 justify-center mt-1">${p.h.map(c=>cd(c,'sm')).join('')}</div>`:r?`<div class="flex gap-0.5 justify-center mt-1">${('<div class="card back sm" style="'+cbs(p.cb)+'"></div>').repeat(p.n)}</div>`:''}</div>`}
  const old=prevT;prevT=v.table.length;
  h+='<div class="absolute left-1/2 top-1/2" style="width:0;height:0">';
- v.table.forEach((t,k)=>{const r=(t.seat-me+4)%4,p=[[0,44],[-62,0],[0,-44],[62,0]][r];
-  h+=cd(t.card,(t.card.r==v.man?'man ':'')+(k>=old?'pl':''),`position:absolute;left:${p[0]-27}px;top:${p[1]-39}px;--dx:${[0,-160,0,160][r]}px;--dy:${[140,0,-140,0][r]}px`)});
+ const tb4=[[0,44],[-62,0],[0,-44],[62,0]],dx4=[0,-160,0,160],dy4=[140,0,-140,0];
+ const tb6=[[0,48],[-68,26],[-68,-26],[0,-48],[68,-26],[68,26]],dx6=[0,-150,-150,0,150,150],dy6=[140,80,-80,-140,-80,80];
+ v.table.forEach((t,k)=>{const r=(t.seat-me+N)%N,p=(nt==3?tb6:tb4)[r],dx=(nt==3?dx6:dx4)[r],dy=(nt==3?dy6:dy4)[r];
+  h+=cd(t.card,(isMan(t.card,v)?'man ':'')+(k>=old?'pl':''),`position:absolute;left:${p[0]-27}px;top:${p[1]-39}px;--dx:${dx}px;--dy:${dy}px`)});
  $('board').innerHTML=h+'</div>';
  const mp=v.seats[me],ml=mp.lv|0,dk=''+v.vira.r+v.vira.s+v.dealer,dl=dk!=lastDK;lastDK=dk;if(dl)bp(500,.1);
- const myT=v.phase=='play'&&v.turn==me&&!v.pend&&v.p11==null&&!v.busy;
+ const myFold=v.out&&v.out[mt];
+ const myT=v.phase=='play'&&v.turn==me&&!v.pend&&v.p11==null&&!v.busy&&!myFold;
  $('hand').innerHTML=(mp.h||[]).map((c,i)=>{const st=dl?`animation-delay:${i*130}ms`:'',oc=`send({t:'card',i:${i}})`;
-  return v.blind?bk('lg '+(dl?'deal':''),st+';'+cbs(mp.cb),oc):cd(c,'lg '+(dl?'deal ':'')+(myT?'go ':'')+(c.r==v.man?'man':''),st,oc)}).join('');
+  return v.blind?bk('lg '+(dl?'deal':''),st+';'+cbs(mp.cb),oc):cd(c,'lg '+(dl?'deal ':'')+(myT?'go ':'')+(isMan(c,v)?'man':''),st,oc)}).join('');
  let a='';const pl=v.phase=='play';
  if(pl&&v.p11===mt)a=`<span class="text-amber-300 text-sm">Mão de onze! Veja as cartas da dupla.</span>`+B("send({t:'p11',r:'play'})",'Jogar (vale 3)','bg-emerald-600')+B("send({t:'p11',r:'run'})",'Correr','bg-rose-700');
  else if(pl&&v.p11!=null)a='<span class="text-sm">Adversários decidindo a mão de onze…</span>';
- else if(pl&&v.pend){if(v.pend.by%2!=mt)a=`<b class="text-amber-300">${TL[v.pend.val]}!</b>`+B("send({t:'resp',r:'ok'})",'Aceitar','bg-emerald-600')+B("send({t:'resp',r:'run'})",'Correr','bg-rose-700')+(v.pend.val<12?B("send({t:'resp',r:'up'})",TL[NX[v.pend.val]]+'!','bg-amber-600'):'');
-  else a='<span class="text-sm">Aguardando resposta…</span>'}
- else if(pl&&!v.lock&&v.turn==me&&v.lastUp!=mt&&v.val<12&&!v.busy)a=B("send({t:'truco'})",TL[NX[v.val]]+'!','bg-amber-600');
+ else if(pl&&v.pend){
+  const iOk=v.pend.ok&&v.pend.ok.includes(mt);
+  if(!myFold&&!iOk)a=`<b class="text-amber-300">${TL[v.pend.val]}!</b>`+B("send({t:'resp',r:'ok'})",'Aceitar','bg-emerald-600')+B("send({t:'resp',r:'run'})",'Correr','bg-rose-700')+(v.pend.val<12?B("send({t:'resp',r:'up'})",TL[nxV(v.pend.val,v.dbl)]+'!','bg-amber-600'):'');
+  else a='<span class="text-sm">Aguardando resposta da mesa…</span>'}
+ else if(pl&&myFold)a='<span class="text-sm opacity-70">Sua dupla correu desta mão</span>';
+ else if(pl&&!v.lock&&v.turn==me&&v.lastUp!=mt&&v.val<12&&!v.busy)a=B("send({t:'truco'})",TL[nxV(v.val,v.dbl)]+'!','bg-amber-600');
  else if(pl&&v.turn==me&&!v.busy)a='<span class="text-sm text-emerald-300">Sua vez</span>';
  $('acts').innerHTML=a;
- $('sigs').innerHTML=pl?`<span class="text-xs opacity-70 mr-1">Sinais p/ parceiro (${LIM[ml]-v.sigN[me]}) · ${LV[ml]}:</span>`+SG.map((s,i)=>`<button onclick="send({t:'sig',i:${i}})" class="px-2 py-0.5 rounded bg-black/40 text-center ${v.sigN[me]>=LIM[ml]?'opacity-40':''}"><span class="s block w-9 mx-auto">${gest(i)}</span><span class="block text-[9px]">${s[1]}</span></button>`).join('')+'<span class="ml-2">'+['Põe na conta!','Sobe mais uma!','Aham, Cláudia','Tá feio, hein'].map(e=>`<button onclick="send({t:'emo',e:'${e}'})" class="px-2 py-0.5 rounded bg-black/40 text-xs">${e}</button>`).join('')+'</span>':'';
- if(v.phase=='over'){if(!xpDone){xpDone=1;const o=lvOf(xp);lastGain=Math.round((v.winner==mt?18:10)*(offline?.5:1));gainXP(lastGain);if(lvOf(xp)>o){const n=lvOf(xp),nw=[...AV.filter((_,i)=>UL[i]==n).map(a=>a[0]),...TTL.filter(t=>t[1]==n).map(t=>t[0]),...CB.filter(t=>t[1]==n).map(t=>'verso '+t[0]),...MZ.filter(t=>t[1]==n).map(t=>'mesa '+t[0]),...SN.filter(t=>t[1]==n).map(t=>'grito '+t[0])];toast('⭐ Nível '+LV[n]+'! Liberou: '+nw.join(', '))}}$('ovt').textContent=(v.winner==mt?'🏆 Vitória!':'💀 Derrota…')+' +'+lastGain+' XP';$('bAgain').classList.toggle('hidden',!isHost)}else xpDone=0;
+ $('sigs').innerHTML=pl?`<span class="text-xs opacity-70 mr-1">Sinais p/ parceiro (${LIM[ml]-v.sigN[me]}) · ${LV[ml]}:</span>`+SG.map((s,i)=>`<button onclick="send({t:'sig',i:${i}})" class="px-2 py-0.5 rounded bg-black/40 text-center ${v.sigN[me]>=LIM[ml]||myFold?'opacity-40':''}"><span class="s block w-9 mx-auto">${gest(i)}</span><span class="block text-[9px]">${s[1]}</span></button>`).join('')+'<span class="ml-2">'+['Põe na conta!','Sobe mais uma!','Aham, Cláudia','Tá feio, hein','Marreco!','Vem no seis!'].map(e=>`<button onclick="send({t:'emo',e:'${e}'})" class="px-2 py-0.5 rounded bg-black/40 text-xs">${e}</button>`).join('')+'</span>':'';
+ if(v.phase=='over'){if(!xpDone){xpDone=1;const o=lvOf(xp);lastGain=Math.round((v.winner==mt?18:10)*(offline?.5:1));gainXP(lastGain);if(lvOf(xp)>o){const n=lvOf(xp),nw=[...AV.filter((_,i)=>UL[i]==n).map(a=>a[0]),...TTL.filter(t=>t[1]==n).map(t=>t[0]),...CB.filter(t=>t[1]==n).map(t=>'verso '+t[0]),...MZ.filter(t=>t[1]==n).map(t=>'mesa '+t[0]),...SN.filter(t=>t[1]==n).map(t=>'grito '+t[0])];toast('⭐ Nível '+LV[n]+'! Liberou: '+nw.join(', '))}}$('ovt').textContent=(v.winner==mt?'🏆 Vitória!':`💀 Dupla ${tNm[v.winner]} venceu…`)+' +'+lastGain+' XP';$('bAgain').classList.toggle('hidden',!isHost)}else xpDone=0;
  v.ev.filter(e=>e.id>evSeen).forEach(doFx);evSeen=Math.max(evSeen,...v.ev.map(e=>e.id),0);
  updMic();callAll()}
 
@@ -417,7 +508,7 @@ const CUP=`<svg viewBox="0 0 50 60"><path d="M5 5h40l-5 52a3 3 0 0 1-3 3H13a3 3 
 const NUT=`<svg viewBox="0 0 70 46"><ellipse cx="35" cy="30" rx="32" ry="14" fill="#efe6cf" stroke="#2a1505" stroke-width="2"/><ellipse cx="35" cy="26" rx="27" ry="10" fill="#c98a4b"/><g fill="#e0a867" stroke="#8a5a2b"><ellipse cx="22" cy="24" rx="5" ry="3.2"/><ellipse cx="33" cy="20" rx="5" ry="3.2"/><ellipse cx="45" cy="24" rx="5" ry="3.2"/><ellipse cx="30" cy="28" rx="5" ry="3.2"/><ellipse cx="41" cy="30" rx="5" ry="3.2"/></g></svg>`;
 const CAP=`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#d4af37" stroke="#7a5a10" stroke-width="1.5"/><circle cx="12" cy="12" r="6" fill="none" stroke="#7a5a10" stroke-dasharray="2 2"/></svg>`;
 const DC=(css,svg)=>`<div class="absolute pointer-events-none" style="${css}">${svg}</div>`;
-const tblBuild=()=>{const z=MZ[myMz];$('tbl').innerHTML=`<div class="absolute inset-x-1 inset-y-1 rounded-[26px]" style="background:radial-gradient(ellipse at 50% 42%,${z[2]},${z[3]} 62%,${z[4]});box-shadow:inset 0 0 0 5px ${z[5]},inset 0 0 0 8px #f6eedc99,inset 0 0 90px #000a,0 10px 30px #000a"></div>
+const tblBuild=()=>{const z=MZ[myMz]||MZ[0];$('tbl').innerHTML=`<div class="absolute inset-x-1 inset-y-1 rounded-[26px]" style="background:radial-gradient(ellipse at 50% 42%,${z[2]},${z[3]} 62%,${z[4]});box-shadow:inset 0 0 0 5px ${z[5]},inset 0 0 0 8px #f6eedc99,inset 0 0 90px #000a,0 10px 30px #000a"></div>
 <div class="absolute left-1/2 top-1/2 f text-center rounded-full flex flex-col items-center justify-center" style="width:min(44vw,250px);height:min(44vw,250px);transform:translate(-50%,-50%);border:4px solid #f6eedc44;color:#f6eedc44;line-height:1.1"><span style="font-size:11px;letter-spacing:.3em">★ GELADA ★</span><span style="font-size:min(11vw,52px)">TRUCO</span><span style="font-size:10px;letter-spacing:.3em">DESDE SEMPRE</span></div>`
 +DC('left:3%;top:3%;width:clamp(26px,7vw,40px);transform:rotate(14deg)',BOT)
 +DC('right:3%;top:3%;width:clamp(44px,12vw,72px)',ASH)
