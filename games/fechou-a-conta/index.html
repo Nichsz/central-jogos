@@ -6,37 +6,62 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Fechou a Conta</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
 html,body{height:100%}
 body{margin:0;background:repeating-linear-gradient(90deg,#0004 0 2px,transparent 2px 46px) bottom/100% 42% no-repeat,repeating-linear-gradient(0deg,#0004 0 2px,transparent 2px 46px) bottom/100% 42% no-repeat,linear-gradient(transparent 58%,#235a49 58%),linear-gradient(#3b2410,#5a3517);background-color:#3b2410;color:#f8f1dc;font-family:Inter,sans-serif;user-select:none;overflow-x:hidden}
 .f{font-family:'Alfa Slab One',serif;font-weight:400}
-.card{width:56px;height:82px;background:#fffaf0;color:#111;border-radius:8px;border:1px solid #d4af37;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:18px;line-height:1.1;box-shadow:0 4px 10px #0009;transition:transform .15s;flex:none;cursor:pointer}
+.card{position:relative;width:56px;height:82px;background:#fffaf0;color:#111;border-radius:8px;border:1px solid #d4af37;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:18px;line-height:1.1;box-shadow:0 4px 10px #0009;transition:transform .15s;flex:none;cursor:pointer}
 .card span{font-size:26px}.card.r{color:#b91c1c}
-.hand .card{margin-left:-18px}.hand .card:first-child{margin-left:0}
+/* Temas de Carta */
+.cs-retro{background:#f3e5ab;border-color:#8a5a2b;color:#2a1a10}.cs-retro.r{color:#991b1b}
+.cs-dark{background:#18181b;border-color:#38bdf8;color:#f4f4f5}.cs-dark.r{color:#fb7185}
+.cs-royal{background:linear-gradient(160deg,#fffbeb,#fde68a);border:2px solid #b45309;color:#1c1917}.cs-royal.r{color:#b91c1c}
+/* Cartas Especiais */
+.card.m-gold{background:linear-gradient(145deg,#fef08a,#f59e0b)!important;border:2px solid #fff!important;color:#111!important}
+.card.m-mult{background:linear-gradient(145deg,#fecdd3,#fb7185)!important;border:2px solid #be123c!important;color:#111!important}
+.card.m-chips{background:linear-gradient(145deg,#bae6fd,#38bdf8)!important;border:2px solid #0369a1!important;color:#111!important}
+.card.m-xmult{background:linear-gradient(145deg,#e9d5ff,#c084fc)!important;border:2px solid #6b21a8!important;color:#111!important}
+.card.dead{opacity:.38;filter:grayscale(1)}
+.bdg{position:absolute;top:-6px;right:-6px;font-size:9px;font-weight:900;padding:1px 4px;border-radius:6px;background:#111;color:#fde047;border:1px solid #fde047;line-height:1.1}
+.hand .card{margin-left:-16px}.hand .card:first-child{margin-left:0}
 .card.sel{transform:translateY(-18px);box-shadow:0 0 0 3px #fbbf24,0 8px 12px #000a;z-index:2}
 .card.pa{margin:0 3px;cursor:default}
 .pop{animation:pop .38s}
 @keyframes pop{50%{transform:scale(1.28) translateY(-8px);filter:brightness(1.4)}}
-.comanda{background:#f6eedc;color:#2a1a10;border-radius:6px;padding:8px 14px;box-shadow:0 4px 10px #0008;transform:rotate(-1.5deg);border-left:6px dotted #c33;min-width:150px}
+.comanda{background:#f6eedc;color:#2a1a10;border-radius:6px;padding:8px 14px;box-shadow:0 4px 10px #0008;transform:rotate(-1.5deg);border-left:6px dotted #c33;min-width:165px}
+.comanda.boss{background:#fff1f2;border-left:6px solid #be123c;box-shadow:0 0 18px #f43f5e88}
 .bar{height:8px;background:#d9cfb5;border-radius:4px;overflow:hidden;margin:4px 0}.bar i{display:block;height:100%;background:#b3141a;transition:width .5s}
-.mesa{background:radial-gradient(ellipse at 50% 30%,#d62a30,#a3121a);border-radius:22px;box-shadow:inset 0 0 0 4px #7a0d11,inset 0 0 0 6px #f6eedc88,0 8px 20px #000a;padding:10px}
+.mesa{border-radius:22px;padding:10px;box-shadow:inset 0 0 0 4px #0006,inset 0 0 0 6px #f6eedc66,0 8px 20px #000a}
+.tb-0{background:radial-gradient(ellipse at 50% 30%,#d62a30,#a3121a)}
+.tb-1{background:repeating-conic-gradient(#b91c1c 0 25%,#f6eedc 0 50%) 50%/28px 28px;box-shadow:inset 0 0 0 1000px #7f1d1d99,inset 0 0 0 4px #450a0a,0 8px 20px #000a}
+.tb-2{background:radial-gradient(ellipse at 50% 30%,#15803d,#064e3b)}
+.tb-3{background:radial-gradient(ellipse at 50% 30%,#1d4ed8,#1e3a8a)}
+.tb-4{background:radial-gradient(ellipse at 50% 30%,#27272a,#09090b);box-shadow:inset 0 0 0 4px #d4af37,0 8px 20px #000a}
 .bx{min-width:80px;text-align:center;border-radius:10px;padding:4px 14px;font-family:'Alfa Slab One';font-size:28px;border:2px solid #fff8}
 .bl{background:#1d4ed8}.rd{background:#7f1d1d}
-.jk{width:62px;height:74px;background:#2a1608;border:2px solid #d4af37;border-radius:8px;font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2px;line-height:1.15}
+.jk{width:60px;height:74px;background:#2a1608;border:2px solid #d4af37;border-radius:8px;font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2px;line-height:1.15}
 .jk.emp{border-style:dashed;opacity:.3}
-.bt{padding:10px 18px;border-radius:12px;font-weight:700}.bt:disabled{opacity:.4}
+.bt{padding:10px 16px;border-radius:12px;font-weight:700}.bt:disabled{opacity:.4;cursor:not-allowed}
 .lousa{background:#1c2b25;border:5px solid #8a5a2b;border-radius:14px;box-shadow:inset 0 0 30px #000a,0 6px 16px #0008}
-.card{position:relative}.deb{opacity:.4;filter:grayscale(1)}
+.tst{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#000e;border:1px solid #d4af37;padding:6px 14px;border-radius:10px;font-size:13px;z-index:90;white-space:nowrap}
 button{cursor:pointer}
 </style>
 </head>
 <body>
+<div id="tc"></div>
 <div id="app" class="max-w-xl mx-auto p-3 min-h-full"></div>
 <script>
-const SU=['♠','♥','♦','♣'],RN=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+const SU=['♠','♥','♦','♣'],SNM=['Espadas ♠','Copas ♥','Ouros ♦','Paus ♣'],RN=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+const MOD={
+ gold:{n:'Dourada',b:'R$+3',c:'m-gold',d:'+R$ 3 ao pontuar'},
+ mult:{n:'Temperada',b:'+4M',c:'m-mult',d:'+4 Mult ao pontuar'},
+ chips:{n:'Gelada',b:'+35F',c:'m-chips',d:'+35 Fichas ao pontuar'},
+ xmult:{n:'Dose Dupla',b:'x1,5',c:'m-xmult',d:'x1,5 Mult ao pontuar'}
+};
 const $=id=>document.getElementById(id),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
 const rv=r=>r==12?11:r>=9?10:r+2;
 const H={hc:['Carta Alta',5,1],p:['Par',10,2],'2p':['Dois Pares',20,2],'3':['Trinca',30,3],st:['Sequência',30,4],fl:['Mesma Cor',35,4],fh:['Casa Cheia',40,4],'4':['Quadra',60,7],sf:['Straight Flush',100,8]};
 const nS=(x,s)=>x.sc.filter(c=>c.s==s).length;
@@ -52,20 +77,213 @@ const JK=[
 {n:'Cachaça',d:'+3 Mult por ♠ pontuada',p:5,ev:x=>({m:3*nS(x,0)})},
 {n:'Cafezinho',d:'+25 Fichas por ♣ pontuada',p:5,ev:x=>({c:25*nS(x,3)})},
 {n:'Dona do Boteco',d:'+2 Mult por figura (J, Q, K) pontuada',p:6,ev:x=>({m:2*x.sc.filter(c=>c.r>=9&&c.r<=11).length})},
-{n:'Tira-Gosto',d:'+1 Mult por descarte que sobrou',p:5,ev:x=>({m:x.g.disc})},
-{n:'Cartão Fidelidade',d:'Ganha R$ 3 ao fechar a conta',p:5,eco:3,ev:()=>({})}];
-let seed='',g=null,best=0;
-try{best=+localStorage.getItem('fechou_best')||0}catch(e){}
+{n:'Tira-Gosto',d:'+2 Mult por descarte que sobrou',p:5,ev:x=>({m:2*x.g.disc})},
+{n:'Cartão Fidelidade',d:'Ganha R$ 3 ao fechar a conta',p:5,eco:3,ev:()=>({})},
+{n:'Chopp no Grau',d:'+15 Mult se jogar 3 cartas ou menos',p:6,ev:x=>x.all.length<=3?{m:15}:{}},
+{n:'Espetinho',d:'+45 Fichas se a mão tiver Trinca ou Casa Cheia',p:5,ev:x=>x.t=='3'||x.t=='fh'?{c:45}:{}},
+{n:'Pote de Paçoca',d:'+4 Mult por Ás (A) pontuado',p:5,ev:x=>({m:4*x.sc.filter(c=>c.r==12).length})},
+{n:'Mesa de Plástico',d:'x2 Mult na última mão da conta',p:7,ev:x=>x.g.hands==0?{x:2}:{}},
+{n:'Pix na Hora',d:'+2 Fichas por cada R$ 1 que você tem',p:6,ev:x=>({c:2*x.g.money})}
+];
+const BOSS=[
+{id:'tax',n:'🧾 Fiscal da Receita',d:'Meta 1,4x maior e cada mão jogada custa R$ 1',tm:1.4},
+{id:'nof',n:'🪙 Falta de Troco',d:'Figuras (J, Q, K) não pontuam fichas nem bônus',tm:1.2},
+{id:'suit',n:'🧤 Vigilância Sanitária',d:'Cartas de %S estão interditadas e não pontuam',tm:1.2},
+{id:'rush',n:'⏰ Horário de Pico',d:'Começa a conta com -1 Mão disponível',tm:1.15},
+{id:'five',n:'🪑 Mesa Reservada',d:'Só pontua mãos jogadas com exatamente 5 cartas',tm:1.2},
+{id:'uniq',n:'🧐 Cliente Exigente',d:'Proibido repetir o mesmo tipo de mão nesta conta',tm:1.2},
+{id:'final',n:'👑 Dono da Rua (Chefão Final)',d:'Meta 1,6x maior e -1 Descarte nesta conta',tm:1.6}
+];
+const PKS=[
+{k:'card',n:'📦 Pacote do Baralho',d:'Escolha 1 de 3 cartas especiais p/ seu baralho',p:4,c:'from-sky-900 to-slate-900 border-sky-400'},
+{k:'hand',n:'📋 Pacote da Comanda',d:'Escolha 1 de 3 mãos p/ subir +2 níveis',p:4,c:'from-emerald-900 to-slate-900 border-emerald-400'},
+{k:'joker',n:'🏺 Pacote da Estufa',d:'Escolha 1 de 3 amuletos do boteco',p:6,c:'from-amber-900 to-stone-900 border-amber-400'}
+];
+
+/* ============ META-PROGRESSÃO, BARALHOS, TROFÉUS E COLECIONÁVEIS ============ */
+const DECKS=[
+{id:'balcao',n:'🍺 Baralho do Balcão',d:'Equilibrado: 4 mãos, 3 descartes e R$ 4 iniciais.',req:'Inicial',ok:()=>true},
+{id:'fiado',n:'📒 Baralho do Fiado',d:'Começa rico com R$ 12, mas não ganha juros de dinheiro guardado.',req:'Chegar na Conta 5',ok:m=>m.best>=5},
+{id:'sinuca',n:'🎱 Baralho da Sinuca',d:'+2 Descartes por conta (5), mas -1 Mão por conta (3).',req:'Conquistar 2 Troféus',ok:m=>m.tr.length>=2},
+{id:'dourado',n:'🪙 Baralho Dourado',d:'Começa a partida já com 4 Áses especiais (Dourados e Temperados).',req:'Conquistar 4 Troféus',ok:m=>m.tr.length>=4},
+{id:'caos',n:'🌀 Baralho da Saideira',d:'Começa com 1 Amuleto aleatório grátis e todas as mãos já no Nv 2.',req:'Conquistar 6 Troféus',ok:m=>m.tr.length>=6},
+{id:'magnata',n:'👑 Baralho Dono do Bar',d:'Cabe até 6 Amuletos na estufa (em vez de 5) e começa com R$ 6.',req:'Vencer os 12 meses 1 vez',ok:m=>m.wins>=1}
+];
+const STAKES=[
+{id:0,n:'☕ Café com Leite',d:'Dificuldade padrão do boteco',tm:1},
+{id:1,n:'🥃 Cachaça Pura',d:'Metas das contas 25% maiores',tm:1.25},
+{id:2,n:'🌶️ Malagueta',d:'Metas 50% maiores e pacotes custam +R$ 1',tm:1.5},
+{id:3,n:'🔥 Saideira Braba',d:'Metas 80% maiores e -1 Descarte por conta',tm:1.8}
+];
+const TROPHIES=[
+{id:'c6',i:'🍻',n:'Freguês da Casa',d:'Chegue até a Conta 6 em uma partida'},
+{id:'win1',i:'🏆',n:'Fechou a Conta!',d:'Pague os 12 meses e vença uma partida completa'},
+{id:'one',i:'⚡',n:'Na Primeira Goleada',d:'Feche uma conta usando apenas 1 mão'},
+{id:'rich',i:'💰',n:'Barão do Balcão',d:'Junte R$ 35 ou mais na carteira'},
+{id:'fulljk',i:'🏺',n:'Estufa Lotada',d:'Tenha 5 (ou 6) amuletos equipados ao mesmo tempo'},
+{id:'big',i:'🚀',n:'Comanda Astral',d:'Faça 2.500 ou mais pontos em uma única mão'},
+{id:'quad',i:'🃏',n:'Mão de Patrão',d:'Jogue uma Quadra ou Straight Flush'},
+{id:'nodisc',i:'🧊',n:'Sangue Frio',d:'Feche uma conta sem usar nenhum descarte'},
+{id:'pack6',i:'✨',n:'Baralho Turbinado',d:'Tenha 6 ou mais cartas especiais no seu baralho'},
+{id:'boss3',i:'👹',n:'Terror da Fiscalização',d:'Derrote 3 Chefões na mesma partida'},
+{id:'stake2',i:'🌶️',n:'Garganta de Aço',d:'Vença uma partida na dose Cachaça Pura ou superior'},
+{id:'col12',i:'📚',n:'Conhecedor do Cardápio',d:'Descubra pelo menos 12 amuletos diferentes na coleção'}
+];
+const RELICS=[
+{id:'filtro',i:'🏺',n:'Filtro de Barro São João',d:'Mantém a água fresca desde 1984.',how:'Derrote o 1º Chefão (Conta 3)'},
+{id:'galo',i:'🐓',n:'Galo do Tempo',d:'Fica azul se vai fazer sol, rosa se vai chover.',how:'Derrote o 2º Chefão (Conta 6)'},
+{id:'bola8',i:'🎱',n:'Bola 8 da Sinuca',d:'Relíquia da mesa de feltro verde do fundo.',how:'Derrote o 3º Chefão (Conta 9)'},
+{id:'caramelo',i:'🐕',n:'Cachorro Caramelo',d:'Guardião oficial da calçada do boteco.',how:'Derrote o Chefão Final (Conta 12)'},
+{id:'copo',i:'🥃',n:'Copo Americano de Ouro',d:'Para tomar aquele cafezinho ou dose no capricho.',how:'Faça 2.500+ pts numa única mão'},
+{id:'caderno',i:'📒',n:'Caderneta do Fiado',d:'Assinada pelos maiores fregueses do bairro.',how:'Acumule R$ 35+ na mesma partida'},
+{id:'pimenta',i:'🌶️',n:'Pote de Pimenta Curtida',d:'Ninguém sabe a receita, mas todo mundo respeita.',how:'Vença na dose Cachaça Pura ou maior'},
+{id:'chave',i:'🔑',n:'Chave de Ouro do Boteco',d:'Concedida apenas aos sócios honorários.',how:'Conquiste 8 Troféus no mural'}
+];
+const TABLES=[
+{id:0,n:'Vermelha de Bar',req:0},
+{id:1,n:'Xadrez de Pizzaria',req:2},
+{id:2,n:'Verde Sinuca',req:4},
+{id:3,n:'Azul Gelada',req:6},
+{id:4,n:'Preta & Ouro VIP',req:8}
+];
+const SKINS=[
+{id:'',n:'Marfim Clássico',req:0},
+{id:'cs-retro',n:'Retrô de Buteco',req:2},
+{id:'cs-dark',n:'Escuro Neon',req:5},
+{id:'cs-royal',n:'Folheado a Ouro',req:8}
+];
+
+let M={best:0,wins:0,tr:[],rel:[],jks:[],dk:'balcao',st:0,tb:0,cs:''};
+try{const sv=JSON.parse(localStorage.getItem('fechou_meta')||'null');if(sv)M={...M,...sv};else M.best=+localStorage.getItem('fechou_best')||0}catch(e){}
+function saveM(){try{localStorage.setItem('fechou_meta',JSON.stringify(M));localStorage.setItem('fechou_best',M.best)}catch(e){}}
+function unlockTr(id){
+ if(!M.tr.includes(id)){const t=TROPHIES.find(x=>x.id==id);if(t){M.tr.push(id);toast(`🏆 Troféu: ${t.n}!`);bp(880,.25,'triangle')}}
+ if(M.tr.length>=8)unlockRel('chave');
+ saveM();
+}
+function unlockRel(id){
+ if(!M.rel.includes(id)){const r=RELICS.find(x=>x.id==id);if(r){M.rel.push(id);toast(`🎁 Nova Relíquia na Estante: ${r.i} ${r.n}!`)}}
+ saveM();
+}
+function seeJk(idx){if(!M.jks.includes(idx)){M.jks.push(idx);if(M.jks.length>=12)unlockTr('col12');saveM()}}
+
+let seed='',g=null,ac,menuTab='play';
 const hs=s=>{let h=1779033703;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}return h>>>0};
 const mul=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
 const R=k=>mul(hs(seed+':'+k));
 const shuf=(a,r)=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-let ac;function bp(f=440,d=.1,ty='sine'){try{ac=ac||new AudioContext();const o=ac.createOscillator(),v=ac.createGain();o.type=ty;o.frequency.value=f;v.gain.value=.07;o.connect(v);v.connect(ac.destination);o.start();v.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}}
+function bp(f=440,d=.1,ty='sine'){try{ac=ac||new AudioContext();const o=ac.createOscillator(),v=ac.createGain();o.type=ty;o.frequency.value=f;v.gain.value=.07;o.connect(v);v.connect(ac.destination);o.start();v.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}}
+function toast(t){const d=document.createElement('div');d.className='tst';d.textContent=t;$('tc').appendChild(d);setTimeout(()=>d.remove(),2600)}
 const T=n=>Math.round(220*Math.pow(1.5,n-1)/10)*10;
-const BOSS={3:{n:'Fiscal da Vigilância',d:'Cartas ♠ não pontuam',deb:0},6:{n:'Dono do Prédio',d:'Só 3 mãos nesta conta',hands:3},9:{n:'Sindicato',d:'Sem descartes',disc:0},12:{n:'Gerente do Banco',d:'Meta +50% e cartas ♥ não pontuam',mul:1.5,deb:1}};
-const PKN={pa:['Pacote de Amuletos',6,'Escolha 1 de 3 amuletos'],pm:['Pacote de Melhorias',4,'Escolha 1 de 3 melhorias de mão'],pc:['Pacote de Cartas',3,'Escolha 1 de 3 cartas turbinadas para o baralho']};
-let mp=null;
-const cd=(c,cl='',oc='')=>`<div ${oc?`onclick="${oc}"`:''} class="card ${c.s==1||c.s==2?'r':''} ${cl}"><b>${RN[c.r]}</b><span>${SU[c.s]}</span>${c.bc||c.bm?`<i style="position:absolute;top:2px;right:4px;font-size:10px;color:#b7791f;font-style:normal">${c.bm?'+'+c.bm+'M':'+'+c.bc}</i>`:''}</div>`;
+
+/* ============ MULTIPLAYER PEERJS ============ */
+let myUid='u'+Math.random().toString(36).slice(2,8),myName='Freguês',peer=null,conns={},hconn=null,mp=null;
+const PC=()=>({config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}});
+function getNm(){const el=$('nm');if(el&&el.value.trim())myName=el.value.trim().slice(0,12);try{localStorage.setItem('fechou_nm',myName)}catch(e){}return myName}
+try{myName=localStorage.getItem('fechou_nm')||'Freguês'}catch(e){}
+
+function hostRoom(){
+ getNm();const code=Array.from({length:5},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join('');
+ const sd=($('sd')&&$('sd').value.trim().toUpperCase())||Math.random().toString(36).slice(2,7).toUpperCase();
+ mp={code,host:true,mode:'vs',seed:sd,ph:'lobby',coopSc:0,coopRd:1,
+  pls:[{uid:myUid,name:myName,rd:1,sc:0,tot:0,money:4,hp:3,st:'lobby'}]};
+ if(peer)try{peer.destroy()}catch(e){}
+ peer=new Peer('fechou-'+code,PC());
+ peer.on('open',()=>render());
+ peer.on('error',e=>toast('Erro de rede: '+e.type));
+ peer.on('connection',c=>{
+  c.on('data',d=>{
+   if(!mp)return;
+   if(d.t=='join'){
+    let p=mp.pls.find(x=>x.uid==d.uid);
+    if(!p){if(mp.pls.length>=6||mp.ph!='lobby'){c.close();return}
+     p={uid:d.uid,name:String(d.name||'Freguês').slice(0,12),rd:1,sc:0,tot:0,money:4,hp:3,st:'lobby'};mp.pls.push(p)}
+    c.uid=d.uid;conns[d.uid]=c;bcastMP()}
+   else if(d.t=='upd'){
+    const p=mp.pls.find(x=>x.uid==d.uid);
+    if(p){Object.assign(p,{rd:d.rd,sc:d.sc,tot:d.tot,money:d.money,hp:d.hp,st:d.st});
+     if(mp.mode=='coop'&&d.addSc){mp.coopSc+=d.addSc;if(g&&g.ph=='round'){g.score=mp.coopSc;chkCoopWin()}}
+     chkVsEnd();bcastMP()}}
+  });
+  c.on('close',()=>{if(c.uid&&mp&&mp.ph=='lobby'){mp.pls=mp.pls.filter(x=>x.uid!=c.uid);delete conns[c.uid];bcastMP()}});
+ });
+ render();
+}
+function joinRoom(c0){
+ getNm();const code=String(c0||'').trim().toUpperCase();if(code.length<4)return toast('Digite o código da sala');
+ if(peer)try{peer.destroy()}catch(e){}
+ mp={code,host:false,mode:'vs',seed:'',ph:'lobby',coopSc:0,coopRd:1,pls:[]};
+ peer=new Peer('fechou-'+code+'-'+myUid,PC());
+ peer.on('open',()=>{
+  hconn=peer.connect('fechou-'+code,{reliable:true});
+  hconn.on('open',()=>hconn.send({t:'join',uid:myUid,name:myName}));
+  hconn.on('data',d=>{
+   if(d.t=='st'){
+    const wasLob=mp.ph=='lobby';mp={...d.mp,host:false};
+    if(wasLob&&mp.ph=='play'){go(mp.seed,true)}
+    else if(g&&mp.mode=='coop'){
+     if(mp.coopRd>g.round){g.round=mp.coopRd;startRound()}
+     else if(g.ph=='round'){g.score=mp.coopSc;if($('sc'))$('sc').textContent=g.score;if($('bar'))$('bar').style.width=Math.min(100,g.score/g.target*100)+'%';if(g.score>=g.target&&!g.busy)win()}
+    }
+    updMpBar();if(!g)render();
+   }
+  });
+ });
+ peer.on('error',()=>toast('Sala não encontrada'));
+}
+function bcastMP(){
+ if(!mp||!mp.host)return;
+ for(const u in conns){if(conns[u]&&conns[u].open)conns[u].send({t:'st',mp})}
+ updMpBar();if(!g)render();
+}
+function syncMe(addSc=0){
+ if(!mp||!g)return;
+ const st=g.ph=='end'?(g.won?'won':'dead'):g.ph;
+ if(mp.host){
+  const p=mp.pls.find(x=>x.uid==myUid);
+  if(p)Object.assign(p,{rd:g.round,sc:g.score,tot:g.tot,money:g.money,hp:g.hp,st});
+  if(mp.mode=='coop'&&addSc){mp.coopSc+=addSc;g.score=mp.coopSc}
+  chkVsEnd();bcastMP();
+ }else if(hconn&&hconn.open){
+  hconn.send({t:'upd',uid:myUid,rd:g.round,sc:g.score,tot:g.tot,money:g.money,hp:g.hp,st,addSc});
+ }
+}
+function chkCoopWin(){if(mp&&mp.host&&mp.mode=='coop'&&g&&g.ph=='round'&&g.score>=g.target&&!g.busy){win();bcastMP()}}
+function chkVsEnd(){
+ if(!mp||mp.mode!='vs')return;
+ const alive=mp.pls.filter(p=>p.st!='dead');
+ if(mp.pls.length>1&&alive.length==1&&mp.pls.some(p=>p.st=='dead')){toast('🏆 '+alive[0].name+' é o último de pé na mesa!')}
+}
+function startMP(){
+ if(!mp||!mp.host)return;
+ const sdInput=$('mpSd')&&$('mpSd').value.trim().toUpperCase();
+ if(sdInput)mp.seed=sdInput;
+ mp.ph='play';mp.coopSc=0;mp.coopRd=1;
+ go(mp.seed,true);bcastMP();
+}
+function leaveMP(){if(peer)try{peer.destroy()}catch(e){}peer=null;mp=null;hconn=null;conns={};g=null;render()}
+function updMpBar(){
+ const el=$('mpb');if(!el||!mp)return;
+ el.innerHTML=`<div class="bg-black/55 border border-amber-500/30 rounded-xl p-2 text-xs space-y-1">
+  <div class="flex justify-between items-center"><span class="text-amber-300 font-bold">${mp.mode=='coop'?'🍻 Co-op · Rachando a Conta':'⚔️ Disputa · Sala '+mp.code}</span><span class="opacity-70">Semente ${seed}</span></div>
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">${mp.pls.map(p=>`<div class="px-2 py-1 rounded bg-white/5 border ${p.uid==myUid?'border-amber-400/60':'border-white/10'} flex justify-between items-center">
+   <div class="truncate"><b class="${p.st=='dead'?'line-through opacity-50':''}">${esc(p.name)}</b><div class="text-[10px] opacity-75">Conta ${p.rd}/12 · R$${p.money}</div></div>
+   <div class="text-right text-[10px]"><div>${mp.mode=='vs'?'❤️'.repeat(Math.max(0,p.hp)):'🍻'}</div><div class="text-amber-300 font-bold">${p.sc} pts</div></div>
+  </div>`).join('')}</div></div>`;
+}
+
+/* ============ LÓGICA DO JOGO ============ */
+const isDeadCard=c=>{
+ if(!g||!g.boss)return false;
+ if(g.boss.id=='nof'&&c.r>=9&&c.r<=11)return true;
+ if(g.boss.id=='suit'&&c.s===g.boss.suit)return true;
+ return false;
+};
+const cd=(c,cl='',oc='')=>{
+ const m=c.m?MOD[c.m]:null,dead=isDeadCard(c);
+ return`<div ${oc?`onclick="${oc}"`:''} class="card ${M.cs} ${c.s==1||c.s==2?'r':''} ${m?m.c:''} ${dead?'dead':''} ${cl}" title="${m?m.n+': '+m.d:''}">
+  ${m?`<i class="bdg">${m.b}</i>`:''}<b>${RN[c.r]}</b><span>${SU[c.s]}</span></div>`;
+};
 
 function evalH(cs){const n=cs.length,rs=cs.map(c=>c.r),cnt={};rs.forEach(r=>cnt[r]=(cnt[r]||0)+1);
  const gs=Object.entries(cnt).map(([r,c])=>[+r,c]).sort((a,b)=>b[1]-a[1]||b[0]-a[0]),u=[...new Set(rs)].sort((a,b)=>a-b);
@@ -74,121 +292,415 @@ function evalH(cs){const n=cs.length,rs=cs.map(c=>c.r),cnt={};rs.forEach(r=>cnt[
  const all=['sf','fl','st','fh'].includes(t),rr=t=='hc'?[Math.max(...rs)]:t=='2p'?[gs[0][0],gs[1][0]]:[gs[0][0]];
  return{t,sc:all?cs:cs.filter(c=>rr.includes(c.r))}}
 
-function go(sd){seed=sd||Math.random().toString(36).slice(2,7).toUpperCase();g={round:1,money:4,jk:[],lv:{},ph:'round',so:0,extra:[],tot:0};startRound()}
-function startRound(){const d=[];for(let s=0;s<4;s++)for(let r=0;r<13;r++)d.push({r,s,id:s*13+r});
- (g.extra||[]).forEach(c=>d.push(c));
- const b=BOSS[g.round]||{},tg=Math.round(T(g.round)*(b.mul||1)*(mp&&mp.mode=='c'?mp.n*.7:1)/10)*10;
- Object.assign(g,{ph:'round',boss:BOSS[g.round]||null,deb:b.deb!==undefined?b.deb:-1,wait:0,target:tg,score:0,hands:b.hands||4,disc:b.disc===0?0:3,sel:[],hand:[],busy:0,deck:shuf(d,R('d'+g.round))});draw(8);if(mp)prog();render()}
+function mkBaseDeck(dk){
+ const d=[];for(let s=0;s<4;s++)for(let r=0;r<13;r++){
+  let m=null;
+  if(dk=='dourado'&&r==12)m=s%2==0?'gold':'mult';
+  d.push({r,s,id:s*13+r,m});
+ }
+ return d;
+}
+
+function getBoss(rd){
+ if(rd%3!==0)return null;
+ if(rd==12)return{...BOSS[6]};
+ const r=R('boss'+rd),pool=BOSS.slice(0,6),b={...pool[Math.floor(r()*pool.length)]};
+ if(b.id=='suit'){b.suit=Math.floor(r()*4);b.d=b.d.replace('%S',SNM[b.suit])}
+ return b;
+}
+
+function go(sd,keepMp=false){
+ if(!keepMp)mp=null;
+ seed=sd||Math.random().toString(36).slice(2,7).toUpperCase();
+ const dk=M.dk||'balcao',st=STAKES[M.st|0]||STAKES[0];
+ const lv={};if(dk=='caos')Object.keys(H).forEach(k=>lv[k]=1);
+ const jk=[];if(dk=='caos'){const j0=Math.floor(R('caosjk')()*JK.length);jk.push(j0);seeJk(j0)}
+ g={
+  round:1,dk,st:st.id,maxJk:dk=='magnata'?6:5,
+  money:dk=='fiado'?12:dk=='magnata'?6:4,
+  jk,lv,ph:'round',so:0,base:mkBaseDeck(dk),nid:100,hp:3,tot:0,pk:null,vw:false,bossW:0
+ };
+ startRound();
+}
+
+function startRound(){
+ const b=getBoss(g.round),coopN=mp&&mp.mode=='coop'?Math.max(1,mp.pls.length):1;
+ const stMul=(STAKES[g.st]||STAKES[0]).tm;
+ const rawT=T(g.round)*stMul*(b?b.tm:1)*(coopN>1?coopN*1.15:1);
+ const tgt=Math.round(rawT/10)*10;
+ const baseHands=(g.dk=='sinuca'?3:4)-(b&&b.id=='rush'?1:0);
+ const baseDisc=Math.max(1,(g.dk=='sinuca'?5:3)-(b&&b.id=='final'?1:0)-(g.st>=3?1:0));
+ Object.assign(g,{
+  ph:'round',boss:b,target:tgt,score:mp&&mp.mode=='coop'?mp.coopSc:0,
+  hands:baseHands,maxHands:baseHands,disc:baseDisc,maxDisc:baseDisc,
+  sel:[],hand:[],busy:0,usedH:[],pk:null,
+  deck:shuf(g.base.map(c=>({...c})),R('d'+g.round+':'+myUid))
+ });
+ draw(8);syncMe();render();
+}
+
 function draw(n){while(n-->0&&g.deck.length)g.hand.push(g.deck.pop());g.hand.sort((a,b)=>g.so?a.s-b.s||b.r-a.r:b.r-a.r||a.s-b.s)}
-const hdH=()=>g.hand.map(c=>cd(c,(g.sel.includes(c.id)?'sel ':'')+(c.s==g.deb?'deb':''),`tog(${c.id})`)).join('');
-const set=(c,m)=>{$('ch').textContent=Math.floor(c);$('mu').textContent=+m.toFixed(1)};
+const hdH=()=>g.hand.map(c=>cd(c,g.sel.includes(c.id)?'sel':'',`tog(${c.id})`)).join('');
+const set=(c,m)=>{if($('ch'))$('ch').textContent=Math.floor(c);if($('mu'))$('mu').textContent=+m.toFixed(1)};
 function base(t){const lv=g.lv[t]||0;return[H[t][1]+10*lv,H[t][2]+lv,H[t][0]+(lv?` (nv ${lv+1})`:'')]}
-function pv(){const cs=g.hand.filter(c=>g.sel.includes(c.id));if(!cs.length){$('hn').textContent='';set(0,0);return}const[c,m,n]=base(evalH(cs).t);$('hn').textContent=n;set(c,m)}
+
+function pv(){
+ const cs=g.hand.filter(c=>g.sel.includes(c.id));
+ if(!cs.length){if($('hn'))$('hn').textContent='';set(0,0);return}
+ const e=evalH(cs);
+ if(g.boss&&g.boss.id=='five'&&cs.length<5){$('hn').textContent='⚠️ Mesa Reservada (exige 5 cartas!)';set(0,0);return}
+ if(g.boss&&g.boss.id=='uniq'&&g.usedH.includes(e.t)){$('hn').textContent='⚠️ Mão já usada nesta conta!';set(0,0);return}
+ const[c,m,n]=base(e.t);$('hn').textContent=n;set(c,m);
+}
 function tog(id){if(g.busy)return;const i=g.sel.indexOf(id);if(i>=0)g.sel.splice(i,1);else if(g.sel.length<5)g.sel.push(id);bp(600,.04);$('hd').innerHTML=hdH();pv()}
 function srt(){g.so^=1;g.hand.sort((a,b)=>g.so?a.s-b.s||b.r-a.r:b.r-a.r||a.s-b.s);$('hd').innerHTML=hdH()}
 function ji(i){$('info').textContent=JK[g.jk[i]].n+': '+JK[g.jk[i]].d}
 function disc(){if(g.busy||!g.sel.length||g.disc<1)return;g.disc--;g.hand=g.hand.filter(c=>!g.sel.includes(c.id));g.sel=[];draw(8-g.hand.length);render()}
-async function play(){if(g.busy||!g.sel.length||g.hands<1)return;g.busy=1;
- const cs=g.hand.filter(c=>g.sel.includes(c.id));g.hand=g.hand.filter(c=>!g.sel.includes(c.id));g.sel=[];g.hands--;
- const e=evalH(cs);let[ch,mu,nm]=base(e.t);
- $('hd').innerHTML=hdH();$('pa').innerHTML=cs.map(c=>cd(c,'pa'+(c.s==g.deb?' deb':''))).join('');$('hn').textContent=nm;set(ch,mu);await sleep(400);
- const sc2=e.sc.filter(c=>c.s!=g.deb);for(const c of e.sc){if(c.s!=g.deb){ch+=rv(c.r)+(c.bc||0);mu+=c.bm||0}$('pa').children[cs.indexOf(c)].classList.add('pop');set(ch,mu);bp(500+ch%200,.08,'triangle');await sleep(380)}
- for(let i=0;i<g.jk.length;i++){const r=JK[g.jk[i]].ev({t:e.t,sc:sc2,all:cs,g});
-  if(r.c||r.m||r.x){ch+=r.c||0;mu+=r.m||0;mu*=r.x||1;$('j'+i).classList.add('pop');set(ch,mu);bp(300,.15,'square');await sleep(480)}}
- const tot=Math.floor(ch*mu);$('hn').textContent='+'+tot;bp(800,.3);g.score+=tot;g.tot+=tot;$('sc').textContent=g.score;$('bar').style.width=Math.min(100,prg()*100)+'%';await sleep(900);
- draw(8-g.hand.length);
- if(mp){prog();if(mp.mode=='c'){if(g.hands<1)coopDone();else{g.busy=0;render()}return}}
- if(g.score>=g.target)win();else if(g.hands<1)end(0);else{g.busy=0;render()}}
-function save(){best=Math.max(best,g.round);try{localStorage.setItem('fechou_best',best)}catch(e){}}
-function end(w){g.ph='end';g.won=w;save();if(mp)prog();render()}
-function win(){if(g.round>=12)return end(1);
- g.rw=4+(g.boss?5:0)+g.hands+g.jk.reduce((a,j)=>a+(JK[j].eco||0),0)+Math.min(5,Math.floor(g.money/5));g.money+=g.rw;g.rr=0;g.of=offers();g.ph='shop';save();render()}
-function offers(){const r=R('s'+g.round+':'+g.rr),pool=shuf(JK.map((_,i)=>i).filter(i=>!g.jk.includes(i)),r),ks=Object.keys(H);
- return[{k:'j',i:pool[0]},{k:'j',i:pool[1]},{k:'u',t:ks[Math.floor(r()*ks.length)]}].filter(o=>o.k=='u'||o.i!==undefined).concat(shuf(['pa','pm','pc'],r).slice(0,2).map(t=>({k:'p',t})))}
-function buy(n){const o=g.of[n],p=o.k=='j'?JK[o.i].p:o.k=='p'?PKN[o.t][1]:3;if(g.money<p||(o.k=='j'&&g.jk.length>=5))return;g.money-=p;
- if(o.k=='p'){const r=R('pk'+g.round+':'+n+':'+g.rr),ks=Object.keys(H);
-  g.pk={t:o.t,it:o.t=='pa'?shuf(JK.map((_,x)=>x).filter(x=>!g.jk.includes(x)),r).slice(0,3):o.t=='pm'?shuf(ks.slice(),r).slice(0,3):[0,1,2].map(()=>{const c={r:Math.floor(r()*13),s:Math.floor(r()*4)};if(r()<.5)c.bc=20;else c.bm=3;return c})};
-  g.of[n]=null;g.ph='pack';bp(700,.15);render();return}
- if(o.k=='j')g.jk.push(o.i);else g.lv[o.t]=(g.lv[o.t]||0)+1;g.of[n]=null;bp(700,.15);render()}
-function pickPk(i){const k=g.pk;if(i>=0){const v=k.it[i];if(k.t=='pa'){if(g.jk.length>=5){toast('Sem espaço: venda um amuleto antes');return}g.jk.push(v)}else if(k.t=='pm')g.lv[v]=(g.lv[v]||0)+1;else{v.id=100+g.extra.length;g.extra.push(v)}}g.pk=null;g.ph='shop';render()}
-function sell(i){g.money+=Math.floor(JK[g.jk[i]].p/2);g.jk.splice(i,1);render()}
-function reroll(){const c=2+g.rr;if(g.money<c)return;g.money-=c;g.rr++;g.of=offers();render()}
-function next(){g.round++;startRound()}
 
-const esc=s=>String(s).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
-function toast(t){const d=document.createElement('div');d.textContent=t;d.style.cssText='position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#000d;border:1px solid #d4af37;padding:6px 14px;border-radius:10px;font-size:14px;z-index:99;max-width:90vw;text-align:center';document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
-const bossH=()=>g.boss?`<div class="rounded-lg p-2 text-center text-sm" style="background:#3b0764;border:2px solid #c084fc"><b>👹 CHEFÃO: ${g.boss.n}</b><div class="text-xs">${g.boss.d}</div></div>`:'';
-const teamSum=()=>Object.entries(mp.roster).reduce((a,[u,r])=>a+(u==mp.uid?g.score:r.sc||0),0);
-const prg=()=>mp&&mp.mode=='c'?teamSum()/g.target:g.score/g.target;
-function rosIn(){const co=mp.mode=='c',rs=Object.entries(mp.roster).map(([u,r])=>({u,...r})).sort((a,b)=>(b.won||0)-(a.won||0)||b.rd-a.rd||b.tot-a.tot);
- return(co&&g&&g.ph=='round'?`<div class="text-center">🤝 Time: <b>${teamSum()}</b> / ${g.target}</div>`:'')+rs.map((r,i)=>`<div class="flex justify-between"><span>${co?'':(i+1)+'º '}${esc(r.name)}${r.u==mp.uid?' (você)':''}${r.left?' 🚪':''}</span><span>Conta ${r.rd}/12 · ${r.tot} pts${r.won?' 🏆':r.over?' 💀':r.done?' ✅':''}</span></div>`).join('')}
-const rosH=()=>mp&&!mp.lob?`<div id="ros" class="lousa p-2 text-xs space-y-0.5">${rosIn()}</div>`:'';
-function updRos(){const e=$('ros');if(e&&g)e.innerHTML=rosIn()}
-function rLobby(){return`<div class="space-y-3 pt-6"><div class="text-center"><div class="f text-3xl text-amber-300">${mp.mode=='c'?'Co-op: Rachando a Conta':'Disputa na mesma semente'}</div><div class="text-xs opacity-80 mt-1">${mp.mode=='c'?'Todos jogam as mesmas cartas e somam os pontos. O time precisa bater a conta junto.':'Todos jogam a mesma semente. Vence quem chegar mais longe (ou fizer mais pontos).'}</div></div>
-<div class="text-center"><div class="text-xs opacity-70">Código da sala</div><div class="f text-4xl text-amber-300 tracking-[.3em]">${mp.code}</div><div class="text-[11px] opacity-60 break-all">${location.href.split('?')[0]}?room=${mp.code}</div></div>
-<section class="lousa p-3 space-y-1">${Object.entries(mp.roster).map(([u,r])=>`<div class="text-sm">${esc(r.name)}${u==mp.uid?' (você)':''}${u==mp.hostUid?' 👑':''}</div>`).join('')||'<div class="text-xs opacity-60">Conectando…</div>'}</section>
-${mp.host?`<button class="bt w-full" style="background:linear-gradient(#f5b83d,#b7791f);color:#2a1a02" onclick="mpStart()">Começar</button>`:'<div class="text-center text-sm opacity-80">Aguardando o anfitrião começar…</div>'}
-<a href="../../" class="block text-center text-sm opacity-70">← Sala de Jogos</a></div>`}
-function rPack(){const k=g.pk;return`<div class="space-y-3 pt-6 text-center"><div class="f text-3xl text-amber-300">${PKN[k.t][0]}</div><div class="text-sm">${PKN[k.t][2]}</div><div class="flex flex-col gap-2">${k.it.map((v,i)=>`<button class="lousa p-3 text-left" onclick="pickPk(${i})">${k.t=='pa'?`<b>${JK[v].n}</b><div class="text-xs opacity-80">${JK[v].d}</div>`:k.t=='pm'?`<b>${H[v][0]}</b><div class="text-xs opacity-80">+10 Fichas e +1 Mult (nv ${(g.lv[v]||0)+2})</div>`:`<div class="flex items-center gap-3">${cd(v)}<div><b>${RN[v.r]}${SU[v.s]}</b><div class="text-xs opacity-80">${v.bm?'+'+v.bm+' Mult quando pontuar':'+'+v.bc+' Fichas quando pontuar'}</div></div></div>`}</button>`).join('')}</div><button class="bt bg-slate-700" onclick="pickPk(-1)">Pular</button></div>`}
-/* ---- multiplayer (PeerJS): host é o servidor da sala ---- */
-const PCF={config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}};
-const uidN=()=>'u'+Math.random().toString(36).slice(2,8);
-function mpCreate(mode){const nm=($('mn').value.trim()||'Jogador').slice(0,14),uid=uidN(),code=Array.from({length:5},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join('');
- mp={mode,host:1,uid,hostUid:uid,code,lob:1,conns:{},roster:{[uid]:{name:nm,rd:1,tot:0,sc:0}},n:1};
- mp.peer=new Peer('fechou-'+code,PCF);
- mp.peer.on('error',e=>toast('Erro de rede: '+e.type));
- mp.peer.on('connection',c=>{
-  c.on('data',d=>{if(d.t=='join'){if(!mp.lob||Object.keys(mp.roster).length>=6){c.close();return}c.uid=d.uid;mp.conns[d.uid]=c;mp.roster[d.uid]={name:String(d.name).slice(0,14),rd:1,tot:0,sc:0};bro()}
-   else if(c.uid&&mp.roster[c.uid]&&d.t=='prog'){Object.assign(mp.roster[c.uid],{rd:d.p.rd|0,tot:d.p.tot|0,sc:d.p.sc|0,done:d.p.done|0,over:d.p.over|0,won:d.p.won|0});chkAll();bro()}});
-  c.on('close',()=>{const u=c.uid;if(!u)return;delete mp.conns[u];if(mp.lob)delete mp.roster[u];else if(mp.roster[u]){mp.roster[u].over=1;mp.roster[u].left=1;chkAll()}bro()})});
- render()}
-function mpJoin(){const code=$('mc').value.trim().toUpperCase(),nm=($('mn').value.trim()||'Jogador').slice(0,14);if(code.length<4)return toast('Digite o código da sala');const uid=uidN();
- mp={host:0,uid,code,lob:1,roster:{},mode:'d',n:1};
- mp.peer=new Peer('fechou-'+code+'-'+uid,PCF);
- mp.peer.on('error',e=>toast(e.type=='peer-unavailable'?'Sala não encontrada':'Erro: '+e.type));
- mp.peer.on('open',()=>{mp.hc=mp.peer.connect('fechou-'+code,{reliable:true});mp.hc.on('open',()=>mp.hc.send({t:'join',uid,name:nm}));
-  mp.hc.on('data',d=>{if(d.t=='ros'){mp.roster=d.r;mp.mode=d.mode;mp.hostUid=d.h;if(mp.lob)render();else updRos()}
-   else if(d.t=='start'){mp.lob=0;mp.mode=d.mode;mp.n=d.n;go(d.seed)}
-   else if(d.t=='res')coopRes(d)});
-  mp.hc.on('close',()=>toast('Conexão com a sala perdida'))});
- render()}
-function bro(){const m={t:'ros',r:mp.roster,mode:mp.mode,h:mp.hostUid};Object.values(mp.conns).forEach(c=>c.open&&c.send(m));if(mp.lob)render();else updRos()}
-function mpStart(){mp.lob=0;mp.n=Object.keys(mp.roster).length;const sd=Math.random().toString(36).slice(2,7).toUpperCase(),m={t:'start',seed:sd,mode:mp.mode,n:mp.n};Object.values(mp.conns).forEach(c=>c.open&&c.send(m));go(sd)}
-function prog(){const p={rd:g.round,tot:g.tot,sc:g.score,done:g.wait?1:0,over:g.ph=='end'?1:0,won:g.won?1:0};
- if(mp.host){Object.assign(mp.roster[mp.uid],p);chkAll();bro()}else if(mp.hc&&mp.hc.open)mp.hc.send({t:'prog',p})}
-function coopDone(){if(g.wait||g.ph!='round')return;g.wait=1;g.busy=1;prog();render()}
-function chkAll(){if(!mp.host||mp.mode!='c'||mp.lob||!g||g.ph!='round')return;
- const es=Object.values(mp.roster).filter(r=>!r.over&&!r.left);if(!es.length||!es.every(r=>r.done))return;
- const sum=Object.values(mp.roster).reduce((a,r)=>a+(r.sc||0),0),m={t:'res',win:sum>=g.target?1:0,sum,need:g.target};
- Object.values(mp.roster).forEach(r=>{r.done=0;r.sc=0});Object.values(mp.conns).forEach(c=>c.open&&c.send(m));coopRes(m)}
-function coopRes(m){if(!g)return;toast(m.win?`Time fechou a conta! ${m.sum}/${m.need}`:`Faltou! ${m.sum}/${m.need}`);g.wait=0;g.busy=0;if(m.win)win();else end(0)}
-function rMenu(){return`<div class="space-y-4 pt-6"><a href="../../" class="text-sm opacity-70">← Sala de Jogos</a>
-<div class="text-center"><div class="f text-6xl leading-none" style="color:#f6eedc;text-shadow:0 5px 0 #b3141a,0 9px 0 #000">Fechou<br>a Conta</div><div class="text-sm mt-3 text-amber-100">Monte mãos de pôquer, junte amuletos e pague as contas do boteco por 12 meses.</div></div>
-<section class="lousa p-4 space-y-3 text-sm"><p>🃏 Escolha até <b>5 cartas</b> e jogue. <b>Fichas × Mult</b> = pontos.</p><p>🎯 Bata a <b>meta da conta</b> em 4 mãos (e 3 descartes).</p><p>🛒 Depois de cada conta, compre <b>amuletos</b> e melhorias na loja.</p><p class="opacity-70">Quem usar a mesma semente vê as mesmas cartas e ofertas: dá pra competir com os amigos!</p></section>
-<div class="flex gap-2"><input id="sd" maxlength="8" placeholder="SEMENTE (opcional)" class="flex-1 px-3 py-2 rounded-xl bg-black/50 border border-amber-500/30 uppercase outline-none tracking-widest"><button class="bt" style="background:linear-gradient(#f5b83d,#b7791f);color:#2a1a02" onclick="go($('sd').value.trim().toUpperCase())">Abrir o boteco</button></div>
-<section class="lousa p-3 space-y-2 text-sm"><div class="f text-amber-200">🌐 MULTIPLAYER ONLINE</div><input id="mn" maxlength="14" placeholder="Seu nome" class="w-full px-3 py-2 rounded-xl bg-black/50 border border-amber-500/30 outline-none">
-<div class="grid grid-cols-2 gap-2"><button class="bt bg-sky-800 text-sm" onclick="mpCreate('d')">⚔️ Criar Disputa<span class="block text-[10px] font-normal opacity-80">mesma semente, vence o melhor</span></button><button class="bt bg-emerald-800 text-sm" onclick="mpCreate('c')">🤝 Criar Co-op<span class="block text-[10px] font-normal opacity-80">rachando a conta</span></button></div>
-<div class="flex gap-2"><input id="mc" maxlength="5" placeholder="CÓDIGO" class="flex-1 px-3 py-2 rounded-xl bg-black/50 border border-amber-500/30 uppercase outline-none tracking-widest"><button class="bt bg-amber-600 text-sm" onclick="mpJoin()">Entrar</button></div></section>
-<div class="text-center text-sm opacity-80">Seu recorde: conta <b>${best}</b> de 12</div></div>`}
-function rRound(){return`<div class="space-y-3"><div class="flex justify-between items-start gap-2">
-<div class="comanda"><div class="f text-sm">CONTA ${g.round}/12</div><div class="text-xs">Meta</div><div class="f text-3xl" style="color:#b3141a">${g.target}</div><div class="bar"><i id="bar" style="width:${Math.min(100,prg()*100)}%"></i></div><div class="text-xs">Faturado: <b id="sc">${g.score}</b></div></div>
-<div class="text-right"><div class="f text-3xl text-amber-300">R$ ${g.money}</div><div class="text-sm">Mãos <b>${g.hands}</b> · Descartes <b>${g.disc}</b></div><div class="text-[10px] opacity-60">semente ${seed}</div></div></div>
-${bossH()}${rosH()}${g.wait?'<div class="text-center text-sm text-amber-200">⏳ Sua parte acabou. Aguardando o resto da mesa…</div>':''}<div class="flex gap-1.5 justify-center">${[0,1,2,3,4].map(i=>g.jk[i]!==undefined?`<button id="j${i}" class="jk" onclick="ji(${i})">${JK[g.jk[i]].n}</button>`:'<div class="jk emp"></div>').join('')}</div>
-<div id="info" class="text-center text-xs min-h-[16px] text-amber-200"></div>
-<div class="mesa"><div id="hn" class="f text-center text-lg min-h-[28px]"></div><div class="flex items-center justify-center gap-3 my-1"><div class="bx bl" id="ch">0</div><span class="f text-2xl">×</span><div class="bx rd" id="mu">0</div></div><div id="pa" class="flex justify-center min-h-[92px] items-center"></div></div>
-<div id="hd" class="hand flex justify-center pt-5">${hdH()}</div>
-<div class="flex gap-2 justify-center"><button class="bt bg-emerald-700" onclick="play()">Jogar</button><button class="bt bg-rose-800" onclick="disc()">Descartar</button><button class="bt bg-slate-700" onclick="srt()">Ordenar</button>${mp&&mp.mode=='c'?'<button class="bt bg-amber-700" onclick="coopDone()">Encerrar</button>':''}</div></div>`}
-function rShop(){return`<div class="space-y-3 pt-3"><div class="text-center"><div class="f text-3xl text-amber-300">Conta fechada!</div><div class="text-sm">+ R$ ${g.rw} · você tem <b>R$ ${g.money}</b></div></div>
-<section class="lousa p-3 space-y-2"><div class="f text-sm text-amber-200">CARDÁPIO DE AMULETOS</div>${g.of.map((o,n)=>{if(!o)return'<div class="p-2 text-xs opacity-50 text-center">vendido</div>';const j=o.k=='j'?JK[o.i]:null,pk=o.k=='p'?PKN[o.t]:null,p=j?j.p:pk?pk[1]:3;
- return`<div class="flex items-center justify-between gap-2 bg-black/30 rounded-lg p-2"><div><b>${j?j.n:pk?'📦 '+pk[0]:'Melhoria: '+H[o.t][0]}</b><div class="text-xs opacity-80">${j?j.d:pk?pk[2]:'+10 Fichas e +1 Mult nessa mão (nv '+((g.lv[o.t]||0)+1)+')'}</div></div><button class="bt bg-amber-600 text-sm" ${g.money<p||(j&&g.jk.length>=5)?'disabled':''} onclick="buy(${n})">R$ ${p}</button></div>`}).join('')}
-<button class="bt bg-slate-700 text-sm w-full" onclick="reroll()" ${g.money<2+g.rr?'disabled':''}>Trocar ofertas (R$ ${2+g.rr})</button></section>
-<section class="lousa p-3"><div class="f text-sm text-amber-200 mb-2">SEUS AMULETOS (${g.jk.length}/5)</div>${g.jk.length?g.jk.map((j,i)=>`<div class="flex justify-between items-center text-sm py-1"><span><b>${JK[j].n}</b> <span class="opacity-70 text-xs">${JK[j].d}</span></span><button class="text-xs underline" onclick="sell(${i})">vender R$ ${Math.floor(JK[j].p/2)}</button></div>`).join(''):'<div class="text-xs opacity-60">Nenhum ainda.</div>'}</section>
-<button class="bt w-full" style="background:linear-gradient(#f5b83d,#b7791f);color:#2a1a02" onclick="next()">Próxima conta →</button></div>`}
-function rEnd(){return`<div class="space-y-4 pt-16 text-center"><div class="f text-5xl" style="color:${g.won?'#fde047':'#fb7185'}">${g.won?'Fechou a conta!':'Faliu o boteco…'}</div>
-<div>${g.won?'Você pagou os 12 meses! 🍻':`Você chegou até a conta ${g.round} de 12.`}</div><div class="text-sm opacity-80">Semente <b>${seed}</b> · recorde: conta ${best}</div>
-${rosH()}<div class="flex flex-col gap-2 max-w-xs mx-auto">${mp?'':'<button class="bt bg-emerald-700" onclick="go()">Jogar de novo (nova semente)</button><button class="bt bg-sky-800" onclick="go(seed)">Repetir a mesma semente</button>'}<a href="../../" class="bt bg-slate-700">← Sala de Jogos</a></div></div>`}
-function render(){$('app').innerHTML=(mp&&mp.lob?rLobby:g?{round:rRound,shop:rShop,pack:rPack,end:rEnd}[g.ph]:rMenu)();if(g&&g.ph=='round')pv()}
-render();{const q0=new URLSearchParams(location.search).get('room');if(q0&&$('mc'))$('mc').value=q0.toUpperCase()}
+async function play(){
+ if(g.busy||!g.sel.length||g.hands<1)return;g.busy=1;
+ const cs=g.hand.filter(c=>g.sel.includes(c.id));g.hand=g.hand.filter(c=>!g.sel.includes(c.id));g.sel=[];g.hands--;
+ if(g.boss&&g.boss.id=='tax'&&g.money>0){g.money--;toast('🧾 Fiscal cobrou R$ 1 de taxa!')}
+ const e=evalH(cs);let[ch,mu,nm]=base(e.t);
+ if(e.t=='4'||e.t=='sf')unlockTr('quad');
+ const blocked=(g.boss&&g.boss.id=='five'&&cs.length<5)||(g.boss&&g.boss.id=='uniq'&&g.usedH.includes(e.t));
+ if(!blocked)g.usedH.push(e.t);
+ $('hd').innerHTML=hdH();$('pa').innerHTML=cs.map(c=>cd(c,'pa')).join('');
+ if(blocked){
+  $('hn').textContent='🚫 Anulado pelo Chefão!';set(0,0);bp(180,.35,'sawtooth');await sleep(900);
+ }else{
+  $('hn').textContent=nm;set(ch,mu);await sleep(340);
+  const validSc=e.sc.filter(c=>!isDeadCard(c));
+  for(const c of e.sc){
+   const el=$('pa').children[cs.indexOf(c)];
+   if(isDeadCard(c)){el.classList.add('dead');bp(200,.08,'sawtooth');await sleep(240);continue}
+   ch+=rv(c.r);
+   if(c.m=='chips')ch+=35;
+   if(c.m=='mult')mu+=4;
+   if(c.m=='xmult')mu*=1.5;
+   if(c.m=='gold'){g.money+=3;toast('🪙 Carta Dourada: +R$ 3!')}
+   el.classList.add('pop');set(ch,mu);bp(500+ch%200,.08,'triangle');await sleep(320);
+  }
+  for(let i=0;i<g.jk.length;i++){
+   const r=JK[g.jk[i]].ev({t:e.t,sc:validSc,all:cs,g});
+   if(r.c||r.m||r.x){ch+=r.c||0;mu+=r.m||0;mu*=r.x||1;$('j'+i).classList.add('pop');set(ch,mu);bp(300,.15,'square');await sleep(400)}
+  }
+  const tot=Math.floor(ch*mu);$('hn').textContent='+'+tot;bp(800,.3);
+  if(tot>=2500){unlockTr('big');unlockRel('copo')}
+  g.score+=tot;g.tot+=tot;
+  $('sc').textContent=g.score;$('bar').style.width=Math.min(100,g.score/g.target*100)+'%';
+  syncMe(tot);await sleep(800);
+ }
+ draw(8-g.hand.length);
+ if(g.score>=g.target)win();
+ else if(g.hands<1){
+  if(mp&&mp.mode=='vs'&&g.hp>1){
+   g.hp--;toast(`💔 Estourou a conta! Usou 1 Fiado (${g.hp} restantes) e avançou.`);
+   if(g.round>=12)end(1);else{g.rw=3;g.money+=3;g.rr=0;g.of=offers();g.pks=packOffers();g.ph='shop';syncMe();render()}
+  }else end(0);
+ }else{g.busy=0;syncMe();render()}
+}
+
+function save(){
+ M.best=Math.max(M.best,g.round);
+ if(g.round>=6)unlockTr('c6');
+ if(g.money>=35){unlockTr('rich');unlockRel('caderno')}
+ if(g.base.filter(c=>c.m).length>=6)unlockTr('pack6');
+ saveM();
+}
+function end(w){
+ g.ph='end';g.won=w;
+ if(w){
+  M.wins=(M.wins||0)+1;unlockTr('win1');unlockRel('caramelo');
+  if(g.st>=1){unlockTr('stake2');unlockRel('pimenta')}
+ }
+ save();syncMe();render();
+}
+function win(){
+ if(g.hands==g.maxHands-1)unlockTr('one');
+ if(g.disc==g.maxDisc)unlockTr('nodisc');
+ if(g.boss){
+  g.bossW++;
+  if(g.round==3)unlockRel('filtro');
+  if(g.round==6)unlockRel('galo');
+  if(g.round==9)unlockRel('bola8');
+  if(g.bossW>=3)unlockTr('boss3');
+ }
+ if(g.round>=12)return end(1);
+ const bossBonus=g.boss?3:0;
+ const interest=g.dk=='fiado'?0:Math.min(5,Math.floor(g.money/5));
+ g.rw=4+g.hands+bossBonus+g.jk.reduce((a,j)=>a+(JK[j].eco||0),0)+interest;
+ g.money+=g.rw;g.rr=0;g.of=offers();g.pks=packOffers();g.ph='shop';save();syncMe();render();
+}
+function offers(){
+ const r=R('s'+g.round+':'+g.rr+':'+myUid),pool=shuf(JK.map((_,i)=>i).filter(i=>!g.jk.includes(i)),r),ks=Object.keys(H);
+ return[{k:'j',i:pool[0]},{k:'j',i:pool[1]},{k:'u',t:ks[Math.floor(r()*ks.length)]}].filter(o=>o.k=='u'||o.i!==undefined);
+}
+function packOffers(){
+ const r=R('pk'+g.round+':'+g.rr+':'+myUid),extra=g.st>=2?1:0;
+ const a=Math.floor(r()*3),b=(a+1+Math.floor(r()*2))%3;
+ return[{...PKS[a],p:PKS[a].p+extra,sold:0},{...PKS[b],p:PKS[b].p+extra,sold:0}];
+}
+function buy(n){
+ const o=g.of[n],p=o.k=='j'?JK[o.i].p:3;if(g.money<p||(o.k=='j'&&g.jk.length>=g.maxJk))return;g.money-=p;
+ if(o.k=='j'){g.jk.push(o.i);seeJk(o.i);if(g.jk.length>=5)unlockTr('fulljk')}
+ else g.lv[o.t]=(g.lv[o.t]||0)+1;
+ g.of[n]=null;bp(700,.15);save();syncMe();render();
+}
+function buyPack(idx){
+ const pk=g.pks[idx];if(!pk||pk.sold||g.money<pk.p)return;
+ if(pk.k=='joker'&&g.jk.length>=g.maxJk)return toast(`Estufa cheia (${g.maxJk}/${g.maxJk})!`);
+ g.money-=pk.p;pk.sold=1;bp(750,.18);
+ const r=R('open'+g.round+':'+idx+':'+g.rr+':'+myUid);
+ if(pk.k=='card'){
+  const mks=Object.keys(MOD),items=[];
+  for(let i=0;i<3;i++)items.push({r:Math.floor(r()*13),s:Math.floor(r()*4),m:mks[Math.floor(r()*mks.length)],id:++g.nid});
+  g.pk={title:pk.n,sub:'Escolha 1 carta especial para adicionar ao seu baralho:',k:'card',items};
+ }else if(pk.k=='hand'){
+  const ks=shuf(Object.keys(H),r).slice(0,3);
+  g.pk={title:pk.n,sub:'Escolha 1 mão de pôquer para subir +2 níveis (+20 Fichas e +2 Mult):',k:'hand',items:ks};
+ }else{
+  const pool=shuf(JK.map((_,i)=>i).filter(i=>!g.jk.includes(i)),r).slice(0,3);
+  g.pk={title:pk.n,sub:'Escolha 1 amuleto para levar para a sua mesa:',k:'joker',items:pool};
+ }
+ syncMe();render();
+}
+function pickPack(i){
+ if(!g.pk)return;const it=g.pk.items[i];
+ if(g.pk.k=='card'){g.base.push(it);toast(`✨ ${RN[it.r]}${SU[it.s]} (${MOD[it.m].n}) entrou no baralho!`)}
+ else if(g.pk.k=='hand'){g.lv[it]=(g.lv[it]||0)+2;toast(`📈 ${H[it][0]} subiu +2 níveis!`)}
+ else if(g.pk.k=='joker'&&it!==undefined&&g.jk.length<g.maxJk){g.jk.push(it);seeJk(it);if(g.jk.length>=5)unlockTr('fulljk');toast(`🏺 Amuleto ${JK[it].n} equipado!`)}
+ g.pk=null;bp(880,.15);save();syncMe();render();
+}
+function sell(i){g.money+=Math.floor(JK[g.jk[i]].p/2);g.jk.splice(i,1);syncMe();render()}
+function reroll(){const c=2+g.rr;if(g.money<c)return;g.money-=c;g.rr++;g.of=offers();syncMe();render()}
+function next(){
+ g.round++;
+ if(mp&&mp.mode=='coop'&&mp.host){mp.coopRd=g.round;mp.coopSc=0;bcastMP()}
+ startRound();
+}
+
+/* ============ TELAS DO MENU E META-PROGRESSÃO ============ */
+function rMenu(){
+ if(mp&&mp.ph=='lobby'){
+  return`<div class="space-y-4 pt-6">
+   <div class="flex justify-between items-center text-sm"><button onclick="leaveMP()" class="opacity-70">← Voltar</button><span class="text-amber-300 font-bold">Sala Online</span></div>
+   <div class="lousa p-4 space-y-3 text-center">
+    <div class="text-xs opacity-70">Código da Sala</div>
+    <div class="f text-4xl text-amber-300 tracking-[.25em]">${mp.code}</div>
+    ${mp.host?`<div class="grid grid-cols-2 gap-2 pt-1 text-xs">
+     <button onclick="mp.mode='vs';bcastMP()" class="py-2 rounded-lg font-bold ${mp.mode=='vs'?'bg-amber-500 text-black':'bg-black/40'}">⚔️ Disputa (Versus)</button>
+     <button onclick="mp.mode='coop';bcastMP()" class="py-2 rounded-lg font-bold ${mp.mode=='coop'?'bg-amber-500 text-black':'bg-black/40'}">🍻 Rachando a Conta (Co-op)</button>
+    </div>
+    <input id="mpSd" value="${mp.seed}" maxlength="8" placeholder="SEMENTE DA SALA" class="w-full px-3 py-1.5 rounded-lg bg-black/50 border border-amber-500/30 text-center text-xs uppercase tracking-widest">`
+    :`<div class="text-xs text-amber-200">${mp.mode=='coop'?'🍻 Modo Co-op: Rachando a Conta':'⚔️ Modo Disputa: Mesma Semente'} · Semente <b>${mp.seed}</b></div>`}
+    <div class="space-y-1.5 text-left pt-2">
+     <div class="text-xs opacity-70">Na mesa (${mp.pls.length}/6):</div>
+     ${mp.pls.map(p=>`<div class="px-3 py-1.5 rounded-lg bg-black/40 flex justify-between text-sm"><b>${esc(p.name)}</b><span class="text-xs opacity-70">Pronto 🍻</span></div>`).join('')}
+    </div>
+    ${mp.host?`<button onclick="startMP()" class="bt w-full" style="background:linear-gradient(#f5b83d,#b7791f);color:#2a1a02">Começar Partida Online →</button>`:`<div class="text-xs opacity-70 animate-pulse">Aguardando o anfitrião abrir as comandas…</div>`}
+   </div>
+  </div>`;
+ }
+
+ const tabs=[['play','🃏 Jogar'],['decks','📦 Baralhos & Mesa'],['trophies','🏆 Troféus ('+M.tr.length+'/12)'],['shelf','🏺 Estante ('+M.rel.length+'/8)']];
+ let body='';
+
+ if(menuTab=='play'){
+  const curDk=DECKS.find(d=>d.id==M.dk)||DECKS[0],curSt=STAKES[M.st|0]||STAKES[0];
+  body=`
+  <section class="lousa p-3.5 space-y-2.5">
+   <div class="flex justify-between items-center"><span class="f text-sm text-amber-300">SEU BARALHO E DOSE</span><button onclick="menuTab='decks';render()" class="text-xs underline text-amber-200">Trocar / Personalizar →</button></div>
+   <div class="p-2.5 rounded-xl bg-black/40 border border-amber-500/30 text-xs space-y-1">
+    <div class="font-bold text-amber-200 text-sm">${curDk.n}</div>
+    <div class="opacity-80">${curDk.d}</div>
+    <div class="pt-1 flex gap-1.5 flex-wrap">${STAKES.map(s=>`<button onclick="M.st=${s.id};saveM();render()" class="px-2 py-1 rounded-lg font-bold text-[11px] ${M.st==s.id?'bg-amber-500 text-black':'bg-black/50 opacity-75'}">${s.n}</button>`).join('')}</div>
+    <div class="text-[11px] text-amber-300/90 pt-0.5">${curSt.d}</div>
+   </div>
+   <div class="flex gap-2 pt-1"><input id="sd" maxlength="8" placeholder="SEMENTE (opcional)" class="flex-1 px-3 py-2 rounded-xl bg-black/50 border border-amber-500/30 uppercase outline-none tracking-widest text-sm"><button class="bt" style="background:linear-gradient(#f5b83d,#b7791f);color:#2a1a02" onclick="go($('sd').value.trim().toUpperCase())">Abrir o boteco</button></div>
+  </section>
+  <section class="lousa p-3.5 space-y-2">
+   <div class="f text-xs text-amber-300">PRATELEIRA DE RELÍQUIAS DO BOTECO</div>
+   <div class="grid grid-cols-8 gap-1.5 bg-black/40 p-2 rounded-xl border border-amber-500/20 text-center">
+    ${RELICS.map(r=>{const ok=M.rel.includes(r.id);return`<div title="${r.n}: ${ok?r.d:'Bloqueado ('+r.how+')'}" class="text-2xl p-1 rounded-lg ${ok?'bg-amber-500/20 border border-amber-400/40':'opacity-25 grayscale'}">${r.i}</div>`}).join('')}
+   </div>
+  </section>
+  <section class="lousa p-3.5 space-y-2.5">
+   <div class="f text-sm text-amber-300">MULTIPLAYER ONLINE (VERSUS OU CO-OP)</div>
+   <input id="nm" value="${esc(myName)}" maxlength="12" placeholder="Seu apelido na mesa" class="w-full px-3 py-2 rounded-xl bg-black/50 border border-amber-500/30 outline-none text-sm">
+   <div class="flex gap-2">
+    <button onclick="hostRoom()" class="bt bg-emerald-700 text-sm flex-1">Criar Sala Online</button>
+    <input id="rc" maxlength="5" placeholder="CÓDIGO" class="w-28 px-3 py-2 rounded-xl bg-black/50 border border-amber-500/30 uppercase outline-none tracking-widest text-sm text-center">
+    <button onclick="joinRoom($('rc').value)" class="bt bg-sky-700 text-sm">Entrar</button>
+   </div>
+  </section>`;
+ }else if(menuTab=='decks'){
+  body=`
+  <section class="lousa p-3.5 space-y-2.5">
+   <div class="f text-sm text-amber-300">ESCOLHA SEU BARALHO</div>
+   <div class="space-y-2">${DECKS.map(d=>{const ok=d.ok(M),sel=M.dk==d.id;return`<div onclick="${ok?`M.dk='${d.id}';saveM();render()`:''}" class="p-2.5 rounded-xl border ${sel?'bg-amber-500/20 border-amber-400':'bg-black/40 border-white/10'} ${ok?'cursor-pointer':'opacity-50'} flex justify-between items-center gap-2">
+    <div><div class="font-bold text-sm ${sel?'text-amber-300':''}">${ok?'':'🔒 '}${d.n}</div><div class="text-xs opacity-80">${d.d}</div>${!ok?`<div class="text-[11px] text-amber-300 mt-0.5">Requisito: ${d.req}</div>`:''}</div>
+    ${sel?'<span class="text-xs bg-amber-500 text-black font-bold px-2 py-1 rounded-lg">Equipado</span>':''}
+   </div>`}).join('')}</div>
+  </section>
+  <section class="lousa p-3.5 space-y-2.5">
+   <div class="f text-sm text-amber-300">PERSONALIZAR MESA & CARTAS</div>
+   <div class="text-xs opacity-80">Desbloqueie novas toalhas e baralhos conquistando Troféus (${M.tr.length}/12):</div>
+   <div class="grid grid-cols-2 gap-2 text-xs">
+    <div><div class="mb-1 font-bold text-amber-200">Toalha da Mesa</div>
+     ${TABLES.map(t=>{const ok=M.tr.length>=t.req;return`<button onclick="${ok?`M.tb=${t.id};saveM();render()`:''}" class="w-full text-left px-2.5 py-1.5 rounded-lg mb-1 border ${M.tb==t.id?'bg-amber-500 text-black font-bold border-amber-300':'bg-black/40 border-white/10'} ${ok?'':'opacity-40'}">${ok?'':'🔒 '}${t.n}${ok?'':' ('+t.req+'🏆)'}</button>`}).join('')}
+    </div>
+    <div><div class="mb-1 font-bold text-amber-200">Estilo das Cartas</div>
+     ${SKINS.map(s=>{const ok=M.tr.length>=s.req;return`<button onclick="${ok?`M.cs='${s.id}';saveM();render()`:''}" class="w-full text-left px-2.5 py-1.5 rounded-lg mb-1 border ${M.cs==s.id?'bg-amber-500 text-black font-bold border-amber-300':'bg-black/40 border-white/10'} ${ok?'':'opacity-40'}">${ok?'':'🔒 '}${s.n}${ok?'':' ('+s.req+'🏆)'}</button>`}).join('')}
+    </div>
+   </div>
+  </section>`;
+ }else if(menuTab=='trophies'){
+  body=`
+  <section class="lousa p-3.5 space-y-2">
+   <div class="flex justify-between items-center"><span class="f text-sm text-amber-300">MURAL DE TROFÉUS DO BOTECO</span><span class="text-xs opacity-80">${M.tr.length} de ${TROPHIES.length}</span></div>
+   <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${TROPHIES.map(t=>{const ok=M.tr.includes(t.id);return`<div class="p-2.5 rounded-xl border ${ok?'bg-amber-500/15 border-amber-400/50':'bg-black/40 border-white/10 opacity-55'} flex items-center gap-2.5">
+    <div class="text-2xl">${ok?t.i:'🔒'}</div>
+    <div><div class="font-bold text-xs ${ok?'text-amber-300':''}">${t.n}</div><div class="text-[11px] opacity-80">${t.d}</div></div>
+   </div>`}).join('')}</div>
+  </section>`;
+ }else{
+  body=`
+  <section class="lousa p-3.5 space-y-2.5">
+   <div class="f text-sm text-amber-300">RELÍQUIAS DA ESTANTE (${M.rel.length}/${RELICS.length})</div>
+   <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${RELICS.map(r=>{const ok=M.rel.includes(r.id);return`<div class="p-2.5 rounded-xl border ${ok?'bg-emerald-950/60 border-emerald-400/50':'bg-black/40 border-white/10 opacity-55'} flex items-center gap-2.5">
+    <div class="text-3xl">${ok?r.i:'❓'}</div>
+    <div><div class="font-bold text-xs ${ok?'text-emerald-300':''}">${ok?r.n:'Relíquia Misteriosa'}</div><div class="text-[11px] opacity-80">${ok?r.d:r.how}</div></div>
+   </div>`}).join('')}</div>
+  </section>
+  <section class="lousa p-3.5 space-y-2">
+   <div class="f text-sm text-amber-300">CATÁLOGO DE AMULETOS DESCOBERTOS (${M.jks.length}/${JK.length})</div>
+   <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-xs">${JK.map((j,i)=>{const ok=M.jks.includes(i);return`<div class="p-2 rounded-lg bg-black/40 border ${ok?'border-amber-400/40':'border-white/10 opacity-45'}">
+    <div class="font-bold text-amber-200">${ok?j.n:'???'}</div>
+    <div class="text-[10px] opacity-80">${ok?j.d:'Compre na loja para descobrir'}</div>
+   </div>`}).join('')}</div>
+  </section>`;
+ }
+
+ return`<div class="space-y-3 pt-3"><div class="flex justify-between items-center text-sm"><a href="../../" class="opacity-70">← Sala de Jogos</a><span class="text-xs opacity-80">Recorde: Conta <b>${M.best}</b>/12 · Vitórias: <b>${M.wins||0}</b></span></div>
+ <div class="text-center"><div class="f text-5xl sm:text-6xl leading-none" style="color:#f6eedc;text-shadow:0 5px 0 #b3141a,0 9px 0 #000">Fechou a Conta</div><div class="text-xs sm:text-sm mt-1.5 text-amber-100">Monte mãos de pôquer, colecione relíquias e pague os 12 meses do boteco.</div></div>
+ <div class="grid grid-cols-4 gap-1 bg-black/45 p-1 rounded-xl border border-amber-500/30 text-[11px] font-bold">
+  ${tabs.map(([k,lbl])=>`<button onclick="menuTab='${k}';render()" class="py-2 rounded-lg ${menuTab==k?'bg-amber-500 text-black':'opacity-75'}">${lbl}</button>`).join('')}
+ </div>
+ ${body}
+ </div>`;
+}
+
+function rDeckModal(){
+ if(!g||!g.vw)return'';
+ const mods=g.base.filter(c=>c.m);
+ return`<div class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-3" onclick="g.vw=false;render()">
+  <div class="lousa max-w-lg w-full p-4 max-h-[85vh] overflow-y-auto space-y-3" onclick="event.stopPropagation()">
+   <div class="flex justify-between items-center"><div class="f text-lg text-amber-300">Seu Baralho (${g.base.length} cartas · ${mods.length} especiais)</div><button onclick="g.vw=false;render()" class="px-2 py-1 rounded bg-rose-800 text-xs font-bold">Fechar ✕</button></div>
+   <div class="text-xs opacity-80">Restantes para comprar nesta conta: <b>${g.deck.length}</b> cartas</div>
+   <div class="grid grid-cols-6 sm:grid-cols-8 gap-1.5 justify-items-center">${g.base.slice().sort((a,b)=>a.s-b.s||b.r-a.r).map(c=>cd(c,'scale-90')).join('')}</div>
+  </div>
+ </div>`;
+}
+
+function rPackModal(){
+ if(!g||!g.pk)return'';
+ const p=g.pk;
+ return`<div class="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-3">
+  <div class="lousa max-w-md w-full p-4 space-y-4 text-center">
+   <div><div class="f text-2xl text-amber-300">${p.title}</div><div class="text-xs opacity-80 mt-1">${p.sub}</div></div>
+   <div class="grid grid-cols-3 gap-2.5 items-stretch">
+    ${p.items.map((it,i)=>{
+     if(p.k=='card'){const m=MOD[it.m];return`<div onclick="pickPack(${i})" class="p-2.5 rounded-xl bg-black/40 border border-amber-400/40 hover:border-amber-300 flex flex-col items-center gap-2 cursor-pointer">${cd(it)}<div class="text-xs font-bold text-amber-300">${m.n}</div><div class="text-[10px] opacity-80">${m.d}</div></div>`}
+     if(p.k=='hand'){const lv=(g.lv[it]||0)+1;return`<div onclick="pickPack(${i})" class="p-3 rounded-xl bg-black/40 border border-emerald-400/40 hover:border-emerald-300 flex flex-col justify-between cursor-pointer"><div class="f text-sm text-emerald-300">${H[it][0]}</div><div class="text-xs my-2">Nv ${lv} → <b>Nv ${lv+2}</b></div><div class="text-[10px] opacity-80">+20 Fichas · +2 Mult</div></div>`}
+     const j=JK[it];return`<div onclick="pickPack(${i})" class="p-3 rounded-xl bg-black/40 border border-amber-400/40 hover:border-amber-300 flex flex-col justify-between cursor-pointer"><div class="f text-xs text-amber-300">${j.n}</div><div class="text-[11px] opacity-90 my-2">${j.d}</div><span class="text-[10px] bg-amber-600/40 rounded px-1.5 py-0.5">Equipar</span></div>`;
+    }).join('')}
+   </div>
+   <button onclick="g.pk=null;render()" class="text-xs underline opacity-70">Pular pacote</button>
+  </div>
+ </div>`;
+}
+
+function rRound(){
+ const b=g.boss,slots=Array.from({length:g.maxJk},(_,i)=>i);
+ return`<div class="space-y-2.5">
+ <div id="mpb"></div>
+ <div class="flex justify-between items-start gap-2">
+  <div class="comanda ${b?'boss':''}">
+   <div class="f text-sm flex items-center justify-between gap-2"><span>CONTA ${g.round}/12</span>${b?'<span class="text-[10px] bg-rose-700 text-white px-1.5 py-0.5 rounded">CHEFÃO</span>':''}</div>
+   ${b?`<div class="text-[11px] font-bold text-rose-800 mt-0.5">${b.n}</div><div class="text-[10px] text-rose-900 leading-tight mb-1">${b.d}</div>`:'<div class="text-xs">Meta</div>'}
+   <div class="f text-3xl" style="color:#b3141a">${g.target}</div>
+   <div class="bar"><i id="bar" style="width:${Math.min(100,g.score/g.target*100)}%"></i></div>
+   <div class="text-xs">Faturado: <b id="sc">${g.score}</b></div>
+  </div>
+  <div class="text-right space-y-0.5">
+   <div class="f text-3xl text-amber-300">R$ ${g.money}</div>
+   <div class="text-sm">Mãos <b>${g.hands}</b> · Desc. <b>${g.disc}</b></div>
+   ${mp&&mp.mode=='vs'?`<div class="text-xs">Fiados: ${'❤️'.repeat(g.hp)}</div>`:''}
+   <div class="text-[10px] opacity-60">semente ${seed}</div>
+   <div class="flex gap-1 justify-end pt-1">
+    <button onclick="g.vw=true;render()" class="px-2 py-1 rounded-lg bg-black/40 border border-amber-400/30 text-xs">🃏 Baralho (${g.deck.length})</button>
+    <button onclick="if(confirm('Sair para o menu?')){g=null;render()}" class="px-2 py-1 rounded-lg bg-rose-950/80 border border-rose-500/30 text-xs">Menu</button>
+   </div>
+  </div>
+ </div>
+ <div class="flex gap-1.5 justify-center">${slots.map(i=>g.jk[i]!==undefined?`<button id="j${i}" class="jk" onclick="ji(${i})">${JK[g.jk[i]].n}</button>`:'<div class="jk emp"></div>').join('')}</div>
+ <div id="info" class="text-center text-xs min-h-[16px] text-amber-200"></div>
+ <div class="mesa tb-${M.tb|0}"><div id="hn" class="f text-center text-lg min-h-[28px]"></div><div class="flex items-center justify-center gap-3 my-1"><div class="bx bl" id="ch">0</div><span class="f text-2xl">×</span><div class="bx rd" id="mu">0</div></div><div id="pa" class="flex justify-center min-h-[92px] items-center"></div></div>
+ <div id="hd" class="hand flex justify-center pt-5">${hdH()}</div>
+ <div class="flex gap-2 justify-center"><button class="bt bg-emerald-700" onclick="play()">Jogar</button><button class="bt bg-rose-800" onclick="disc()">Descartar</button><button class="bt bg-slate-700" onclick="srt()">Ordenar</button></div>
+ ${rDeckModal()}</div>`;
+}
+
+function rShop(){
+ const nextBoss=getBoss(g.round+1);
+ return`<div class="space-y-3 pt-2">
+ <div id="mpb"></div>
+ <div class="flex justify-between items-center">
+  <div><div class="f text-2xl text-amber-300">Conta ${g.round} fechada!</div><div class="text-xs">+ R$ ${g.rw}${g.boss?' (inclui +R$ 3 do Chefão)':''} · Saldo: <b>R$ ${g.money}</b></div></div>
+  <button onclick="g.vw=true;render()" class="px-3 py-1.5 rounded-lg bg-black/40 border border-amber-400/30 text-xs">🃏 Baralho (${g.base.length})</button>
+ </div>
+ ${nextBoss?`<div class="px-3 py-2 rounded-xl bg-rose-950/70 border border-rose-500/40 text-xs"><b class="text-rose-300">⚠️ Próxima Conta (${g.round+1}/12) tem Chefão:</b> ${nextBoss.n} — ${nextBoss.d}</div>`:''}
+ <section class="lousa p-3 space-y-2">
+  <div class="f text-xs text-amber-200">CARDÁPIO DE AMULETOS & COMANDAS</div>
+  ${g.of.map((o,n)=>{if(!o)return'<div class="p-2 text-xs opacity-50 text-center">vendido</div>';const j=o.k=='j'?JK[o.i]:null,p=j?j.p:3;
+   return`<div class="flex items-center justify-between gap-2 bg-black/30 rounded-lg p-2"><div><b>${j?j.n:'Melhoria: '+H[o.t][0]}</b><div class="text-xs opacity-80">${j?j.d:'+10 Fichas e +1 Mult nessa mão (nv '+((g.lv[o.t]||0)+1)+')'}</div></div><button class="bt bg-amber-600 text-sm" ${g.money<p||(j&&g.jk.length>=g.maxJk)?'disabled':''} onclick="buy(${n})">R$ ${p}</button></div>`}).join('')}
+  <button class="bt bg-slate-700 text-xs w-full" onclick="reroll()" ${g.money<2+g.rr?'disabled':''}>Trocar ofertas da lousa (R$ ${2+g.rr})</button>
+ </section>
+ <section class="lousa p-3 space-y-2">
+  <div class="f text-xs text-amber-200">PACOTES SURPRESA (ESCOLHA 1 DE 3)</div>
+  <div class="grid grid-cols-2 gap-2">
+   ${(g.pks||[]).map((pk,i)=>pk.sold?`<div class="p-3 rounded-xl bg-black/20 border border-white/10 text-center text-xs opacity-50 flex items-center justify-center">Pacote aberto</div>`:`<div class="p-2.5 rounded-xl bg-gradient-to-br ${pk.c} border flex flex-col justify-between gap-2"><div><div class="font-bold text-xs">${pk.n}</div><div class="text-[11px] opacity-80">${pk.d}</div></div><button onclick="buyPack(${i})" ${g.money<pk.p?'disabled':''} class="bt bg-amber-500 text-black text-xs py-1.5">Abrir R$ ${pk.p}</button></div>`).join('')}
+  </div>
+ </section>
+ <section class="lousa p-3"><div class="f text-xs text-amber-200 mb-1.5">SEUS AMULETOS (${g.jk.length}/${g.maxJk})</div>${g.jk.length?g.jk.map((j,i)=>`<div class="flex justify-between items-center text-sm py-1"><span><b>${JK[j].n}</b> <span class="opacity-70 text-xs">${JK[j].d}</span></span><button class="text-xs underline" onclick="sell(${i})">vender R$ ${Math.floor(JK[j].p/2)}</button></div>`).join(''):'<div class="text-xs opacity-60">Nenhum ainda.</div>'}</section>
+ ${mp&&mp.mode=='coop'&&!mp.host
+  ?`<div class="text-center text-xs text-amber-200 py-2 animate-pulse">Aguardando o anfitrião abrir a próxima conta da mesa…</div>`
+  :`<button class="bt w-full" style="background:linear-gradient(#f5b83d,#b7791f);color:#2a1a02" onclick="next()">Próxima conta →</button>`}
+ ${rPackModal()}${rDeckModal()}</div>`;
+}
+
+function rEnd(){
+ return`<div class="space-y-4 pt-12 text-center">
+  <div id="mpb"></div>
+  <div class="f text-5xl" style="color:${g.won?'#fde047':'#fb7185'}">${g.won?'Fechou a conta!':'Faliu o boteco…'}</div>
+  <div>${g.won?'Você pagou os 12 meses e derrotou todos os chefões! 🍻':`Você chegou até a conta ${g.round} de 12.`}</div>
+  <div class="text-sm opacity-80">Faturamento total: <b>${g.tot} pts</b> · Semente <b>${seed}</b> · Recorde: conta ${M.best}</div>
+  <div class="flex flex-col gap-2 max-w-xs mx-auto">
+   <button class="bt bg-emerald-700" onclick="go()">Jogar de novo (nova semente)</button>
+   <button class="bt bg-sky-800" onclick="go(seed)">Repetir a mesma semente</button>
+   <button class="bt bg-amber-600 text-black" onclick="g=null;render()">Menu, Troféus & Estante</button>
+   <a href="../../" class="bt bg-slate-700">← Sala de Jogos</a>
+  </div>
+ </div>`;
+}
+
+function render(){
+ $('app').innerHTML=(g?{round:rRound,shop:rShop,end:rEnd}[g.ph]:rMenu)();
+ if(g&&g.ph=='round')pv();
+ if(mp)updMpBar();
+}
+render();
 </script>
 </body>
 </html>
