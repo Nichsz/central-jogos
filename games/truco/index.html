@@ -4,14 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="robots" content="noindex,nofollow">
-<title>Truco</title>
+<title>BOTECO DO TRUCO: 2x2 & 2x2x2</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Pacifico&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Pacifico&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
+*{box-sizing:border-box;user-select:none;-webkit-user-select:none}
 html,body{height:100%}
-body{margin:0;background:repeating-linear-gradient(90deg,#0004 0 2px,transparent 2px 46px) bottom/100% 42% no-repeat,repeating-linear-gradient(0deg,#0004 0 2px,transparent 2px 46px) bottom/100% 42% no-repeat,linear-gradient(transparent 58%,#235a49 58%),linear-gradient(#3b2410,#5a3517);background-color:#3b2410;color:#f8f1dc;font-family:Inter,sans-serif;user-select:none;overflow:hidden}
-.f{font-family:'Alfa Slab One',serif;font-weight:400}
+body{margin:0;background:radial-gradient(circle at 50% 30%,rgba(62,34,16,.85) 0%,rgba(24,13,6,.96) 70%,#0f0804 100%);color:#f8f1dc;font-family:Inter,sans-serif;overflow-x:hidden}
+.f{font-family:'Alfa Slab One',serif;font-weight:400;letter-spacing:.03em}
+.neon{font-family:Pacifico,cursive;color:#fff;text-shadow:0 0 6px #fff,0 0 14px #ff3d6e,0 0 30px #ff3d6e;animation:fk 5s infinite}
+@keyframes fk{0%,92%,100%{opacity:1}94%{opacity:.55}96%{opacity:1}98%{opacity:.7}}
+.gold-border{border:1px solid rgba(212,175,55,.42);box-shadow:0 8px 30px -4px rgba(0,0,0,.7),inset 0 1px 0 0 rgba(245,225,156,.18)}
+.gold-border-strong{border:2px solid #d4af37;box-shadow:0 0 25px rgba(212,175,55,.35),inset 0 0 12px rgba(212,175,55,.15)}
+.lousa{background:rgba(22,36,30,.92);border:2px solid rgba(212,175,55,.45);border-radius:20px;box-shadow:inset 0 0 30px #000a,0 10px 25px #0009}
 .card{width:54px;height:78px;background:#fffaf0;color:#111;border-radius:8px;border:1px solid #d4af37;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:18px;line-height:1.1;box-shadow:0 4px 10px #0009;transition:transform .2s;flex:none}
 .card.r{color:#b91c1c}
 .card.back{background:repeating-linear-gradient(45deg,#1d4ed8,#1d4ed8 5px,#1e3a8a 5px,#1e3a8a 10px);color:transparent}
@@ -41,76 +48,292 @@ svg.gs{width:100%;height:auto}
 @keyframes bl{50%{transform:scaleY(.1)}}
 @keyframes br{to{transform:translateY(-7px) rotate(-12deg)}}
 .fl small{display:block;font-size:12px;background:#000b;border-radius:6px;padding:1px 8px}
-@keyframes wig{50%{transform:rotate(20deg) scale(1.2)}}
 @keyframes fl{0%{opacity:0;transform:translate(-50%,10px) scale(.4)}15%{opacity:1;transform:translate(-50%,-10px) scale(1.2)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-80px)}}
-.tst{background:#000d;border:1px solid #d4af37;padding:4px 12px;border-radius:10px;font-size:14px;animation:tf 2.4s forwards}
+.tst{background:#180e07f2;border:2px solid #d4af37;padding:8px 16px;border-radius:14px;font-size:13px;font-weight:600;box-shadow:0 10px 25px #000c;animation:tf 2.6s forwards}
 @keyframes tf{0%{opacity:0;transform:translateY(-8px)}10%,85%{opacity:1;transform:none}100%{opacity:0}}
-.turn{box-shadow:0 0 0 2px #fcd34d,0 0 18px #fcd34d99}
-.lousa{background:#1c2b25;border:5px solid #8a5a2b;border-radius:14px;box-shadow:inset 0 0 30px #000a,0 6px 16px #0008}
-.neon{font-family:Pacifico,cursive;color:#fff;text-shadow:0 0 6px #fff,0 0 14px #ff3d6e,0 0 30px #ff3d6e,0 0 54px #ff3d6e;animation:fk 5s infinite}
-@keyframes fk{0%,92%,100%{opacity:1}94%{opacity:.55}96%{opacity:1}98%{opacity:.7}}
+.turn{box-shadow:0 0 0 2px #fcd34d,0 0 22px #fcd34d99}
 .smk{transform-box:fill-box;animation:sm 3s infinite}
 @keyframes sm{0%{opacity:0;transform:translateY(8px)}40%{opacity:.85}100%{opacity:0;transform:translateY(-16px)}}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:rgba(15,10,6,.6)}
+::-webkit-scrollbar-thumb{background:rgba(212,175,55,.35);border-radius:9999px}
 button{cursor:pointer}
 </style>
 </head>
-<body>
-<!-- LOBBY -->
-<div id="lob" class="fixed inset-0 z-40 overflow-auto">
- <svg class="fixed top-0 inset-x-0 pointer-events-none" width="100%" height="48"><defs><pattern id="bd" width="124" height="48" patternUnits="userSpaceOnUse"><path d="M0 3h124" stroke="#111" stroke-width="2"/><polygon points="4,3 34,3 19,42" fill="#009c3b"/><polygon points="35,3 65,3 50,42" fill="#ffdf00"/><polygon points="66,3 96,3 81,42" fill="#002776"/><polygon points="97,3 127,3 112,42" fill="#f4f1e6"/></pattern></defs><rect width="100%" height="48" fill="url(#bd)"/></svg>
- <div class="max-w-xl mx-auto p-4 space-y-4">
-  <div class="flex items-center justify-between text-sm pt-9"><a href="../../" class="opacity-70 hover:opacity-100">← Sala de Jogos</a><span class="opacity-60">2x2 ou 2x2x2 · voz ao vivo</span></div>
-  <div class="text-center"><div class="neon text-4xl">Boteco do</div><div class="f text-7xl leading-none" style="color:#f6eedc;text-shadow:0 5px 0 #b3141a,0 9px 0 #000">TRUCO</div><div class="text-sm mt-3 text-amber-100">Mesa de bar · cerveja gelada · zoeira liberada</div></div>
-  <section class="lousa p-4 space-y-3">
-   <div class="flex gap-3 items-center"><div id="pav" class="w-16 h-16 flex-none"></div><div class="flex-1 min-w-0"><input id="nm" maxlength="14" placeholder="Seu nome" class="w-full px-3 py-2 rounded-lg bg-black/50 border border-amber-500/30 outline-none"><div id="ptt" class="f text-sm text-amber-300 mt-1"></div><select id="tts" onchange="pickTt(this.value)" class="w-full mt-1 px-2 py-1 rounded bg-black/60 border border-amber-500/30 text-xs"></select></div></div>
-   <div id="avg" class="grid grid-cols-7 gap-2 justify-items-center"></div>
-   <div class="grid grid-cols-3 gap-2 text-[11px]"><label>Verso das cartas<select id="scb" onchange="pickC('cb',this.value)" class="w-full px-1 py-1 rounded bg-black/60 border border-amber-500/30"></select></label><label>Mesa<select id="smz" onchange="pickC('mz',this.value)" class="w-full px-1 py-1 rounded bg-black/60 border border-amber-500/30"></select></label><label>Grito do truco<select id="ssn" onchange="pickC('sn',this.value)" class="w-full px-1 py-1 rounded bg-black/60 border border-amber-500/30"></select></label></div>
-   <div id="xpb" class="text-xs space-y-1"></div>
-  </section>
-  <div id="lm" class="space-y-2">
-   <div class="grid grid-cols-2 gap-2 bg-black/40 p-1.5 rounded-xl border border-amber-500/30 text-sm">
-    <button id="m2" onclick="setMd(2)" class="py-2 rounded-lg font-bold bg-amber-600 text-black">🍻 Mesa 2×2 (4 jog.)</button>
-    <button id="m3" onclick="setMd(3)" class="py-2 rounded-lg font-bold opacity-70">🔥 Mesa 2×2×2 (6 jog.)</button>
-   </div>
-   <button id="bBack" class="hidden w-full py-2.5 rounded-xl bg-sky-800 font-bold"></button>
-   <button id="bRes" class="hidden w-full py-2.5 rounded-xl bg-sky-800 font-bold"></button>
-   <button id="bHost" class="w-full py-3 rounded-xl font-bold text-lg" style="background:linear-gradient(#f5b83d,#b7791f);color:#2a1a02">Abrir a mesa (criar sala)</button>
-   <div class="flex gap-2"><input id="rc" maxlength="5" placeholder="CÓDIGO DA SALA" class="flex-1 px-3 py-2 rounded-xl bg-black/50 border border-amber-500/30 uppercase outline-none tracking-widest"><button id="bJoin" class="px-5 rounded-xl bg-emerald-700 font-bold">Sentar</button></div>
-   <button id="bTest" class="w-full py-2 rounded-xl bg-black/40 border border-white/20 text-sm">Treinar contra bots (offline)</button>
+<body class="min-h-screen lg:h-screen lg:overflow-hidden flex flex-col justify-between">
+
+<!-- CABEÇALHO FIXO PADRÃO INTRIGAS DA CORTE -->
+<header class="w-full bg-[#1a0f07]/95 backdrop-blur-md border-b border-amber-500/25 px-3 sm:px-6 py-2.5 flex items-center justify-between z-40 sticky top-0">
+ <div class="flex items-center gap-2.5 sm:gap-3">
+  <a href="../../" title="Voltar para a Sala de Jogos" class="px-2.5 py-2 rounded-xl bg-[#2a180c] hover:bg-[#3b2211] border border-amber-500/30 text-amber-200 transition flex items-center gap-1.5 text-xs sm:text-sm font-semibold">
+   <i class="fa-solid fa-arrow-left text-amber-400"></i><span class="hidden sm:inline">Central</span>
+  </a>
+  <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-500 via-red-600 to-rose-900 flex items-center justify-center shadow-lg border border-amber-300/50">
+   <i class="fa-solid fa-beer-mug-empty text-amber-100 text-lg"></i>
   </div>
-  <div id="lr" class="hidden space-y-3">
-   <div class="text-center"><div class="text-xs opacity-70">Código da sala</div><div id="rl" class="f text-4xl text-amber-300 tracking-[.3em]"></div></div>
-   <div class="flex gap-2"><input id="lk" readonly class="flex-1 px-2 py-1 rounded bg-black/50 text-xs"><button id="bCp" class="px-3 rounded bg-slate-600 text-sm">Copiar link</button></div>
-   <div id="rmSw" class="hidden grid grid-cols-2 gap-2 bg-black/40 p-1 rounded-xl border border-amber-500/30 text-xs">
-    <button id="rm2" onclick="send({t:'mode',nt:2})" class="py-1.5 rounded-lg font-bold">Mesa 2×2 (2 duplas)</button>
-    <button id="rm3" onclick="send({t:'mode',nt:3})" class="py-1.5 rounded-lg font-bold">Mesa 2×2×2 (3 duplas)</button>
+  <div>
+   <div class="flex items-center gap-2">
+    <h1 class="f text-sm sm:text-lg tracking-wider bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-200 bg-clip-text text-transparent">BOTECO DO TRUCO</h1>
+    <span class="hidden md:inline-block text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">2×2 & 2×2×2</span>
    </div>
-   <div id="sl"></div>
-   <label class="flex items-center gap-3 rounded-xl bg-fuchsia-950/50 border border-fuchsia-400/30 p-3 text-sm"><input type="checkbox" id="chaos" class="w-5 h-5" onchange="send({t:'opt',v:this.checked})"><span><b>🌀 Modo Caos</b><br><span class="opacity-70 text-xs">Às vezes a mão vem com uma regra maluca: manilha velha, truco dobrado, ordem invertida, às cegas...</span></span></label>
-   <p class="text-xs opacity-70 text-center">Parceiros sentam sempre de frente. Vagas vazias viram bots.</p>
-   <button id="bStart" class="hidden w-full py-3 rounded-xl bg-emerald-600 font-bold text-lg">Embaralhar e começar</button>
+   <p class="text-[11px] text-amber-200/60 hidden sm:block">Mesa Privada P2P • Sinais Secretos & Voz ao Vivo</p>
   </div>
  </div>
-</div>
-<!-- JOGO -->
-<div id="game" class="hidden fixed inset-0 flex flex-col">
- <div class="flex items-center justify-between px-3 py-2 bg-[#2a1608]/90 border-b-2 border-amber-900 gap-2 flex-wrap">
+
+ <div id="roomHeaderBadge" class="hidden items-center gap-1.5 sm:gap-2 bg-[#2a180c] border border-amber-500/40 rounded-xl px-2.5 py-1.5">
+  <span class="text-xs text-amber-200/70 hidden sm:inline">Sala:</span>
+  <span id="roomCodeDisplay" class="font-mono font-bold text-sm sm:text-base text-amber-300 tracking-widest">-----</span>
+  <button onclick="copyCode()" title="Copiar Código" class="text-xs bg-amber-500/20 hover:bg-amber-500/35 text-amber-200 px-2 py-1 rounded-lg transition flex items-center gap-1">
+   <i class="fa-regular fa-copy"></i><span class="hidden md:inline">Código</span>
+  </button>
+  <button onclick="copyLink()" title="Copiar Link Direto" class="text-xs bg-emerald-500/20 hover:bg-emerald-500/35 border border-emerald-400/40 text-emerald-200 px-2 py-1 rounded-lg transition flex items-center gap-1 font-semibold">
+   <i class="fa-solid fa-link"></i><span class="hidden md:inline">Link Convite</span>
+  </button>
+ </div>
+
+ <div class="flex items-center gap-1.5 sm:gap-2">
+  <button id="mic" onclick="mic()" title="Ligar/Desligar Microfone" class="hidden px-2.5 py-2 rounded-xl bg-[#2a180c] hover:bg-[#3b2211] border border-amber-500/30 text-amber-100 transition items-center gap-1.5 text-xs sm:text-sm"></button>
+  <button onclick="toggleSfx()" title="Efeitos Sonoros" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-[#2a180c] hover:bg-[#3b2211] border border-amber-500/30 text-amber-200 transition text-xs sm:text-sm">
+   <i id="sfxIcon" class="fa-solid fa-volume-high"></i>
+  </button>
+  <button onclick="openInviteModal()" class="px-2.5 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-200 transition flex items-center gap-1.5 text-xs sm:text-sm font-medium">
+   <i class="fa-solid fa-user-group text-emerald-400"></i><span class="hidden sm:inline">Convite</span>
+  </button>
+  <button onclick="$('rulesModal').classList.remove('hidden')" class="px-2.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/30 border border-amber-400/40 text-amber-200 transition flex items-center gap-1.5 text-xs sm:text-sm font-medium">
+   <i class="fa-solid fa-scroll text-amber-400"></i><span class="hidden sm:inline">Cartas & Regras</span>
+  </button>
+  <button id="leaveBtn" onclick="leave()" class="hidden p-2 sm:px-3 sm:py-2 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-500/40 text-rose-200 transition text-xs sm:text-sm items-center gap-1.5">
+   <i class="fa-solid fa-right-from-bracket"></i><span class="hidden md:inline">Sair</span>
+  </button>
+ </div>
+</header>
+
+<!-- LOBBY TELA CHEIA (12 COLUNAS IGUAL AO INTRIGAS DA CORTE) -->
+<main id="lob" class="flex-1 flex flex-col items-center justify-center p-3 sm:p-6 overflow-y-auto">
+ <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch my-auto">
+
+  <!-- Coluna Esquerda (7 cols): Personagem, Customização e Entrada -->
+  <div class="lg:col-span-7 bg-[#1c1008]/90 backdrop-blur-xl rounded-3xl p-5 sm:p-7 gold-border flex flex-col justify-between relative overflow-hidden">
+   <div class="absolute -right-12 -top-12 w-44 h-44 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+   <!-- Visão Inicial do Menu -->
+   <div id="lm" class="space-y-4">
+    <div>
+     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-medium mb-2">
+      <i class="fa-solid fa-playing-cards"></i><span>4 ou 6 Jogadores • Duplas Online ou Bots</span>
+     </div>
+     <h2 class="f text-2xl sm:text-4xl text-amber-100 leading-tight">Puxe uma Cadeira no Boteco</h2>
+     <p class="text-xs sm:text-sm text-amber-100/70 mt-1">
+      Manilha pela vira, sinais furtivos para o parceiro (com risco dos rivais flagrarem!), voz ao vivo e o imprevisível Modo Caos.
+     </p>
+    </div>
+
+    <!-- Perfil e Apelido -->
+    <div class="flex gap-3 items-center bg-black/40 p-3 rounded-2xl border border-amber-500/25">
+     <div id="pav" class="w-16 h-16 flex-none"></div>
+     <div class="flex-1 min-w-0 space-y-1">
+      <label class="block text-[10px] font-bold uppercase tracking-wider text-amber-300/90">Seu Apelido & Título na Mesa</label>
+      <input id="nm" maxlength="14" placeholder="Seu nome no bar" class="w-full px-3 py-1.5 rounded-xl bg-black/60 border border-amber-500/40 text-sm text-amber-50 outline-none focus:border-amber-400">
+      <div class="flex items-center gap-2">
+       <span id="ptt" class="f text-xs text-amber-300 truncate"></span>
+       <select id="tts" onchange="pickTt(this.value)" class="flex-1 px-2 py-1 rounded-lg bg-black/60 border border-amber-500/30 text-xs text-amber-100"></select>
+      </div>
+     </div>
+    </div>
+
+    <!-- Grade de 14 Personagens -->
+    <div>
+     <div class="flex items-center justify-between mb-1.5">
+      <label class="text-xs font-semibold uppercase tracking-wider text-amber-300/90">Escolha sua Figura do Boteco</label>
+      <span class="text-[11px] text-amber-200/60">Libere mais subindo de nível</span>
+     </div>
+     <div id="avg" class="grid grid-cols-7 gap-1.5 justify-items-center bg-black/30 p-2.5 rounded-2xl border border-amber-500/20"></div>
+    </div>
+
+    <!-- Customização da Mesa, Verso e Grito -->
+    <div class="grid grid-cols-3 gap-2 text-[11px]">
+     <label class="text-amber-200/80">Verso das Cartas<select id="scb" onchange="pickC('cb',this.value)" class="w-full mt-1 px-2 py-1.5 rounded-xl bg-black/60 border border-amber-500/30 text-amber-100"></select></label>
+     <label class="text-amber-200/80">Estilo da Mesa<select id="smz" onchange="pickC('mz',this.value)" class="w-full mt-1 px-2 py-1.5 rounded-xl bg-black/60 border border-amber-500/30 text-amber-100"></select></label>
+     <label class="text-amber-200/80">Grito de Truco<select id="ssn" onchange="pickC('sn',this.value)" class="w-full mt-1 px-2 py-1.5 rounded-xl bg-black/60 border border-amber-500/30 text-amber-100"></select></label>
+    </div>
+
+    <!-- Modo e Botões de Ação -->
+    <div class="space-y-2.5 pt-2 border-t border-amber-500/20">
+     <div class="grid grid-cols-2 gap-2 bg-black/40 p-1 rounded-xl border border-amber-500/30 text-xs">
+      <button id="m2" onclick="setMd(2)" class="py-2 rounded-lg font-bold bg-amber-500 text-black">🍻 Mesa 2×2 (4 Jogadores)</button>
+      <button id="m3" onclick="setMd(3)" class="py-2 rounded-lg font-bold opacity-70">🔥 Mesa 2×2×2 (6 Jogadores)</button>
+     </div>
+     <button id="bBack" class="hidden w-full py-2.5 rounded-xl bg-sky-800 hover:bg-sky-700 font-bold text-sm"></button>
+     <button id="bRes" class="hidden w-full py-2.5 rounded-xl bg-sky-800 hover:bg-sky-700 font-bold text-sm"></button>
+     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+      <button id="bHost" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-[#1c1008] font-bold shadow-lg transition flex items-center justify-center gap-2 text-sm">
+       <i class="fa-solid fa-plus-circle"></i><span>Criar Nova Sala</span>
+      </button>
+      <button id="bTest" class="w-full py-3.5 px-4 rounded-xl bg-[#2a180c] hover:bg-[#3b2211] border border-amber-400/40 text-amber-200 font-semibold transition flex items-center justify-center gap-2 text-sm">
+       <i class="fa-solid fa-robot text-amber-400"></i><span>Partida Rápida (c/ Bots)</span>
+      </button>
+     </div>
+     <div class="flex items-center gap-2">
+      <input id="rc" maxlength="5" placeholder="CÓDIGO DA SALA (EX: BAR99)" class="flex-1 px-4 py-3 rounded-xl bg-black/60 border border-amber-500/40 text-amber-200 font-mono uppercase tracking-widest text-sm outline-none focus:border-amber-400">
+      <button id="bJoin" class="px-5 py-3 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/45 border border-emerald-400/50 text-emerald-200 font-bold transition flex items-center gap-2 text-sm">
+       <span>Sentar</span><i class="fa-solid fa-arrow-right"></i>
+      </button>
+     </div>
+    </div>
+   </div>
+
+   <!-- Sala de Espera (Quando cria ou entra numa sala) -->
+   <div id="lr" class="hidden space-y-3 my-auto">
+    <div class="flex items-center justify-between border-b border-amber-500/20 pb-2">
+     <div>
+      <span class="text-[11px] uppercase tracking-wider text-amber-300/80">Mesa Reservada • Código</span>
+      <div id="rl" class="f text-3xl text-amber-300 tracking-[.25em]">-----</div>
+     </div>
+     <div class="flex gap-2">
+      <button onclick="copyLink()" class="px-3 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/35 border border-emerald-400/50 text-emerald-200 text-xs font-bold flex items-center gap-1.5">
+       <i class="fa-solid fa-link"></i><span>Copiar Link Convite</span>
+      </button>
+      <button onclick="leave()" class="px-3 py-2 rounded-xl bg-rose-950/80 border border-rose-500/40 text-rose-200 text-xs font-bold">Sair</button>
+     </div>
+    </div>
+    <input id="lk" type="hidden">
+    <div id="rmSw" class="hidden grid grid-cols-2 gap-2 bg-black/40 p-1 rounded-xl border border-amber-500/30 text-xs">
+     <button id="rm2" onclick="send({t:'mode',nt:2})" class="py-1.5 rounded-lg font-bold">Mesa 2×2 (2 duplas)</button>
+     <button id="rm3" onclick="send({t:'mode',nt:3})" class="py-1.5 rounded-lg font-bold">Mesa 2×2×2 (3 duplas)</button>
+    </div>
+    <div id="sl"></div>
+    <label class="flex items-center gap-3 rounded-xl bg-fuchsia-950/50 border border-fuchsia-400/30 p-3 text-xs sm:text-sm cursor-pointer">
+     <input type="checkbox" id="chaos" class="w-5 h-5" onchange="send({t:'opt',v:this.checked})">
+     <span><b>🌀 Modo Caos</b><br><span class="opacity-75 text-xs">Sorteia regras malucas na mão: manilha velha, truco dobrado, ordem invertida, às cegas...</span></span>
+    </label>
+    <p class="text-xs opacity-70 text-center">Parceiros sentam sempre de frente. Lugares vazios viram bots automaticamente.</p>
+    <button id="bStart" class="hidden w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-black font-bold text-base shadow-lg">
+     <i class="fa-solid fa-play mr-1"></i>Embaralhar e Começar Partida
+    </button>
+   </div>
+  </div>
+
+  <!-- Coluna Direita (5 cols): Resumo de Regras/XP + Status P2P -->
+  <div class="lg:col-span-5 flex flex-col gap-5">
+   <div class="bg-[#1c1008]/85 backdrop-blur-xl rounded-3xl p-5 gold-border flex-1 flex flex-col justify-between space-y-3">
+    <div class="space-y-3">
+     <div class="flex items-center justify-between">
+      <h3 class="f text-base text-amber-300 flex items-center gap-2"><i class="fa-solid fa-star"></i><span>Sua Reputação no Bar</span></h3>
+      <button onclick="$('rulesModal').classList.remove('hidden')" class="text-xs text-amber-300 underline">Ver guia completo</button>
+     </div>
+     <div id="xpb" class="text-xs space-y-1.5 bg-black/40 p-3 rounded-2xl border border-amber-500/20"></div>
+     <div class="space-y-2 pt-1">
+      <div class="text-xs font-bold uppercase tracking-wider text-amber-300/90">Destaques da Mesa</div>
+      <div class="p-2.5 rounded-xl bg-black/40 border border-amber-500/20 flex items-center gap-3 text-xs">
+       <span class="text-2xl">😉</span>
+       <div><b class="text-amber-200">Sinais Furtivos de Parceiro</b><p class="opacity-75 text-[11px]">Passe sinais de Zap, Manilha ou 3 para sua dupla — mas cuidado para os adversários não pescarem!</p></div>
+      </div>
+      <div class="p-2.5 rounded-xl bg-black/40 border border-amber-500/20 flex items-center gap-3 text-xs">
+       <span class="text-2xl">⚡</span>
+       <div><b class="text-amber-200">Manilha pela Vira (ou Fixa no Caos)</b><p class="opacity-75 text-[11px]">Ordem dos naipes da manilha: <b>♣ Paus (Zap) &gt; ♥ Copas &gt; ♠ Espadas &gt; ♦ Ouros</b>.</p></div>
+      </div>
+      <div class="p-2.5 rounded-xl bg-black/40 border border-amber-500/20 flex items-center gap-3 text-xs">
+       <span class="text-2xl">🔥</span>
+       <div><b class="text-amber-200">Modo 2×2 e 2×2×2 (6 Jogadores)</b><p class="opacity-75 text-[11px]">Jogue o duelo tradicional de 2 duplas ou coloque 3 duplas na mesma mesa!</p></div>
+      </div>
+     </div>
+    </div>
+    <div class="pt-3 border-t border-amber-500/20 flex items-center justify-between text-xs text-amber-200/70">
+     <span><i class="fa-solid fa-microphone text-emerald-400 mr-1"></i> Voz P2P na Mesa</span>
+     <span><i class="fa-solid fa-bolt text-amber-400 mr-1"></i> 60 FPS & Zero Login</span>
+    </div>
+   </div>
+
+   <div class="bg-[#1c1008]/85 backdrop-blur-xl rounded-3xl p-5 gold-border">
+    <div class="flex items-center justify-between mb-2">
+     <h3 class="f text-sm text-amber-300 flex items-center gap-2"><i class="fa-solid fa-network-wired"></i><span>Status da Rede P2P</span></h3>
+     <span id="netBadge" class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Pronto (PeerJS P2P)</span>
+    </div>
+    <p class="text-xs text-amber-100/70 leading-relaxed">
+     Crie uma sala e clique em <strong class="text-emerald-300">Link Convite</strong> no topo para mandar no WhatsApp ou Discord. Seus amigos entram direto na mesa em qualquer Wi-Fi!
+    </p>
+   </div>
+  </div>
+
+ </div>
+</main>
+
+<!-- MESA DE JOGO -->
+<div id="game" class="hidden flex-1 min-h-0 flex flex-col">
+ <div class="flex items-center justify-between px-3 py-2 bg-[#2a1608]/95 border-b border-amber-500/30 gap-2 flex-wrap">
   <div id="vira"></div>
   <div id="score" class="f text-sm sm:text-lg"></div>
-  <div class="flex gap-2"><button id="mic" class="px-2 py-1 rounded bg-slate-700 text-xs"></button><a href="../../" class="px-2 py-1 rounded bg-slate-700 text-xs">← Central</a><button onclick="leave()" class="px-2 py-1 rounded bg-rose-900 text-xs">Sair</button></div>
  </div>
  <div class="relative flex-1 min-h-0"><div id="tbl" class="absolute inset-0"></div><div id="board" class="absolute inset-0"></div></div>
- <div class="p-2 bg-[#2a1608]/90 border-t-2 border-amber-900 space-y-2">
+ <div class="p-2 bg-[#2a1608]/95 border-t border-amber-500/30 space-y-2">
   <div id="acts" class="flex flex-wrap gap-2 justify-center items-center min-h-[34px]"></div>
   <div id="sigs" class="flex flex-wrap gap-1 justify-center items-center"></div>
   <div id="hand" class="flex justify-center gap-3 min-h-[116px]"></div>
  </div>
 </div>
-<div id="ov" class="hidden fixed inset-0 z-40 bg-black/75 flex flex-col items-center justify-center gap-4">
- <div id="ovt" class="f text-5xl text-amber-300 text-center px-4"></div>
- <button id="bAgain" onclick="send({t:'again'})" class="px-6 py-2 rounded-lg bg-emerald-700 font-bold">Jogar de novo</button>
+
+<!-- FIM DE PARTIDA -->
+<div id="ov" class="hidden fixed inset-0 z-40 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center gap-4">
+ <div id="ovt" class="f text-4xl sm:text-5xl text-amber-300 text-center px-4"></div>
+ <div class="flex gap-3">
+  <button id="bAgain" onclick="send({t:'again'})" class="px-6 py-3 rounded-xl bg-emerald-600 font-bold text-sm">Jogar de novo na mesa</button>
+  <button onclick="leave()" class="px-5 py-3 rounded-xl bg-slate-700 font-bold text-sm">Voltar ao Lobby</button>
+ </div>
 </div>
-<div id="fxl" class="fixed inset-0 pointer-events-none z-50"><div id="tc" class="absolute top-14 inset-x-0 flex flex-col items-center gap-1"></div></div>
+
+<!-- MODAL: REGRAS & CARTAS -->
+<div id="rulesModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onclick="this.classList.add('hidden')">
+ <div class="w-full max-w-2xl max-h-[86vh] bg-[#1c1008] gold-border-strong rounded-3xl p-5 sm:p-7 flex flex-col overflow-hidden shadow-2xl" onclick="event.stopPropagation()">
+  <div class="flex items-center justify-between pb-3 border-b border-amber-500/30">
+   <h3 class="f text-lg sm:text-2xl text-amber-200 flex items-center gap-2"><i class="fa-solid fa-scroll text-amber-400"></i><span>Guia Rápido do Boteco — Regras & Sinais</span></h3>
+   <button onclick="$('rulesModal').classList.add('hidden')" class="w-8 h-8 rounded-xl bg-black/50 text-amber-200"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="flex-1 overflow-y-auto py-4 space-y-4 text-xs sm:text-sm text-amber-100/85 pr-1">
+   <div class="p-3.5 rounded-2xl bg-black/40 border border-amber-500/25">
+    <h4 class="f text-amber-300 mb-1">1. Força das Cartas e Manilhas</h4>
+    <p>A carta virada na mesa define a <b>Manilha</b> (a carta imediatamente acima da vira). A força das 4 manilhas segue os naipes: <b>♣ Paus (Zap) &gt; ♥ Copas &gt; ♠ Espadas &gt; ♦ Ouros (Pica-fumo)</b>.</p>
+    <p class="mt-1 opacity-80">Ordem comum (da mais forte p/ mais fraca): <b>3 &gt; 2 &gt; A &gt; K &gt; J &gt; Q &gt; 7 &gt; 6 &gt; 5 &gt; 4</b>.</p>
+   </div>
+   <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div class="p-3.5 rounded-2xl bg-black/40 border border-amber-500/25">
+     <h4 class="f text-amber-300 mb-1">2. Sinais e Níveis de XP</h4>
+     <p>Durante a mão, você pode mandar sinais visuais para o seu parceiro sentado à frente. Quanto maior o seu nível (<i>Novato → Freguês → Chapa → Veterano</i>), melhor você lê sinais e mais discreto você fica — porém menos sinais por mão pode enviar!</p>
+    </div>
+    <div class="p-3.5 rounded-2xl bg-black/40 border border-amber-500/25">
+     <h4 class="f text-amber-300 mb-1">3. Modo 2×2×2 (3 Duplas)</h4>
+     <p>Na mesa de 6 jogadores, 3 duplas disputam simultaneamente. Quando alguém pede Truco, as outras duas duplas decidem se aceitam ou correm. Quem fizer 2 rodadas (ou vencer a 1ª em caso de 1–1–1) leva os pontos!</p>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+
+<!-- MODAL: CONVITE -->
+<div id="inviteModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onclick="this.classList.add('hidden')">
+ <div class="w-full max-w-lg bg-[#1c1008] gold-border-strong rounded-3xl p-6 shadow-2xl" onclick="event.stopPropagation()">
+  <div class="flex items-center justify-between pb-3 border-b border-amber-500/30 mb-4">
+   <h3 class="f text-lg sm:text-xl text-amber-200 flex items-center gap-2"><i class="fa-solid fa-user-group text-emerald-400"></i><span>Como Jogar com Seus Amigos</span></h3>
+   <button onclick="$('inviteModal').classList.add('hidden')" class="w-8 h-8 rounded-xl bg-black/50 text-amber-200"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="space-y-3 text-xs sm:text-sm text-amber-100/85">
+   <div class="p-3 rounded-2xl bg-black/40 border border-amber-500/25 flex gap-3">
+    <span class="w-6 h-6 rounded-full bg-amber-500 text-black font-black text-xs flex items-center justify-center shrink-0">1</span>
+    <div><b class="text-amber-300 block">Abra a Mesa (2×2 ou 2×2×2)</b>Escolha seu personagem, selecione 4 ou 6 jogadores e clique em <b>Criar Nova Sala</b>.</div>
+   </div>
+   <div class="p-3 rounded-2xl bg-black/40 border border-amber-500/25 flex gap-3">
+    <span class="w-6 h-6 rounded-full bg-amber-500 text-black font-black text-xs flex items-center justify-center shrink-0">2</span>
+    <div><b class="text-amber-300 block">Envie o Link de Convite Direto</b>Clique em <b>Link Convite</b> no topo da tela e mande no WhatsApp ou Discord. Seus amigos caem direto na sua sala!</div>
+   </div>
+   <div class="p-3 rounded-2xl bg-black/40 border border-amber-500/25 flex gap-3">
+    <span class="w-6 h-6 rounded-full bg-amber-500 text-black font-black text-xs flex items-center justify-center shrink-0">3</span>
+    <div><b class="text-amber-300 block">Voz ao Vivo e Bots Automáticos</b>Ative o microfone no topo para conversar na mesa. Se faltar gente para fechar 4 ou 6 lugares, os bots completam a roda!</div>
+   </div>
+  </div>
+  <button onclick="$('inviteModal').classList.add('hidden')" class="mt-5 w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 text-black font-bold text-sm">Entendi, Bora pro Truco!</button>
+ </div>
+</div>
+
+<div id="fxl" class="fixed inset-0 pointer-events-none z-50"><div id="tc" class="absolute top-16 inset-x-0 flex flex-col items-center gap-1.5"></div></div>
 
 <script>
 const RK=['4','5','6','7','Q','J','K','A','2','3'],SU=['♦','♠','♥','♣'];
@@ -133,41 +356,31 @@ const AV=[
 ['Rei do Truco','Majestade do Zap','#a855f7','#4a1d96','#e0ac80','#2b1b0e',{hat:'crown',b:'mus',sh:'#7e22ce',ch:1,m:'grin'}],
 ['A Lenda','Lenda Viva do Boteco','#f59e0b','#78350f','#b9805a','#111111',{h:'bald',g:'sun',ch:1,sh:'#111827',m:'smirk'}]];
 const mkBot=n=>{const k=[5,6,3,7,8,9][n%6];return{uid:'b'+n,name:AV[k][0],av:k,bot:1,lv:[3,2,1,2,1,2][n%6]}};
-let avN=0,selNt=2;
+let avN=0,selNt=2,sfxOn=true;
 const UL=[0,0,0,0,0,0,0,0,1,1,2,2,3,3];
 const CB=[
-['Azul clássico',0,'#1d4ed8','#1e3a8a'],
-['Verde boteco',1,'#15803d','#14532d'],
-['Vermelho cassino',1,'#b91c1c','#7f1d1d'],
-['Brasil',2,'#16a34a','#facc15'],
-['Roxo neon',2,'#7e22ce','#3b0764'],
-['Dourado',3,'#d4af37','#7c5a10'],
-['Preto imperial',3,'#27272a','#09090b']];
+['Azul clássico',0,'#1d4ed8','#1e3a8a'],['Verde boteco',1,'#15803d','#14532d'],['Vermelho cassino',1,'#b91c1c','#7f1d1d'],
+['Brasil',2,'#16a34a','#facc15'],['Roxo neon',2,'#7e22ce','#3b0764'],['Dourado',3,'#d4af37','#7c5a10'],['Preto imperial',3,'#27272a','#09090b']];
 const MZ=[
-['Vermelha de bar',0,'#e32a30','#b3141a','#8a0e13','#7a0d11'],
-['Verde feltro',1,'#1f8a48','#14532d','#0b3320','#0b3320'],
-['Amarela de calçada',1,'#eab308','#ca8a04','#854d0e','#713f12'],
-['Azul sinuca',2,'#2a6fd6','#1b4a9a','#10306a','#0b2150'],
-['Madeira de churrasco',2,'#78350f','#451a03','#271001','#d97706'],
-['Preta VIP',3,'#3a3a40','#1c1c20','#0a0a0c','#d4af37'],
+['Vermelha de bar',0,'#e32a30','#b3141a','#8a0e13','#7a0d11'],['Verde feltro',1,'#1f8a48','#14532d','#0b3320','#0b3320'],
+['Amarela de calçada',1,'#eab308','#ca8a04','#854d0e','#713f12'],['Azul sinuca',2,'#2a6fd6','#1b4a9a','#10306a','#0b2150'],
+['Madeira de churrasco',2,'#78350f','#451a03','#271001','#d97706'],['Preta VIP',3,'#3a3a40','#1c1c20','#0a0a0c','#d4af37'],
 ['Roxa clandestina',3,'#581c87','#3b0764','#1e0238','#e879f9']];
-const SN=[
-['Apito',0],
-['Soco na mesa',1],
-['Batida de dominó',1],
-['Sino de boteco',2],
-['Copo no balcão',2],
-['Fanfarra',3],
-['Sirene do caos',3]];
+const SN=[['Apito',0],['Soco na mesa',1],['Batida de dominó',1],['Sino de boteco',2],['Copo no balcão',2],['Fanfarra',3],['Sirene do caos',3]];
 const cbs=i=>{const c=CB[i|0]||CB[0];return`background:repeating-linear-gradient(45deg,${c[2]},${c[2]} 5px,${c[3]} 5px,${c[3]} 10px)`};
 const okU=(v,A,lv)=>A[v|0]&&A[v|0][1]<=lv?v|0:0;
+const $=id=>document.getElementById(id),rnd=n=>Math.floor(Math.random()*n);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+let ac;function bp(f=440,d=.12,ty='sine'){if(!sfxOn)return;try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain();o.type=ty;o.frequency.value=f;g.gain.value=.08;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}}
+function toggleSfx(){sfxOn=!sfxOn;$('sfxIcon').className=sfxOn?'fa-solid fa-volume-high':'fa-solid fa-volume-xmark text-rose-400';toast(sfxOn?'Efeitos sonoros ativados':'Áudio silenciado')}
+function openInviteModal(){$('inviteModal').classList.remove('hidden')}
+function copyCode(){if(!code)return;navigator.clipboard&&navigator.clipboard.writeText(code);toast('Código '+code+' copiado!')}
+function copyLink(){const u=location.href.split('?')[0]+(code?'?room='+code:'');navigator.clipboard&&navigator.clipboard.writeText(u);toast('Link de convite copiado!')}
+
 function shout(k){[
- ()=>bp(140,.35,'sawtooth'),
- ()=>{bp(70,.25,'square');setTimeout(()=>bp(55,.3,'square'),120)},
- ()=>{bp(920,.05,'triangle');setTimeout(()=>bp(680,.07,'square'),55)},
- ()=>[880,1175,880].forEach((f,i)=>setTimeout(()=>bp(f,.35,'triangle'),i*140)),
- ()=>{bp(1350,.09,'sine');setTimeout(()=>bp(1020,.18,'triangle'),80)},
- ()=>[392,523,659,784].forEach((f,i)=>setTimeout(()=>bp(f,.25,'sawtooth'),i*90)),
+ ()=>bp(140,.35,'sawtooth'),()=>{bp(70,.25,'square');setTimeout(()=>bp(55,.3,'square'),120)},
+ ()=>{bp(920,.05,'triangle');setTimeout(()=>bp(680,.07,'square'),55)},()=>[880,1175,880].forEach((f,i)=>setTimeout(()=>bp(f,.35,'triangle'),i*140)),
+ ()=>{bp(1350,.09,'sine');setTimeout(()=>bp(1020,.18,'triangle'),80)},()=>[392,523,659,784].forEach((f,i)=>setTimeout(()=>bp(f,.25,'sawtooth'),i*90)),
  ()=>[320,640,320,640].forEach((f,i)=>setTimeout(()=>bp(f,.16,'sawtooth'),i*100))
 ][k|0]()}
 const TTL=[
@@ -181,9 +394,9 @@ const LIM=[5,4,3,2],PER=[.5,.7,.85,.95],SPY=[.06,.12,.2,.3],SLO=[1.6,1.2,.9,.7];
 let xp=0,xpDone=0,lastGain=0,myTt=-1,myCb=0,myMz=0,mySn=0;try{xp=+localStorage.getItem('truco_xp')||0}catch(e){}
 const lvOf=x=>XT.reduce((a,t,i)=>x>=t?i:a,0);
 function gainXP(n){xp+=n;try{localStorage.setItem('truco_xp',xp)}catch(e){}}
-function setMd(nt){selNt=nt;$('m2').className='py-2 rounded-lg font-bold '+(nt==2?'bg-amber-600 text-black':'opacity-70');$('m3').className='py-2 rounded-lg font-bold '+(nt==3?'bg-amber-600 text-black':'opacity-70')}
+function setMd(nt){selNt=nt;$('m2').className='py-2 rounded-lg font-bold '+(nt==2?'bg-amber-500 text-black':'opacity-70');$('m3').className='py-2 rounded-lg font-bold '+(nt==3?'bg-amber-500 text-black':'opacity-70')}
 function xpUpd(){const l=lvOf(xp),nx=XT[l+1],pc=nx?(xp-XT[l])/(nx-XT[l])*100:100;
- $('xpb').innerHTML=`<div class="flex justify-between"><span><b class="text-amber-300">${LV[l]}</b> <span class="text-amber-300">${'★'.repeat(l+1)}</span></span><span class="opacity-70">${xp} XP${nx?` · faltam ${nx-xp} p/ ${LV[l+1]}`:' · nível máximo'}</span></div><div class="h-2 rounded bg-black/50 overflow-hidden"><i class="block h-full bg-amber-400" style="width:${pc}%"></i></div><details class="opacity-80"><summary class="cursor-pointer">Como funciona a experiência?</summary><p class="mt-1">Quanto mais você joga, melhor percebe os sinais do parceiro e dos adversários. Novatos percebem menos, mas podem mandar mais sinais, e os sinais deles vazam mais. Veteranos leem tudo, mas só mandam 2 sinais por mão, e cada sinal extra deixa a dupla mais manjada. Partidas contra bots rendem metade do XP.</p></details>`}
+ $('xpb').innerHTML=`<div class="flex justify-between"><span><b class="text-amber-300">${LV[l]}</b> <span class="text-amber-300">${'★'.repeat(l+1)}</span></span><span class="opacity-70">${xp} XP${nx?` · faltam ${nx-xp} p/ ${LV[l+1]}`:' · nível máximo'}</span></div><div class="h-2 rounded-full bg-black/60 overflow-hidden"><i class="block h-full bg-amber-400" style="width:${pc}%"></i></div>`}
 function avt(i,z=56,lv=0){const[,,c1,c2,sk,hr,o]=AV[i|0]||AV[0],u=++avN;
  const eye=x=>`<ellipse cx="${x}" cy="46" rx="4.6" ry="${o.m=='flat'?3:4.2}" fill="#fff"/><circle cx="${x}" cy="46.5" r="2.5" fill="#2a1a10"/><circle cx="${x+.9}" cy="45.6" r=".9" fill="#fff"/>`;
  const brow=o.m=='angry'?`<path d="M32 38l14 4M68 38l-14 4" stroke="${hr}" stroke-width="3.2" stroke-linecap="round"/>`:`<path d="M33 39q6-3 12 0M55 39q6-3 12 0" stroke="${hr}" stroke-width="2.8" fill="none" stroke-linecap="round"/>`;
@@ -216,12 +429,10 @@ function avt(i,z=56,lv=0){const[,,c1,c2,sk,hr,o]=AV[i|0]||AV[0],u=++avN;
  if(o.ch)body+=`<path d="M34 74q16 16 32 0" stroke="#fbbf24" stroke-width="3" fill="none"/>`;
  const ex=(o.ear?`<circle cx="27" cy="56" r="2.6" fill="#fde047"/><circle cx="73" cy="56" r="2.6" fill="#fde047"/>`:'')+(o.fr?`<g fill="#a14d2a" opacity=".6"><circle cx="38" cy="54" r=".9"/><circle cx="42" cy="56" r=".9"/><circle cx="62" cy="54" r=".9"/><circle cx="58" cy="56" r=".9"/></g>`:'');
  return`<svg viewBox="0 0 100 100" width="${z}" height="${z}"><defs><radialGradient id="ab${u}" cx=".5" cy=".3" r=".9"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></radialGradient><linearGradient id="as${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sk}"/><stop offset="1" stop-color="${sk}" stop-opacity=".82"/></linearGradient><clipPath id="ac${u}"><circle cx="50" cy="50" r="48"/></clipPath></defs><circle cx="50" cy="50" r="48" fill="url(#ab${u})"/><g clip-path="url(#ac${u})">${back}${body}<path d="M42 60h16v14q-8 6-16 0z" fill="${sk}"/><path d="M42 68q8 5 16 0v4q-8 5-16 0z" fill="#0003"/><circle cx="27" cy="48" r="5" fill="${sk}"/><circle cx="73" cy="48" r="5" fill="${sk}"/><ellipse cx="50" cy="45" rx="23" ry="26" fill="url(#as${u})"/><circle cx="36" cy="55" r="5" fill="#f87171" opacity=".22"/><circle cx="64" cy="55" r="5" fill="#f87171" opacity=".22"/>${eye(39)}${eye(61)}${brow}<path d="M50 48q-3 7 0 9h3" stroke="#0004" stroke-width="2" fill="none" stroke-linecap="round"/>${mouth}${o.lip?'<path d="M42 59q8 5 16 0q-8 2-16 0z" fill="#c1121f"/>':''}${ex}${top}</g><circle cx="50" cy="50" r="48" fill="none" stroke="${['#f6eedc','#cbd5e1','#fbbf24','#fde047'][lv]}" stroke-opacity="${lv?1:.7}" stroke-width="${[2.5,3.5,4.5,5][lv]}"/>${lv>2?'<circle cx="50" cy="50" r="43" fill="none" stroke="#f59e0b" stroke-width="1.3" stroke-dasharray="3 3"/>':''}</svg>`}
-const $=id=>document.getElementById(id),rnd=n=>Math.floor(Math.random()*n);
-const esc=s=>String(s).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+
 let myUid='u'+Math.random().toString(36).slice(2,8),myAv=0,rj=0,left=0,jt=0;
 let G=null,V=null,me=0,isHost=false,offline=false,code='',peer=null,hconn=null,conns={},bt=null;
 let evSeen=-1,prevT=0,lastDK='',name='';
-let ac;function bp(f=440,d=.12,ty='sine'){try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain();o.type=ty;o.frequency.value=f;g.gain.value=.08;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}}
 
 /* ============ MOTOR (roda só no host) ============ */
 function newG(nt=2){return{hostUid:myUid,nt,n:nt*2,seats:Array(nt*2).fill(null),pts:Array(nt).fill(0),phase:'lobby',dealer:nt*2-1,ev:[],eid:0}}
@@ -332,7 +543,7 @@ function botTick(){
  if(G.pend){
   for(let t=0;t<G.nt;t++){if(G.out[t]||G.pend.ok.includes(t))continue;
    const s1=t,s2=t+G.nt;if(!S[s1].bot||!S[s2].bot)continue;
-   const o=S[s1].hand.length>=S[s2].hand.length?s1:s2,p=S[o];
+   const o=S[s1].hand.length>=S[s2].hand.length?s1:s2;
    const w=G.rs.filter(x=>x===t).length,l=G.rs.filter(x=>x!=='T'&&x!==t).length;
    const pw=Math.max(pwr(S[s1].hand),pwr(S[s2].hand))+(w-l)*1.3+(Math.random()<.12?2:0);
    respond(o,pw>5.6&&G.pend.val<12&&Math.random()<.3?'up':pw>3.2?'ok':'run');bcast();return}
@@ -354,11 +565,11 @@ function send(a){if(isHost)act(myUid,a);else if(hconn&&hconn.open)hconn.send({..
 const PC=()=>({config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}});
 function getName(){name=($('nm').value.trim()||AV[myAv][0]).slice(0,14);try{localStorage.setItem('truco_prof',JSON.stringify(prof()))}catch(e){}return name}
 function profUpd(){xpUpd();const L=lvOf(xp);
- $('avg').innerHTML=AV.map((a,i)=>`<button onclick="pickAv(${i})" class="relative rounded-full p-0.5 ring-amber-300 ${i==myAv?'ring-2':''} ${UL[i]>L?'opacity-40 grayscale':''}" title="${a[0]}${UL[i]>L?' (nível '+LV[UL[i]]+')':''}">${avt(i,46)}${UL[i]>L?'<span class="absolute inset-0 flex items-center justify-center text-lg">🔒</span>':''}</button>`).join('');
+ $('avg').innerHTML=AV.map((a,i)=>`<button onclick="pickAv(${i})" class="relative rounded-full p-0.5 ring-amber-300 ${i==myAv?'ring-2':''} ${UL[i]>L?'opacity-40 grayscale':''}" title="${a[0]}${UL[i]>L?' (nível '+LV[UL[i]]+')':''}">${avt(i,44)}${UL[i]>L?'<span class="absolute inset-0 flex items-center justify-center text-base">🔒</span>':''}</button>`).join('');
  $('pav').innerHTML=avt(myAv,64,L);$('ptt').textContent='“'+ttName({tt:myTt,av:myAv})+'”';
  const so=(A,cur)=>A.map((t,i)=>`<option value="${i}" ${t[1]>L?'disabled':''} ${i==cur?'selected':''}>${t[1]>L?'🔒 ':''}${t[0]}${t[1]>L?' ('+LV[t[1]]+')':''}</option>`).join('');
  $('scb').innerHTML=so(CB,myCb);$('smz').innerHTML=so(MZ,myMz);$('ssn').innerHTML=so(SN,mySn);tblBuild();
- $('tts').innerHTML='<option value="-1">Título do personagem</option>'+TTL.map((t,i)=>`<option value="${i}" ${t[1]>L?'disabled':''} ${i==myTt?'selected':''}>${t[1]>L?'🔒 ':''}${t[0]}${t[1]>L?' (nível '+LV[t[1]]+')':''}</option>`).join('')}
+ $('tts').innerHTML='<option value="-1">Título padrão do personagem</option>'+TTL.map((t,i)=>`<option value="${i}" ${t[1]>L?'disabled':''} ${i==myTt?'selected':''}>${t[1]>L?'🔒 ':''}${t[0]}${t[1]>L?' (nível '+LV[t[1]]+')':''}</option>`).join('')}
 const prof=()=>({name:$('nm').value.trim(),av:myAv,tt:myTt,cb:myCb,mz:myMz,sn:mySn});
 function pickC(k,v){v=+v;if(k=='cb')myCb=v;else if(k=='mz')myMz=v;else{mySn=v;shout(v)}profUpd();saveProf()}
 function saveProf(){try{localStorage.setItem('truco_prof',JSON.stringify(prof()))}catch(e){}}
@@ -373,7 +584,7 @@ function hostGame(online,res){getName();isHost=true;offline=!online;
  if(!res)code=Array.from({length:5},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[rnd(32)]).join('');
  hostPeer()}
 function hostPeer(n=0){peer=new Peer('truco-'+code,PC());
- peer.on('open',id=>{G.seats.find(p=>p&&p.uid==myUid).pid=id;bcast();if(!ls)mic()});
+ peer.on('open',id=>{G.seats.find(p=>p&&p.uid==myUid).pid=id;$('netBadge').textContent='Sala P2P Ativa ('+code+')';bcast();if(!ls)mic()});
  peer.on('error',e=>{if(e.type=='unavailable-id'&&n<8){try{peer.destroy()}catch(x){}setTimeout(()=>hostPeer(n+1),2500)}else toast('Erro de rede: '+e.type)});
  peer.on('call',onCall);
  peer.on('connection',c=>{
@@ -391,7 +602,7 @@ function joinGame(c0){getName();isHost=false;code=c0.toUpperCase();out={};
  if(peer)try{peer.destroy()}catch(e){}
  peer=new Peer('truco-'+code+'-'+myUid,PC());
  peer.on('open',id=>{hconn=peer.connect('truco-'+code,{reliable:true});
-  hconn.on('open',()=>{jt=0;hconn.send({t:'join',uid:myUid,name,av:myAv,tt:myTt,cb:myCb,sn:mySn,lv:lvOf(xp),pid:id});if(!ls)mic()});
+  hconn.on('open',()=>{jt=0;$('netBadge').textContent='Conectado ('+code+')';hconn.send({t:'join',uid:myUid,name,av:myAv,tt:myTt,cb:myCb,sn:mySn,lv:lvOf(xp),pid:id});if(!ls)mic()});
   hconn.on('data',d=>{if(d.t=='st'){rj=1;render(d.v)}});
   hconn.on('close',retry)});
  peer.on('error',e=>{if(e.type=='peer-unavailable'&&!rj){toast('Sala não encontrada. Confira o código.');return}
@@ -401,7 +612,7 @@ function retry(){if(left||jt>12)return;jt++;toast('Reconectando…');setTimeout(
 
 /* ============ VOZ (todos ouvem todos) ============ */
 let ls=null,out={},aud={};
-function updMic(){$('mic').textContent=!ls?'🎙️ Ativar voz':ls.getAudioTracks()[0].enabled?'🎙️ Voz ligada':'🔇 Mudo'}
+function updMic(){$('mic').innerHTML=!ls?'<i class="fa-solid fa-microphone-slash text-rose-400"></i><span class="hidden lg:inline">Voz</span>':ls.getAudioTracks()[0].enabled?'<i class="fa-solid fa-microphone text-emerald-400"></i><span class="hidden lg:inline">Voz Ativa</span>':'<i class="fa-solid fa-microphone-slash text-amber-400"></i><span class="hidden lg:inline">Mudo</span>'}
 async function mic(){
  if(ls){const t=ls.getAudioTracks()[0];t.enabled=!t.enabled;updMic();return}
  try{ls=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch(e){toast('Microfone indisponível');return}
@@ -426,7 +637,7 @@ function gest(i){const sk='#f2c9a0',st='#7a4b2a';
  else if(i==4)g=hand([0,0,0,0],'knk');
  else g=hand([1,0,0,0],'wob wf');
  return`<svg class="gs" viewBox="0 0 64 64">${g}</svg>`}
-function toast(t){const d=document.createElement('div');d.className='tst';d.textContent=t;$('tc').appendChild(d);setTimeout(()=>d.remove(),2400)}
+function toast(t){const d=document.createElement('div');d.className='tst';d.textContent=t;$('tc').appendChild(d);setTimeout(()=>d.remove(),2600)}
 function big(t,col){const d=document.createElement('div');d.className='bang f';d.style.color=col;d.textContent=t;$('fxl').appendChild(d);setTimeout(()=>d.remove(),1500)}
 function bub(rel,html){const el=$('st'+rel);if(!el)return;const r=el.getBoundingClientRect(),d=document.createElement('div');d.className='fl';d.style.cssText=`left:${r.left+r.width/2}px;top:${r.top}px`;d.innerHTML=html;$('fxl').appendChild(d);setTimeout(()=>d.remove(),2600)}
 const tCol=['#34d399','#fb7185','#38bdf8'],tDot=['🟢','🔴','🔵'],tNm=['Verde','Vermelha','Azul'];
@@ -447,14 +658,18 @@ function doFx(e){const N=V.n||4,nt=V.nt||2,rel=s=>(s-me+N)%N,mt=me%nt;
 function render(v){
  V=v;me=v.me;const L=v.phase=='lobby',nt=v.nt||2,N=v.n||4,mt=me%nt;
  $('lob').classList.toggle('hidden',!L);$('game').classList.toggle('hidden',L);$('ov').classList.toggle('hidden',v.phase!='over');
+ $('roomHeaderBadge').classList.toggle('hidden',offline&&L);$('roomHeaderBadge').classList.toggle('flex',!offline||!L);
+ $('roomCodeDisplay').textContent=offline?'BOTS':code;
+ $('mic').classList.toggle('hidden',offline);$('mic').classList.toggle('flex',!offline);
+ $('leaveBtn').classList.toggle('hidden',L&&!code);$('leaveBtn').classList.toggle('flex',!L||!!code);
  if(evSeen<0)evSeen=v.ev.reduce((m,e)=>Math.max(m,e.id),0);
  const boxCls=['bg-emerald-900/50 border-emerald-400/40','bg-rose-900/40 border-rose-400/40','bg-sky-900/45 border-sky-400/40'];
  const txtCls=['text-emerald-300','text-rose-300','text-sky-300'];
- if(L){$('lm').classList.add('hidden');$('lr').classList.remove('hidden');$('rl').textContent=offline?'':code;
+ if(L){$('lm').classList.add('hidden');$('lr').classList.remove('hidden');$('rl').textContent=offline?'BOTS':code;
   $('lk').value=location.href.split('?')[0]+'?room='+code;
   $('rmSw').classList.toggle('hidden',!isHost);
-  $('rm2').className='py-1.5 rounded-lg font-bold '+(nt==2?'bg-amber-600 text-black':'opacity-70');
-  $('rm3').className='py-1.5 rounded-lg font-bold '+(nt==3?'bg-amber-600 text-black':'opacity-70');
+  $('rm2').className='py-1.5 rounded-lg font-bold '+(nt==2?'bg-amber-500 text-black':'opacity-70');
+  $('rm3').className='py-1.5 rounded-lg font-bold '+(nt==3?'bg-amber-500 text-black':'opacity-70');
   const slot=i=>{const p=v.seats[i],tm=i%nt;return`<div class="rounded-2xl p-2.5 text-center border ${boxCls[tm]}"><div class="text-[10px] font-bold uppercase ${txtCls[tm]}">Dupla ${tNm[tm]}</div>${p?`<div class="w-12 h-12 mx-auto mt-0.5">${avt(p.av,48,p.lv|0)}</div><div class="font-bold text-xs mt-1 truncate">${esc(p.name)}${p.uid==myUid?' (você)':''}</div><div class="text-[10px] opacity-70 truncate">${ttName(p)} <span class="text-amber-300">${'★'.repeat((p.lv|0)+1)}</span></div>${isHost&&p.bot?`<button onclick="send({t:'bot',n:${i}})" class="text-[11px] mt-0.5 underline opacity-70">remover bot</button>`:''}`:`<div class="w-12 h-12 mx-auto mt-0.5 rounded-full border-2 border-dashed border-white/30 flex items-center justify-center text-xl opacity-50">+</div><div class="mt-1.5 flex gap-1 justify-center"><button onclick="send({t:'sit',n:${i}})" class="px-2 py-0.5 rounded bg-amber-600 text-xs font-bold">Sentar</button>${isHost?`<button onclick="send({t:'bot',n:${i}})" class="px-2 py-0.5 rounded bg-slate-600 text-xs">+🤖</button>`:''}</div>`}</div>`};
   $('sl').innerHTML=nt==2
    ?`<div class="grid grid-cols-3 gap-2 items-center"><div></div>${slot(2)}<div></div>${slot(1)}<div class="text-center f text-amber-300 text-sm leading-tight">Mesa 2×2<br>verde × vermelha</div>${slot(3)}<div></div>${slot(0)}<div></div></div>`
@@ -467,13 +682,13 @@ function render(v){
   const ord=[mt,(mt+1)%3,(mt+2)%3];
   $('score').innerHTML=ord.map((t,k)=>`<span class="${txtCls[t]}">${k==0?'Nós':tNm[t]} <b>${v.pts[t]}</b></span>`).join(' × ')+` <span class="text-xs sm:text-sm ml-1.5">Vale <b class="text-amber-300">${v.val}</b> ${v.rs.map(r=>r==='T'?'🟰':tDot[r]).join('')}</span>`;
  }
- $('vira').innerHTML=`<div class="flex items-center gap-1 text-xs">Vira ${cd(v.vira,'sm')} Manilha <b class="text-amber-300 text-lg">${v.oldMan?'4♣ 7♥ A♠ 7♦':RK[v.man]||'—'}</b>${v.chaosTxt?`<span class="ml-2 text-fuchsia-300">🌀 ${esc(v.chaosTxt)}</span>`:''}</div>`;
+ $('vira').innerHTML=`<div class="flex items-center gap-1.5 text-xs">Vira ${cd(v.vira,'sm')} Manilha <b class="text-amber-300 text-lg">${v.oldMan?'4♣ 7♥ A♠ 7♦':RK[v.man]||'—'}</b>${v.chaosTxt?`<span class="ml-2 text-fuchsia-300">🌀 ${esc(v.chaosTxt)}</span>`:''}</div>`;
  const pos4=['left:50%;bottom:4px;transform:translateX(-50%)','left:6px;top:50%;transform:translateY(-50%)','left:50%;top:4px;transform:translateX(-50%)','right:6px;top:50%;transform:translateY(-50%)'];
  const pos6=['left:50%;bottom:4px;transform:translateX(-50%)','left:6px;top:68%;transform:translateY(-50%)','left:6px;top:25%;transform:translateY(-50%)','left:50%;top:4px;transform:translateX(-50%)','right:6px;top:25%;transform:translateY(-50%)','right:6px;top:68%;transform:translateY(-50%)'];
  const pos=nt==3?pos6:pos4;
  let h='';
  for(let r=0;r<N;r++){const i=(me+r)%N,p=v.seats[i],tm=i%nt,t=tm==mt,folded=v.out&&v.out[tm];
-  h+=`<div id="st${r}" class="absolute text-center rounded-lg px-2 py-1 bg-black/65 ${v.turn==i&&v.phase=='play'&&!folded?'turn':''} ${folded?'opacity-45':''}" style="${pos[r]}"><div class="flex items-center gap-1.5"><span class="w-8 h-8 flex-none">${avt(p.av,32,p.lv|0)}</span><span class="text-left leading-tight"><span class="block text-xs font-semibold ${nt==3?txtCls[tm]:t?'text-emerald-300':'text-rose-300'}">${i==me?'Você':esc(p.name)}${p.away?' 💤':p.bot?' 🤖':''}${t&&i!=me?' (parceiro)':''}${folded?' 🏃':''}</span><span class="block text-[10px] opacity-70">${ttName(p)} <span class="text-amber-300">${'★'.repeat((p.lv|0)+1)}</span></span></span></div>${r&&p.h?`<div class="flex gap-0.5 justify-center mt-1">${p.h.map(c=>cd(c,'sm')).join('')}</div>`:r?`<div class="flex gap-0.5 justify-center mt-1">${('<div class="card back sm" style="'+cbs(p.cb)+'"></div>').repeat(p.n)}</div>`:''}</div>`}
+  h+=`<div id="st${r}" class="absolute text-center rounded-xl px-2.5 py-1 bg-black/70 border border-amber-500/25 ${v.turn==i&&v.phase=='play'&&!folded?'turn':''} ${folded?'opacity-45':''}" style="${pos[r]}"><div class="flex items-center gap-1.5"><span class="w-8 h-8 flex-none">${avt(p.av,32,p.lv|0)}</span><span class="text-left leading-tight"><span class="block text-xs font-semibold ${nt==3?txtCls[tm]:t?'text-emerald-300':'text-rose-300'}">${i==me?'Você':esc(p.name)}${p.away?' 💤':p.bot?' 🤖':''}${t&&i!=me?' (parceiro)':''}${folded?' 🏃':''}</span><span class="block text-[10px] opacity-70">${ttName(p)} <span class="text-amber-300">${'★'.repeat((p.lv|0)+1)}</span></span></span></div>${r&&p.h?`<div class="flex gap-0.5 justify-center mt-1">${p.h.map(c=>cd(c,'sm')).join('')}</div>`:r?`<div class="flex gap-0.5 justify-center mt-1">${('<div class="card back sm" style="'+cbs(p.cb)+'"></div>').repeat(p.n)}</div>`:''}</div>`}
  const old=prevT;prevT=v.table.length;
  h+='<div class="absolute left-1/2 top-1/2" style="width:0;height:0">';
  const tb4=[[0,44],[-62,0],[0,-44],[62,0]],dx4=[0,-160,0,160],dy4=[140,0,-140,0];
@@ -495,10 +710,10 @@ function render(v){
   else a='<span class="text-sm">Aguardando resposta da mesa…</span>'}
  else if(pl&&myFold)a='<span class="text-sm opacity-70">Sua dupla correu desta mão</span>';
  else if(pl&&!v.lock&&v.turn==me&&v.lastUp!=mt&&v.val<12&&!v.busy)a=B("send({t:'truco'})",TL[nxV(v.val,v.dbl)]+'!','bg-amber-600');
- else if(pl&&v.turn==me&&!v.busy)a='<span class="text-sm text-emerald-300">Sua vez</span>';
+ else if(pl&&v.turn==me&&!v.busy)a='<span class="text-sm text-emerald-300">Sua vez de jogar</span>';
  $('acts').innerHTML=a;
- $('sigs').innerHTML=pl?`<span class="text-xs opacity-70 mr-1">Sinais p/ parceiro (${LIM[ml]-v.sigN[me]}) · ${LV[ml]}:</span>`+SG.map((s,i)=>`<button onclick="send({t:'sig',i:${i}})" class="px-2 py-0.5 rounded bg-black/40 text-center ${v.sigN[me]>=LIM[ml]||myFold?'opacity-40':''}"><span class="s block w-9 mx-auto">${gest(i)}</span><span class="block text-[9px]">${s[1]}</span></button>`).join('')+'<span class="ml-2">'+['Põe na conta!','Sobe mais uma!','Aham, Cláudia','Tá feio, hein','Marreco!','Vem no seis!'].map(e=>`<button onclick="send({t:'emo',e:'${e}'})" class="px-2 py-0.5 rounded bg-black/40 text-xs">${e}</button>`).join('')+'</span>':'';
- if(v.phase=='over'){if(!xpDone){xpDone=1;const o=lvOf(xp);lastGain=Math.round((v.winner==mt?18:10)*(offline?.5:1));gainXP(lastGain);if(lvOf(xp)>o){const n=lvOf(xp),nw=[...AV.filter((_,i)=>UL[i]==n).map(a=>a[0]),...TTL.filter(t=>t[1]==n).map(t=>t[0]),...CB.filter(t=>t[1]==n).map(t=>'verso '+t[0]),...MZ.filter(t=>t[1]==n).map(t=>'mesa '+t[0]),...SN.filter(t=>t[1]==n).map(t=>'grito '+t[0])];toast('⭐ Nível '+LV[n]+'! Liberou: '+nw.join(', '))}}$('ovt').textContent=(v.winner==mt?'🏆 Vitória!':`💀 Dupla ${tNm[v.winner]} venceu…`)+' +'+lastGain+' XP';$('bAgain').classList.toggle('hidden',!isHost)}else xpDone=0;
+ $('sigs').innerHTML=pl?`<span class="text-xs opacity-70 mr-1">Sinais (${LIM[ml]-v.sigN[me]}):</span>`+SG.map((s,i)=>`<button onclick="send({t:'sig',i:${i}})" class="px-2 py-0.5 rounded bg-black/40 text-center ${v.sigN[me]>=LIM[ml]||myFold?'opacity-40':''}"><span class="s block w-8 mx-auto">${gest(i)}</span><span class="block text-[9px]">${s[1]}</span></button>`).join('')+'<span class="ml-1 flex flex-wrap gap-1">'+['Põe na conta!','Sobe mais uma!','Aham, Cláudia','Tá feio, hein','Marreco!','Vem no seis!'].map(e=>`<button onclick="send({t:'emo',e:'${e}'})" class="px-2 py-1 rounded bg-black/40 text-xs hover:bg-black/60">${e}</button>`).join('')+'</span>':'';
+ if(v.phase=='over'){if(!xpDone){xpDone=1;const o=lvOf(xp);lastGain=Math.round((v.winner==mt?18:10)*(offline?.5:1));gainXP(lastGain);if(lvOf(xp)>o){const n=lvOf(xp),nw=[...AV.filter((_,i)=>UL[i]==n).map(a=>a[0]),...TTL.filter(t=>t[1]==n).map(t=>t[0]),...CB.filter(t=>t[1]==n).map(t=>'verso '+t[0]),...MZ.filter(t=>t[1]==n).map(t=>'mesa '+t[0]),...SN.filter(t=>t[1]==n).map(t=>'grito '+t[0])];toast('⭐ Nível '+LV[n]+'! Liberou: '+nw.join(', '))}}$('ovt').textContent=(v.winner==mt?'🏆 Vitória da Dupla!':`💀 Dupla ${tNm[v.winner]} venceu…`)+' +'+lastGain+' XP';$('bAgain').classList.toggle('hidden',!isHost)}else xpDone=0;
  v.ev.filter(e=>e.id>evSeen).forEach(doFx);evSeen=Math.max(evSeen,...v.ev.map(e=>e.id),0);
  updMic();callAll()}
 
@@ -508,7 +723,7 @@ const CUP=`<svg viewBox="0 0 50 60"><path d="M5 5h40l-5 52a3 3 0 0 1-3 3H13a3 3 
 const NUT=`<svg viewBox="0 0 70 46"><ellipse cx="35" cy="30" rx="32" ry="14" fill="#efe6cf" stroke="#2a1505" stroke-width="2"/><ellipse cx="35" cy="26" rx="27" ry="10" fill="#c98a4b"/><g fill="#e0a867" stroke="#8a5a2b"><ellipse cx="22" cy="24" rx="5" ry="3.2"/><ellipse cx="33" cy="20" rx="5" ry="3.2"/><ellipse cx="45" cy="24" rx="5" ry="3.2"/><ellipse cx="30" cy="28" rx="5" ry="3.2"/><ellipse cx="41" cy="30" rx="5" ry="3.2"/></g></svg>`;
 const CAP=`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#d4af37" stroke="#7a5a10" stroke-width="1.5"/><circle cx="12" cy="12" r="6" fill="none" stroke="#7a5a10" stroke-dasharray="2 2"/></svg>`;
 const DC=(css,svg)=>`<div class="absolute pointer-events-none" style="${css}">${svg}</div>`;
-const tblBuild=()=>{const z=MZ[myMz]||MZ[0];$('tbl').innerHTML=`<div class="absolute inset-x-1 inset-y-1 rounded-[26px]" style="background:radial-gradient(ellipse at 50% 42%,${z[2]},${z[3]} 62%,${z[4]});box-shadow:inset 0 0 0 5px ${z[5]},inset 0 0 0 8px #f6eedc99,inset 0 0 90px #000a,0 10px 30px #000a"></div>
+const tblBuild=()=>{const z=MZ[myMz]||MZ[0];$('tbl').innerHTML=`<div class="absolute inset-x-2 inset-y-2 rounded-[28px]" style="background:radial-gradient(ellipse at 50% 42%,${z[2]},${z[3]} 62%,${z[4]});box-shadow:inset 0 0 0 5px ${z[5]},inset 0 0 0 8px #f6eedc99,inset 0 0 90px #000a,0 10px 30px #000a"></div>
 <div class="absolute left-1/2 top-1/2 f text-center rounded-full flex flex-col items-center justify-center" style="width:min(44vw,250px);height:min(44vw,250px);transform:translate(-50%,-50%);border:4px solid #f6eedc44;color:#f6eedc44;line-height:1.1"><span style="font-size:11px;letter-spacing:.3em">★ GELADA ★</span><span style="font-size:min(11vw,52px)">TRUCO</span><span style="font-size:10px;letter-spacing:.3em">DESDE SEMPRE</span></div>`
 +DC('left:3%;top:3%;width:clamp(26px,7vw,40px);transform:rotate(14deg)',BOT)
 +DC('right:3%;top:3%;width:clamp(44px,12vw,72px)',ASH)
@@ -520,13 +735,11 @@ $('bTest').onclick=()=>hostGame(false);
 $('bHost').onclick=()=>hostGame(true);
 $('bJoin').onclick=()=>{const c=$('rc').value.trim();if(c.length>=4)joinGame(c);else toast('Digite o código da sala')};
 $('bStart').onclick=()=>send({t:'start'});
-$('bCp').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText($('lk').value);toast('Link copiado!')};
-$('mic').onclick=mic;
 try{const pf=JSON.parse(localStorage.getItem('truco_prof')||'null');if(pf){$('nm').value=pf.name||'';myAv=pf.av|0;myTt=pf.tt>=0?pf.tt|0:-1;myCb=pf.cb|0;myMz=pf.mz|0;mySn=pf.sn|0}if(UL[myAv]>lvOf(xp))myAv=0;if(myTt>=0&&(!TTL[myTt]||TTL[myTt][1]>lvOf(xp)))myTt=-1;const L0=lvOf(xp);if(!CB[myCb]||CB[myCb][1]>L0)myCb=0;if(!MZ[myMz]||MZ[myMz][1]>L0)myMz=0;if(!SN[mySn]||SN[mySn][1]>L0)mySn=0;}catch(e){}
 profUpd();
 try{const ss=JSON.parse(localStorage.getItem('truco_sess')||'null');if(ss&&Date.now()-ss.t<216e5){$('bBack').textContent='↩ Voltar para a sala '+ss.code;$('bBack').classList.remove('hidden');$('bBack').onclick=()=>{rj=1;joinGame(ss.code)}}
  const hs=JSON.parse(localStorage.getItem('truco_host')||'null');if(hs&&Date.now()-hs.t<216e5){$('bRes').textContent='↩ Retomar minha sala '+hs.code;$('bRes').classList.remove('hidden');$('bRes').onclick=()=>hostGame(true,hs)}}catch(e){}
-const q=new URLSearchParams(location.search).get('room');if(q)$('rc').value=q.toUpperCase();
+const q=new URLSearchParams(location.search).get('room');if(q){$('rc').value=q.toUpperCase();toast('Convite detectado para a sala '+q.toUpperCase()+'! Clique em Sentar.')}
 updMic();
 </script>
 </body>
