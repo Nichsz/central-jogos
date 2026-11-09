@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Sala de Jogos</title>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e0f14;--ink:#f3efe6;--mut:#9a98a3;--line:#262833}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 20% -10%,#1e2233,var(--bg) 60%);color:var(--ink);font-family:Inter,sans-serif}
+header{max-width:1000px;margin:0 auto;padding:48px 20px 20px}
+h1{font-family:'Alfa Slab One',serif;font-weight:400;font-size:clamp(38px,8vw,72px);line-height:1;margin:0;letter-spacing:.01em}
+header p{color:var(--mut);margin:12px 0 0;max-width:46ch;line-height:1.5}
+main{max-width:1000px;margin:0 auto;padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px}
+a.g{display:block;color:inherit;text-decoration:none;border-radius:14px;overflow:hidden;background:#15161d;border:1px solid var(--line);transition:transform .25s,box-shadow .25s}
+a.g:hover,a.g:focus-visible{transform:translateY(-8px) rotate(-1deg);box-shadow:0 18px 40px #000a;outline:none}
+a.g.soon{opacity:.55;pointer-events:none}
+.cv{display:block;width:100%;aspect-ratio:3/4}
+.in{padding:14px 16px 16px}
+.in h2{margin:0;font-size:19px;font-family:'Alfa Slab One',serif;font-weight:400}
+.in p{margin:6px 0 10px;color:var(--mut);font-size:13.5px;line-height:1.45}
+.tg{display:flex;flex-wrap:wrap;gap:6px}
+.tg span{font-size:11.5px;padding:3px 9px;border-radius:99px;background:#232634;color:#cfcddb}
+footer{max-width:1000px;margin:0 auto;padding:30px 20px 50px;color:var(--mut);font-size:13px}
+@media(prefers-reduced-motion:reduce){a.g{transition:none}a.g:hover{transform:none}}
+</style>
+</head>
+<body>
+<header>
+ <h1>Sala de Jogos</h1>
+ <p>Jogos para jogar com a galera, direto no navegador. Escolha um, crie a sala e mande o link.</p>
+</header>
+<main id="m"></main>
+<footer>Dica: libere o microfone ao entrar numa sala para conversar por voz durante a partida.</footer>
+<script>
+const covers={
+coup:`<svg class="cv" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="a" cx="50%" cy="35%" r="80%"><stop offset="0" stop-color="#6b1d3a"/><stop offset="1" stop-color="#1a0812"/></radialGradient></defs>
+<rect width="300" height="400" fill="url(#a)"/>
+<rect x="10" y="10" width="280" height="380" rx="10" fill="none" stroke="#d4af37" stroke-width="2" opacity=".6"/>
+<g transform="translate(150 215)">
+ <g transform="rotate(-16) translate(-95 -10)"><rect width="84" height="120" rx="8" fill="#2a1020" stroke="#d4af37" stroke-width="2"/><circle cx="42" cy="60" r="20" fill="none" stroke="#d4af37" stroke-width="3"/><circle cx="42" cy="60" r="8" fill="#d4af37"/></g>
+ <g transform="rotate(16) translate(11 -10)"><rect width="84" height="120" rx="8" fill="#2a1020" stroke="#d4af37" stroke-width="2"/><path d="M42 25v70M30 40h24" stroke="#d4af37" stroke-width="4" stroke-linecap="round"/></g>
+ <g transform="translate(-42 -22)"><rect width="84" height="120" rx="8" fill="#3a1630" stroke="#f5e19c" stroke-width="2.5"/><path d="M14 90l14-28 14 16 14-16 14 28z" fill="#d4af37"/><circle cx="42" cy="38" r="9" fill="#d4af37"/></g>
+</g>
+<path d="M85 118l18-44 30 28 17-38 17 38 30-28 18 44z" fill="#d4af37" stroke="#f5e19c" stroke-width="2"/>
+<rect x="85" y="118" width="130" height="12" fill="#b8932b"/>
+<text x="150" y="350" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="25" fill="#f5e19c">INTRIGAS</text>
+<text x="150" y="374" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="17" fill="#d4af37">DA CORTE</text></svg>`,
+truco:`<svg class="cv" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="b" cx="50%" cy="45%" r="75%"><stop offset="0" stop-color="#e32a30"/><stop offset="1" stop-color="#7a0d11"/></radialGradient></defs>
+<rect width="300" height="400" fill="url(#b)"/>
+<g font-family="Alfa Slab One,serif" font-weight="900">
+ <g transform="translate(150 230) rotate(-20) translate(-45 -70)"><rect width="90" height="130" rx="9" fill="#fffaf0"/><text x="12" y="34" font-size="26" fill="#b91c1c">7</text><text x="45" y="92" font-size="46" fill="#b91c1c" text-anchor="middle">♥</text></g>
+ <g transform="translate(150 230) rotate(20) translate(-45 -70)"><rect width="90" height="130" rx="9" fill="#fffaf0"/><text x="12" y="34" font-size="26" fill="#111">A</text><text x="45" y="92" font-size="46" fill="#111" text-anchor="middle">♠</text></g>
+ <g transform="translate(150 240) translate(-48 -75)"><rect width="96" height="140" rx="9" fill="#fffaf0" stroke="#fbbf24" stroke-width="4"/><text x="12" y="36" font-size="28" fill="#111">4</text><text x="48" y="100" font-size="56" fill="#111" text-anchor="middle">♣</text></g>
+</g>
+<g transform="translate(200 95) rotate(-9)"><path d="M-95 -38l30 8 16-22 22 20 26-24 12 24 34-4-14 26 30 14-34 14 12 24-30-6-16 22-22-18-26 22-12-22-34 6 14-26-30-16z" fill="#fde047" stroke="#7f1d1d" stroke-width="4"/>
+<text y="14" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="40" fill="#b91c1c">TRUCO!</text></g>
+<g transform="translate(36 190) rotate(-12)"><path d="M16 3h8v14c0 6 8 10 8 24v68c0 5-3 8-8 8h-8c-5 0-8-3-8-8V41c0-14 8-18 8-24z" fill="#6a3811" stroke="#2a1505" stroke-width="2"/><rect x="15" y="1" width="10" height="5" rx="1.5" fill="#d4af37"/><rect x="8" y="62" width="24" height="32" fill="#f2e3b3"/></g><text x="150" y="372" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="24" fill="#fde68a">BOTECO · 2×2</text></svg>`,
+conta:`<svg class="cv" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="c" cx="50%" cy="40%" r="80%"><stop offset="0" stop-color="#1d6b5a"/><stop offset="1" stop-color="#08241f"/></radialGradient></defs><rect width="300" height="400" fill="url(#c)"/>
+<g font-family="Alfa Slab One,serif"><g transform="translate(150 230) rotate(-24) translate(-42 -66)"><rect width="84" height="122" rx="9" fill="#fffaf0"/><text x="10" y="32" font-size="28" fill="#111">A</text><text x="42" y="90" font-size="50" fill="#111" text-anchor="middle">♠</text></g>
+<g transform="translate(150 230) rotate(-8) translate(-42 -70)"><rect width="84" height="122" rx="9" fill="#fffaf0"/><text x="10" y="32" font-size="28" fill="#b91c1c">K</text><text x="42" y="90" font-size="50" fill="#b91c1c" text-anchor="middle">♥</text></g>
+<g transform="translate(150 230) rotate(8) translate(-42 -70)"><rect width="84" height="122" rx="9" fill="#fffaf0"/><text x="10" y="32" font-size="28" fill="#b91c1c">Q</text><text x="42" y="90" font-size="50" fill="#b91c1c" text-anchor="middle">♦</text></g>
+<g transform="translate(150 230) rotate(24) translate(-42 -66)"><rect width="84" height="122" rx="9" fill="#fffaf0" stroke="#fbbf24" stroke-width="4"/><text x="10" y="32" font-size="28" fill="#111">J</text><text x="42" y="90" font-size="50" fill="#111" text-anchor="middle">♣</text></g></g>
+<rect x="30" y="52" width="104" height="44" rx="8" fill="#1d4ed8" stroke="#fff" stroke-width="3"/><text x="82" y="84" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="26" fill="#fff">120</text>
+<text x="150" y="82" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="30" fill="#fde68a">×</text>
+<rect x="166" y="52" width="104" height="44" rx="8" fill="#7f1d1d" stroke="#fff" stroke-width="3"/><text x="218" y="84" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="26" fill="#fff">8</text>
+<text x="150" y="356" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="26" fill="#f6eedc">FECHOU</text><text x="150" y="384" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="26" fill="#fde68a">A CONTA</text></svg>`,
+soon:t=>`<svg class="cv" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="400" fill="#1a1c26"/><rect x="14" y="14" width="272" height="372" rx="10" fill="none" stroke="#3a3d52" stroke-width="2" stroke-dasharray="8 8"/><text x="150" y="235" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="140" fill="#2b2e40">?</text><text x="150" y="350" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="20" fill="#6b6e86">${t}</text></svg>`};
+const games=[
+{t:'Intrigas da Corte',d:'Blefe e influência. Engane, desafie e sobreviva na corte.',href:'games/intrigas-da-corte/',c:covers.coup,tg:['2 a 6 jogadores','Online','Bots','Voz e vídeo']},
+{t:'Truco',d:'Duplas, manilha pela vira, sinais secretos e modo caos.',href:'games/truco/',c:covers.truco,tg:['2x2','Online','Bots','Voz','Modo caos']},
+{t:'Jogo da Vida BR',d:'Empregos, estudos e boletos. Quem chega melhor aos 40?',c:covers.soon('EM BREVE'),soon:1,tg:['Em breve']},
+{t:'Fechou a Conta',d:'Monte mãos de pôquer, junte amuletos e pague as contas do boteco.',href:'games/fechou-a-conta/',c:covers.conta,tg:['Solo','Roguelike','Semente']}];
+document.getElementById('m').innerHTML=games.map(g=>`<a class="g ${g.soon?'soon':''}" ${g.href?`href="${g.href}"`:''}>${g.c}<div class="in"><h2>${g.t}</h2><p>${g.d}</p><div class="tg">${g.tg.map(x=>`<span>${x}</span>`).join('')}</div></div></a>`).join('');
+</script>
+</body>
+</html>
