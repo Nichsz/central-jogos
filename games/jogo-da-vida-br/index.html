@@ -4,39 +4,162 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="robots" content="noindex,nofollow">
-<title>Jogo da Vida BR</title>
+<title>JOGO DA VIDA BR: Rumo aos 40</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
+*{box-sizing:border-box;user-select:none;-webkit-user-select:none}
 html,body{height:100%}
-body{margin:0;background:radial-gradient(ellipse at 50% 0%,#134e4a,#091e1c 65%,#05100f);color:#f8f1dc;font-family:Inter,sans-serif;user-select:none;overflow-x:hidden}
-.f{font-family:'Alfa Slab One',serif;font-weight:400}
-.lousa{background:#112926;border:4px solid #d4af37;border-radius:16px;box-shadow:inset 0 0 30px #0009,0 8px 20px #0009}
-.card-loc{background:linear-gradient(160deg,#183834,#0d211f);border:2px solid #2dd4bf44;border-radius:14px;padding:10px;transition:transform .15s,border-color .15s;cursor:pointer}
-.card-loc:hover{transform:translateY(-3px);border-color:#fbbf24}
-.bt{padding:9px 14px;border-radius:11px;font-weight:700;transition:opacity .15s}.bt:disabled{opacity:.38;cursor:not-allowed}
-.bar{height:8px;background:#091917;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;transition:width .35s}
-.tst{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#000e;border:1px solid #fbbf24;padding:7px 14px;border-radius:10px;font-size:13px;z-index:90;max-width:92vw;text-align:center}
+body{margin:0;background:radial-gradient(circle at 50% 25%,rgba(15,118,110,.42) 0%,rgba(6,28,26,.96) 70%,#030d0c 100%);color:#f8f1dc;font-family:Inter,sans-serif;overflow-x:hidden}
+.f{font-family:'Alfa Slab One',serif;font-weight:400;letter-spacing:.03em}
+.gold-border{border:1px solid rgba(212,175,55,.42);box-shadow:0 8px 30px -4px rgba(0,0,0,.7),inset 0 1px 0 0 rgba(245,225,156,.18)}
+.gold-border-strong{border:2px solid #d4af37;box-shadow:0 0 25px rgba(212,175,55,.35),inset 0 0 12px rgba(212,175,55,.15)}
+.lousa{background:#0c2421;border:2px solid rgba(212,175,55,.45);border-radius:20px;box-shadow:inset 0 0 30px #0009,0 8px 20px #0009}
+.card-loc{background:linear-gradient(160deg,#133531,#091b19);border:1.5px solid rgba(94,234,212,.28);border-radius:16px;padding:12px;transition:transform .18s,border-color .18s,box-shadow .18s;cursor:pointer}
+.card-loc:hover{transform:translateY(-4px);border-color:#fbbf24;box-shadow:0 12px 24px #000a}
+.bt{padding:10px 15px;border-radius:12px;font-weight:700;transition:all .15s}.bt:disabled{opacity:.38;cursor:not-allowed}
+.bar{height:8px;background:#051210;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;transition:width .35s}
+.tst{position:fixed;top:64px;left:50%;transform:translateX(-50%);background:#071715f5;border:2px solid #fbbf24;padding:8px 16px;border-radius:12px;font-size:13px;font-weight:600;z-index:90;max-width:92vw;text-align:center;box-shadow:0 10px 25px #000c}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:rgba(6,20,18,.6)}
+::-webkit-scrollbar-thumb{background:rgba(212,175,55,.35);border-radius:9999px}
 button{cursor:pointer}
 </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between">
+
 <div id="tc"></div>
-<div id="app" class="max-w-3xl mx-auto p-3 pb-10 min-h-full"></div>
+
+<!-- CABEÇALHO FIXO PADRÃO INTRIGAS DA CORTE -->
+<header class="w-full bg-[#071715]/95 backdrop-blur-md border-b border-amber-500/25 px-3 sm:px-6 py-2.5 flex items-center justify-between z-40 sticky top-0">
+ <div class="flex items-center gap-2.5 sm:gap-3">
+  <a href="../../" title="Voltar para a Sala de Jogos" class="px-2.5 py-2 rounded-xl bg-[#0f2926] hover:bg-[#163a36] border border-amber-500/30 text-amber-200 transition flex items-center gap-1.5 text-xs sm:text-sm font-semibold">
+   <i class="fa-solid fa-arrow-left text-amber-400"></i><span class="hidden sm:inline">Central</span>
+  </a>
+  <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-teal-400 via-emerald-600 to-teal-900 flex items-center justify-center shadow-lg border border-amber-300/50">
+   <i class="fa-solid fa-graduation-cap text-slate-950 text-lg"></i>
+  </div>
+  <div>
+   <div class="flex items-center gap-2">
+    <h1 class="f text-sm sm:text-lg tracking-wider bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-200 bg-clip-text text-transparent">JOGO DA VIDA BR</h1>
+    <span class="hidden md:inline-block text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-teal-500/15 text-teal-300 border border-teal-500/30">Rumo aos 40 Anos</span>
+   </div>
+   <p class="text-[11px] text-amber-200/60 hidden sm:block">Empregos, Estudos, AirFryer & Boletos • Solo ou Online P2P</p>
+  </div>
+ </div>
+
+ <div id="roomHeaderBadge" class="hidden items-center gap-1.5 sm:gap-2 bg-[#0f2926] border border-amber-500/40 rounded-xl px-2.5 py-1.5">
+  <span class="text-xs text-amber-200/70 hidden sm:inline">Sala:</span>
+  <span id="roomCodeDisplay" class="font-mono font-bold text-sm sm:text-base text-amber-300 tracking-widest">-----</span>
+  <button onclick="copyCode()" title="Copiar Código" class="text-xs bg-amber-500/20 hover:bg-amber-500/35 text-amber-200 px-2 py-1 rounded-lg transition flex items-center gap-1">
+   <i class="fa-regular fa-copy"></i><span class="hidden md:inline">Código</span>
+  </button>
+  <button onclick="copyLink()" title="Copiar Link Direto" class="text-xs bg-emerald-500/20 hover:bg-emerald-500/35 border border-emerald-400/40 text-emerald-200 px-2 py-1 rounded-lg transition flex items-center gap-1 font-semibold">
+   <i class="fa-solid fa-link"></i><span class="hidden md:inline">Link Convite</span>
+  </button>
+ </div>
+
+ <div class="flex items-center gap-1.5 sm:gap-2">
+  <button onclick="toggleSfx()" title="Efeitos Sonoros" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-[#0f2926] hover:bg-[#163a36] border border-amber-500/30 text-amber-200 transition text-xs sm:text-sm">
+   <i id="sfxIcon" class="fa-solid fa-volume-high"></i>
+  </button>
+  <button onclick="$('inviteModal').classList.remove('hidden')" class="px-2.5 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-200 transition flex items-center gap-1.5 text-xs sm:text-sm font-medium">
+   <i class="fa-solid fa-user-group text-emerald-400"></i><span class="hidden sm:inline">Convite</span>
+  </button>
+  <button onclick="$('rulesModal').classList.remove('hidden')" class="px-2.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/30 border border-amber-400/40 text-amber-200 transition flex items-center gap-1.5 text-xs sm:text-sm font-medium">
+   <i class="fa-solid fa-scroll text-amber-400"></i><span class="hidden sm:inline">Guia & Regras</span>
+  </button>
+  <button id="btnExitGame" onclick="if(confirm('Sair da partida e voltar ao Lobby?')){leaveRoom()}" class="hidden p-2 sm:px-3 sm:py-2 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-500/40 text-rose-200 transition text-xs sm:text-sm items-center gap-1.5">
+   <i class="fa-solid fa-right-from-bracket"></i><span class="hidden md:inline">Sair</span>
+  </button>
+ </div>
+</header>
+
+<div id="app" class="flex-1 flex flex-col justify-center p-3 sm:p-6"></div>
+
+<!-- MODAL: REGRAS E LOCAIS DA CIDADE -->
+<div id="rulesModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onclick="this.classList.add('hidden')">
+ <div class="w-full max-w-3xl max-h-[86vh] bg-[#0a1f1d] gold-border-strong rounded-3xl p-5 sm:p-7 flex flex-col overflow-hidden shadow-2xl" onclick="event.stopPropagation()">
+  <div class="flex items-center justify-between pb-3 border-b border-amber-500/30">
+   <h3 class="f text-lg sm:text-2xl text-amber-200 flex items-center gap-2"><i class="fa-solid fa-scroll text-amber-400"></i><span>Manual da Vida Adulta — Como Vencer aos 40</span></h3>
+   <button onclick="$('rulesModal').classList.add('hidden')" class="w-8 h-8 rounded-xl bg-black/50 text-amber-200"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="flex-1 overflow-y-auto py-4 space-y-4 text-xs sm:text-sm text-amber-100/85 pr-1">
+   <div class="p-3.5 rounded-2xl bg-black/40 border border-amber-500/25">
+    <h4 class="f text-amber-300 mb-1">🎂 Os 12 Turnos (Dos 18 aos 40 Anos)</h4>
+    <p>A partida dura <b>12 turnos</b> (cada turno avança 2 anos). Você começa toda semana com <b>60 Horas Livres</b> (ou até 86h com Moto, Carro e AirFryer) para gastar nos 8 pontos da cidade. Vence quem tiver a maior <b>Média Geral</b> entre os 4 pilares:</p>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2 text-center text-xs">
+     <div class="p-2 rounded-xl bg-emerald-950/60 border border-emerald-400/30">💰 <b>Patrimônio</b><br><span class="text-[11px] opacity-80">Saldo + Selic + Bens</span></div>
+     <div class="p-2 rounded-xl bg-sky-950/60 border border-sky-400/30">🎓 <b>Carreira</b><br><span class="text-[11px] opacity-80">Diplomas + Cargo</span></div>
+     <div class="p-2 rounded-xl bg-rose-950/60 border border-rose-400/30">❤️ <b>Saúde</b><br><span class="text-[11px] opacity-80">Comida + Academia</span></div>
+     <div class="p-2 rounded-xl bg-amber-950/60 border border-amber-400/30">😎 <b>Lazer</b><br><span class="text-[11px] opacity-80">Casa + Praia + Bar</span></div>
+    </div>
+   </div>
+   <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div class="p-3.5 rounded-2xl bg-black/40 border border-amber-500/25">
+     <h4 class="f text-amber-300 mb-1">⚠️ Comida, Boletos e SPC</h4>
+     <ul class="space-y-1.5 text-xs">
+      <li><b>Alimentação Obrigatória:</b> Coma pelo menos 1 vez por turno no Mercadinho. Virar o ano sem comer te leva para a <b>UPA (-15h no próximo turno)</b>!</li>
+      <li><b>Aluguel e SPC:</b> Todo fim de turno desconta o aluguel da sua moradia. Se faltar saldo, entra no <b>SPC / Cheque Especial</b> (cobra 25% de juros por turno e derruba sua felicidade).</li>
+     </ul>
+    </div>
+    <div class="p-3.5 rounded-2xl bg-black/40 border border-amber-500/25">
+     <h4 class="f text-amber-300 mb-1">🚑 Burnout & Sabotagens (Perrengues)</h4>
+     <ul class="space-y-1.5 text-xs">
+      <li><b>Estresse (0 a 100%):</b> Trabalhar e estudar aumenta o estresse. Se bater 100%, você sofre <b>Burnout</b> e perde 15h na semana seguinte.</li>
+      <li><b>Perrengues no Boteco:</b> No Boteco você pode mandar <i>Vizinho com Som Alto às 3h</i>, <i>Parente Pedindo Dinheiro</i> ou <i>Obra na Rua</i> para atrasar a vida de um concorrente!</li>
+     </ul>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+
+<!-- MODAL: CONVITE -->
+<div id="inviteModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onclick="this.classList.add('hidden')">
+ <div class="w-full max-w-lg bg-[#0a1f1d] gold-border-strong rounded-3xl p-6 shadow-2xl" onclick="event.stopPropagation()">
+  <div class="flex items-center justify-between pb-3 border-b border-amber-500/30 mb-4">
+   <h3 class="f text-lg sm:text-xl text-amber-200 flex items-center gap-2"><i class="fa-solid fa-user-group text-emerald-400"></i><span>Como Jogar com Seus Amigos</span></h3>
+   <button onclick="$('inviteModal').classList.add('hidden')" class="w-8 h-8 rounded-xl bg-black/50 text-amber-200"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="space-y-3 text-xs sm:text-sm text-amber-100/85">
+   <div class="p-3 rounded-2xl bg-black/40 border border-amber-500/25 flex gap-3">
+    <span class="w-6 h-6 rounded-full bg-amber-500 text-black font-black text-xs flex items-center justify-center shrink-0">1</span>
+    <div><b class="text-amber-300 block">Escolha sua Origem e Crie a Sala</b>Selecione seu avatar e sua origem aos 18 anos e clique em <b>Criar Sala Online</b>.</div>
+   </div>
+   <div class="p-3 rounded-2xl bg-black/40 border border-amber-500/25 flex gap-3">
+    <span class="w-6 h-6 rounded-full bg-amber-500 text-black font-black text-xs flex items-center justify-center shrink-0">2</span>
+    <div><b class="text-amber-300 block">Copie o Link de Convite</b>Clique em <b>Link Convite</b> no topo e mande no WhatsApp ou Discord. O código da sala já abre preenchido para seus amigos!</div>
+   </div>
+   <div class="p-3 rounded-2xl bg-black/40 border border-amber-500/25 flex gap-3">
+    <span class="w-6 h-6 rounded-full bg-amber-500 text-black font-black text-xs flex items-center justify-center shrink-0">3</span>
+    <div><b class="text-amber-300 block">Turnos Simultâneos Rápidos</b>Todos planejam sua semana ao mesmo tempo! Quando todos clicam em "Fechar Ano", os boletos vencem e o próximo ano começa.</div>
+   </div>
+  </div>
+  <button onclick="$('inviteModal').classList.add('hidden')" class="mt-5 w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 text-black font-bold text-sm">Entendi, Bora Vencer na Vida!</button>
+ </div>
+</div>
 
 <script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
-let ac;function bp(f=440,d=.1,ty='sine'){try{ac=ac||new AudioContext();const o=ac.createOscillator(),v=ac.createGain();o.type=ty;o.frequency.value=f;v.gain.value=.07;o.connect(v);v.connect(ac.destination);o.start();v.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}}
+let ac,sfxOn=true;
+function bp(f=440,d=.1,ty='sine'){if(!sfxOn)return;try{ac=ac||new AudioContext();const o=ac.createOscillator(),v=ac.createGain();o.type=ty;o.frequency.value=f;v.gain.value=.07;o.connect(v);v.connect(ac.destination);o.start();v.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}}
+function toggleSfx(){sfxOn=!sfxOn;$('sfxIcon').className=sfxOn?'fa-solid fa-volume-high':'fa-solid fa-volume-xmark text-rose-400';toast(sfxOn?'Efeitos sonoros ativados':'Áudio silenciado')}
 function toast(t){const d=document.createElement('div');d.className='tst';d.textContent=t;$('tc').appendChild(d);setTimeout(()=>d.remove(),2800)}
+function copyCode(){if(!roomCode)return;navigator.clipboard&&navigator.clipboard.writeText(roomCode);toast('Código '+roomCode+' copiado!')}
+function copyLink(){const u=location.href.split('?')[0]+(roomCode?'?room='+roomCode:'');navigator.clipboard&&navigator.clipboard.writeText(u);toast('Link de convite copiado!')}
 
-/* ============ DADOS DO JOGO DA VIDA BR ============ */
+/* ============ AVATARES, ORIGENS E DADOS DO JOGO ============ */
+const AVS=['😎','🤓','🤠','👩‍💻','🧑‍🔧','👩‍🎓','🧔','👵'];
+
 const ORIGINS=[
 {id:'padrao',i:'🎒',n:'Recém-Formado',d:'Equilibrado: começa com R$ 350 na mão e 60h por semana.',req:'Inicial',ok:()=>true},
-{id:'bolsista',i:'🎓',n:'Bolsista Dedicado',d:'Já começa com o Curso de Informática/Inglês concluído.',req:'Chegar aos 40 anos 1 vez',ok:m=>m.plays>=1},
+{id:'bolsista',i:'🎓',n:'Bolsista Dedicado',d:'Já começa com o Curso de Informática & Inglês concluído.',req:'Chegar aos 40 anos 1 vez',ok:m=>m.plays>=1},
 {id:'correria',i:'⚡',n:'Rei da Correria',d:'Tem +6h extras toda semana (66h) e ganha +R$ 2/h em bicos.',req:'Conquistar 2 Troféus',ok:m=>m.tr.length>=2},
-{id:'herdeiro',i:'👵',n:'Xodó da Vó',d:'Começa com R$ 800 na Poupança e uma AirFryer em casa.',req:'Conquistar 4 Troféus',ok:m=>m.tr.length>=4},
+{id:'herdeiro',i:'👵',n:'Xodó da Vó',d:'Começa com R$ 800 na Poupança e uma AirFryer Inox em casa.',req:'Conquistar 4 Troféus',ok:m=>m.tr.length>=4},
 {id:'faria',i:'📈',n:'Faria Limer Mirim',d:'Poupança rende 16% por turno (em vez de 12%) e já tem Roupa Social.',req:'Vencer 1 partida',ok:m=>m.wins>=1}
 ];
 
@@ -77,8 +200,8 @@ const ITEMS=[
 const EVENTS=[
 {n:'🦁 Restituição do Imposto de Renda!',d:'Caiu um Pix inesperado da Receita: +R$ 220 na conta.',fn:p=>{p.cash+=220}},
 {n:'🚌 Chuva Torrencial e Ônibus Lotado',d:'Quem não tem Moto ou Carro perdeu 8h preso no trânsito.',fn:p=>{if(!p.it.includes('moto')&&!p.it.includes('car'))p.h=Math.max(20,p.h-8)}},
-{n:'🎉 Décimo Terceiro Adiantado!',d:'A firma pagou um bônus de R$ '+(160)+'.',fn:p=>{const b=JOBS[p.job].w*8;p.cash+=b}},
-{n:'🦷 Dor de Dente Surpresa',d:'Gasto de emergência no dentista (-R$ 130) ou dor de cabeça.',fn:p=>{if(p.cash>=130)p.cash-=130;else p.hlth=Math.max(10,p.hlth-12)}},
+{n:'🎉 Décimo Terceiro Adiantado!',d:'A firma pagou um bônus extra equivalente a 8h de trabalho!',fn:p=>{p.cash+=JOBS[p.job].w*8}},
+{n:'🦷 Dor de Dente Surpresa',d:'Gasto de emergência no dentista (-R$ 130) ou perda de saúde.',fn:p=>{if(p.cash>=130)p.cash-=130;else p.hlth=Math.max(10,p.hlth-12)}},
 {n:'☀️ Feriadão Prolongado!',d:'Semana mais leve: todo mundo ganhou +6h e -10 Estresse.',fn:p=>{p.h+=6;p.str=Math.max(0,p.str-10)}},
 {n:'📈 Inflação no Mercado',d:'O custo de vida apertou: +8 Estresse nesta fase.',fn:p=>{p.str=Math.min(100,p.str+8)}},
 {n:'💵 Nota de R$ 100 no Bolso da Calça!',d:'Achou dinheiro esquecido lavando roupa: +R$ 100 e +5 Feliz.',fn:p=>{p.cash+=100;p.hap=Math.min(100,p.hap+5)}}
@@ -97,21 +220,25 @@ const TROPHIES=[
 {id:'clean',i:'✨',n:'Nome Limpo',d:'Termine a partida sem nenhuma dívida no SPC'}
 ];
 
-let M={plays:0,wins:0,best:0,tr:[],orig:'padrao'};
+let M={plays:0,wins:0,best:0,tr:[],orig:'padrao',av:0};
 try{const sv=JSON.parse(localStorage.getItem('vida_br_meta')||'null');if(sv)M={...M,...sv}}catch(e){}
 function saveM(){try{localStorage.setItem('vida_br_meta',JSON.stringify(M))}catch(e){}}
 function unlockTr(id){if(!M.tr.includes(id)){const t=TROPHIES.find(x=>x.id==id);if(t){M.tr.push(id);toast(`🏆 Troféu Desbloqueado: ${t.n}!`);bp(880,.25,'triangle');saveM()}}}
 
 /* ============ ESTADO E MULTIPLAYER PEERJS ============ */
-const BOT_NMS=['Enzo (Faria Limer)','Valentina (Concurseira)','Cleitinho (Rei do Bico)'];
+const BOT_NMS=[
+ {n:'Enzo (Faria Limer)',av:0,o:'faria'},
+ {n:'Valentina (Bolsista)',av:5,o:'bolsista'},
+ {n:'Cleitinho (Correria)',av:4,o:'correria'}
+];
 let myUid='u'+Math.random().toString(36).slice(2,8),myName='Brasileiro',tab='play',locModal=null;
 let G=null,peer=null,conns={},hconn=null,isHost=true,offline=true,roomCode='';
 try{myName=localStorage.getItem('vida_br_nm')||'Brasileiro'}catch(e){}
 function getNm(){const el=$('nm');if(el&&el.value.trim())myName=el.value.trim().slice(0,14);try{localStorage.setItem('vida_br_nm',myName)}catch(e){}return myName}
 
-function mkPlayer(uid,name,orig='padrao',bot=0){
+function mkPlayer(uid,name,orig='padrao',av=0,bot=0){
  return{
-  uid,name,orig,bot,
+  uid,name,orig,av,bot,
   cash:350,bank:orig=='herdeiro'?800:0,debt:0,
   job:0,xp:0,edu:orig=='bolsista'?1:0,eduP:0,
   hlth:85,hap:75,str:15,
@@ -145,11 +272,11 @@ function scores(p){
 }
 
 function startSolo(nBots=2){
- getNm();offline=true;isHost=true;
- const pls=[mkPlayer(myUid,myName,M.orig,0)];
+ getNm();offline=true;isHost=true;roomCode='SOLO';
+ const pls=[mkPlayer(myUid,myName,M.orig,M.av,0)];
  for(let i=0;i<nBots;i++){
-  const origs=['padrao','bolsista','correria'];
-  pls.push(mkPlayer('bot'+i,BOT_NMS[i],origs[i%3],1));
+  const b=BOT_NMS[i];
+  pls.push(mkPlayer('bot'+i,b.n,b.o,b.av,1));
  }
  G={turn:1,maxT:12,age:18,ph:'play',ev:null,pls,log:['🎉 A vida adulta começou aos 18 anos! Gerencie suas horas, pague os boletos e chegue bem aos 40!']};
  prepTurn(true);
@@ -160,7 +287,7 @@ const PC=()=>({config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'
 function hostOnline(){
  getNm();offline=false;isHost=true;
  roomCode=Array.from({length:5},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join('');
- G={turn:1,maxT:12,age:18,ph:'lobby',ev:null,pls:[mkPlayer(myUid,myName,M.orig,0)],log:[]};
+ G={turn:1,maxT:12,age:18,ph:'lobby',ev:null,pls:[mkPlayer(myUid,myName,M.orig,M.av,0)],log:[]};
  if(peer)try{peer.destroy()}catch(e){}
  peer=new Peer('vidabr-'+roomCode,PC());
  peer.on('open',()=>render());
@@ -169,7 +296,7 @@ function hostOnline(){
   c.on('data',d=>{
    if(!G)return;
    if(d.t=='join'&&G.ph=='lobby'&&G.pls.length<4){
-    if(!G.pls.some(x=>x.uid==d.uid))G.pls.push(mkPlayer(d.uid,String(d.name||'Amigo').slice(0,14),d.orig||'padrao',0));
+    if(!G.pls.some(x=>x.uid==d.uid))G.pls.push(mkPlayer(d.uid,String(d.name||'Amigo').slice(0,14),d.orig||'padrao',d.av|0,0));
     c.uid=d.uid;conns[d.uid]=c;bcast();
    }else if(d.t=='syncP'){
     const idx=G.pls.findIndex(x=>x.uid==d.p.uid);
@@ -187,10 +314,15 @@ function joinOnline(c0){
  peer=new Peer('vidabr-'+c+'-'+myUid,PC());
  peer.on('open',()=>{
   hconn=peer.connect('vidabr-'+c,{reliable:true});
-  hconn.on('open',()=>hconn.send({t:'join',uid:myUid,name:myName,orig:M.orig}));
+  hconn.on('open',()=>hconn.send({t:'join',uid:myUid,name:myName,orig:M.orig,av:M.av}));
   hconn.on('data',d=>{if(d.t=='st'){G=d.G;render()}});
  });
  peer.on('error',()=>toast('Sala não encontrada'));
+}
+
+function leaveRoom(){
+ if(peer)try{peer.destroy()}catch(e){}
+ peer=null;conns={};hconn=null;G=null;roomCode='';locModal=null;render();
 }
 
 function bcast(){
@@ -227,7 +359,7 @@ function prepTurn(first=false){
  if(ev)G.log.unshift(`📰 Aos ${G.age} anos: ${ev.n} — ${ev.d}`);
 }
 
-/* ============ AÇÕES DO JOGADOR NOS 8 LOCAIS ============ */
+/* ============ AÇÕES NOS 8 LOCAIS ============ */
 const meP=()=>G&&G.pls.find(x=>x.uid==myUid);
 function useH(p,h){if(p.h<h){toast('⏰ Horas insuficientes nesta semana!');return false}p.h-=h;return true}
 
@@ -460,77 +592,146 @@ function chkAllDone(){
  }
 }
 
-/* ============ INTERFACE ============ */
+/* ============ LOBBY 12 COLUNAS (PADRÃO INTRIGAS DA CORTE) ============ */
 function rMenu(){
  if(G&&G.ph=='lobby'){
-  return`<div class="space-y-4 pt-6">
-   <div class="flex justify-between items-center text-sm"><button onclick="G=null;render()" class="opacity-70">← Voltar</button><span class="text-amber-300 font-bold">Sala Online PeerJS</span></div>
-   <div class="lousa p-5 space-y-3 text-center">
-    <div class="text-xs opacity-70">Código da Sala</div>
-    <div class="f text-4xl text-amber-300 tracking-[.25em]">${roomCode}</div>
-    <div class="space-y-1.5 text-left pt-2">
-     <div class="text-xs opacity-70">Jogadores na cidade (${G.pls.length}/4):</div>
-     ${G.pls.map(p=>`<div class="px-3 py-2 rounded-lg bg-black/40 flex justify-between text-sm"><b>${esc(p.name)}</b><span class="text-xs text-emerald-300">${ORIGINS.find(o=>o.id==p.orig)?.n||''}</span></div>`).join('')}
-    </div>
-    ${isHost?`<button onclick="G.ph='play';prepTurn(true);bcast()" class="bt w-full bg-amber-500 text-black text-base">Começar Corrida aos 40! →</button>`:`<div class="text-xs opacity-75 animate-pulse">Aguardando o anfitrião iniciar a partida…</div>`}
+  return`<div class="max-w-lg mx-auto w-full bg-[#0a1f1d]/95 gold-border-strong rounded-3xl p-6 space-y-4 text-center my-auto">
+   <div class="flex justify-between items-center text-xs"><button onclick="leaveRoom()" class="px-3 py-1.5 rounded-lg bg-black/40">← Voltar ao Lobby</button><span class="text-emerald-300 font-bold">Sala P2P Ativa</span></div>
+   <div><div class="text-xs opacity-70">Código da Sala</div><div class="f text-4xl text-amber-300 tracking-[.25em]">${roomCode}</div></div>
+   <div class="flex gap-2 justify-center">
+    <button onclick="copyLink()" class="px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-400/50 text-emerald-200 text-xs font-bold"><i class="fa-solid fa-link mr-1"></i>Copiar Link Convite</button>
+    <button onclick="copyCode()" class="px-4 py-2 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-200 text-xs font-bold"><i class="fa-regular fa-copy mr-1"></i>Copiar Código</button>
    </div>
+   <div class="space-y-1.5 text-left pt-2">
+    <div class="text-xs opacity-70">Jogadores na cidade (${G.pls.length}/4):</div>
+    ${G.pls.map(p=>`<div class="px-3.5 py-2 rounded-xl bg-black/40 flex justify-between items-center text-sm"><span>${AVS[p.av|0]||'😎'} <b>${esc(p.name)}</b></span><span class="text-xs text-emerald-300">${ORIGINS.find(o=>o.id==p.orig)?.n||''}</span></div>`).join('')}
+   </div>
+   ${isHost?`<button onclick="G.ph='play';prepTurn(true);bcast()" class="bt w-full py-3.5 bg-gradient-to-r from-amber-500 to-yellow-600 text-black text-base shadow-lg">Começar Corrida aos 40! →</button>`:`<div class="text-xs opacity-75 animate-pulse">Aguardando o anfitrião iniciar a partida…</div>`}
   </div>`;
  }
 
- const tabs=[['play','🏙️ Jogar'],['origins','🎒 Origens'],['trophies','🏆 Troféus ('+M.tr.length+'/10)']];
- let body='';
+ const tabs=[['play','🏙️ Jogar'],['origins','🎒 Origens (5)'],['trophies','🏆 Troféus ('+M.tr.length+'/10)'],['career','🏢 Guia da Cidade']];
+ let leftContent='';
+
  if(tab=='play'){
   const curO=ORIGINS.find(o=>o.id==M.orig)||ORIGINS[0];
-  body=`
-  <section class="lousa p-4 space-y-3">
-   <div class="flex justify-between items-center"><span class="f text-sm text-amber-300">SUA ORIGEM AOS 18 ANOS</span><button onclick="tab='origins';render()" class="text-xs underline text-amber-200">Trocar Origem →</button></div>
-   <div class="p-3 rounded-xl bg-black/40 border border-amber-500/30 flex items-center gap-3">
-    <div class="text-3xl">${curO.i}</div>
-    <div><div class="font-bold text-sm text-amber-300">${curO.n}</div><div class="text-xs opacity-80">${curO.d}</div></div>
-   </div>
-   <input id="nm" value="${esc(myName)}" maxlength="14" placeholder="Seu nome" class="w-full px-3 py-2 rounded-xl bg-black/50 border border-amber-500/30 outline-none text-sm">
-   <div class="grid grid-cols-3 gap-2 pt-1">
-    <button onclick="startSolo(1)" class="bt bg-emerald-700 text-xs sm:text-sm">Solo (x1 Bot)</button>
-    <button onclick="startSolo(2)" class="bt bg-amber-500 text-black text-xs sm:text-sm">Solo (x2 Bots)</button>
-    <button onclick="startSolo(3)" class="bt bg-teal-700 text-xs sm:text-sm">Solo (x3 Bots)</button>
-   </div>
-  </section>
-  <section class="lousa p-4 space-y-2.5">
-   <div class="f text-sm text-amber-300">JOGAR COM OS AMIGOS (ONLINE P2P)</div>
-   <div class="flex gap-2">
-    <button onclick="hostOnline()" class="bt bg-sky-700 text-sm flex-1">Criar Sala Online</button>
-    <input id="rc" maxlength="5" placeholder="CÓDIGO" class="w-28 px-3 py-2 rounded-xl bg-black/50 border border-amber-500/30 uppercase outline-none tracking-widest text-sm text-center">
-    <button onclick="joinOnline($('rc').value)" class="bt bg-emerald-700 text-sm">Entrar</button>
-   </div>
-  </section>`;
+  leftContent=`
+   <div class="space-y-4">
+    <div class="p-3.5 rounded-2xl bg-black/40 border border-amber-500/30 space-y-2.5">
+     <div class="flex justify-between items-center">
+      <span class="text-xs font-bold uppercase tracking-wider text-amber-300">Seu Perfil & Origem aos 18 Anos</span>
+      <button onclick="tab='origins';render()" class="text-xs text-amber-300 underline">Trocar Origem →</button>
+     </div>
+     <div class="flex gap-2.5 items-center">
+      <div class="text-3xl bg-black/50 w-12 h-12 rounded-2xl flex items-center justify-center border border-amber-400/40">${AVS[M.av|0]}</div>
+      <input id="nm" value="${esc(myName)}" maxlength="14" placeholder="Seu nome na corrida" class="flex-1 px-3.5 py-2.5 rounded-xl bg-black/60 border border-amber-500/40 text-sm outline-none focus:border-amber-400">
+     </div>
+     <div class="grid grid-cols-8 gap-1.5 pt-1">
+      ${AVS.map((ic,idx)=>`<button onclick="M.av=${idx};saveM();render()" class="py-1.5 rounded-xl text-lg border ${M.av==idx?'bg-amber-500/25 border-amber-400':'bg-black/40 border-white/10 opacity-70'}">${ic}</button>`).join('')}
+     </div>
+     <div class="p-2.5 rounded-xl bg-black/45 border border-white/10 flex items-center gap-2.5 text-xs">
+      <span class="text-2xl">${curO.i}</span>
+      <div><b class="text-amber-200">${curO.n}</b><div class="opacity-75 text-[11px]">${curO.d}</div></div>
+     </div>
+    </div>
+
+    <div class="space-y-2 pt-1 border-t border-amber-500/20">
+     <label class="block text-xs font-bold uppercase tracking-wider text-amber-300">Partida Rápida Solo (Contra Bots)</label>
+     <div class="grid grid-cols-3 gap-2">
+      <button onclick="startSolo(1)" class="bt bg-emerald-700 hover:bg-emerald-600 text-xs sm:text-sm"><i class="fa-solid fa-robot mr-1"></i>Solo (1 Bot)</button>
+      <button onclick="startSolo(2)" class="bt bg-gradient-to-r from-amber-500 to-yellow-600 text-black text-xs sm:text-sm"><i class="fa-solid fa-bolt mr-1"></i>Solo (2 Bots)</button>
+      <button onclick="startSolo(3)" class="bt bg-teal-700 hover:bg-teal-600 text-xs sm:text-sm"><i class="fa-solid fa-fire mr-1"></i>Solo (3 Bots)</button>
+     </div>
+    </div>
+
+    <div class="space-y-2 pt-2 border-t border-amber-500/20">
+     <label class="block text-xs font-bold uppercase tracking-wider text-emerald-300">Multiplayer Online P2P (Com Amigos)</label>
+     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <button onclick="hostOnline()" class="py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-black font-bold text-sm flex items-center justify-center gap-2">
+       <i class="fa-solid fa-plus-circle"></i><span>Criar Nova Sala</span>
+      </button>
+      <div class="flex gap-1.5">
+       <input id="rc" maxlength="5" placeholder="CÓDIGO" class="w-full px-3 py-2.5 rounded-xl bg-black/60 border border-amber-500/40 uppercase outline-none tracking-widest text-xs font-mono text-center">
+       <button onclick="joinOnline($('rc').value)" class="px-4 py-2.5 rounded-xl bg-sky-700 hover:bg-sky-600 font-bold text-sm">Entrar</button>
+      </div>
+     </div>
+    </div>
+   </div>`;
  }else if(tab=='origins'){
-  body=`<section class="lousa p-4 space-y-2.5">
-   <div class="f text-sm text-amber-300">ESCOLHA SUA ORIGEM DE VIDA</div>
-   ${ORIGINS.map(o=>{const ok=o.ok(M),sel=M.orig==o.id;return`<div onclick="${ok?`M.orig='${o.id}';saveM();render()`:''}" class="p-3 rounded-xl border ${sel?'bg-amber-500/20 border-amber-400':'bg-black/40 border-white/10'} ${ok?'cursor-pointer':'opacity-45'} flex items-center justify-between gap-2">
-    <div class="flex items-center gap-3"><span class="text-2xl">${ok?o.i:'🔒'}</span><div><div class="font-bold text-sm ${sel?'text-amber-300':''}">${o.n}</div><div class="text-xs opacity-80">${o.d}</div>${!ok?`<div class="text-[11px] text-amber-300 mt-0.5">Requisito: ${o.req}</div>`:''}</div></div>
-    ${sel?'<span class="text-xs bg-amber-500 text-black font-bold px-2 py-1 rounded">Ativa</span>':''}
-   </div>`}).join('')}
-  </section>`;
+  leftContent=`
+   <div class="space-y-2 max-h-[420px] overflow-y-auto pr-1">
+    ${ORIGINS.map(o=>{const ok=o.ok(M),sel=M.orig==o.id;return`<div onclick="${ok?`M.orig='${o.id}';saveM();render()`:''}" class="p-3 rounded-2xl border ${sel?'bg-amber-500/20 border-amber-400':'bg-black/40 border-white/10'} ${ok?'cursor-pointer':'opacity-45'} flex items-center justify-between gap-2">
+     <div class="flex items-center gap-3"><span class="text-2xl">${ok?o.i:'🔒'}</span><div><div class="font-bold text-sm ${sel?'text-amber-300':''}">${o.n}</div><div class="text-xs opacity-80">${o.d}</div>${!ok?`<div class="text-[11px] text-amber-300 mt-0.5">Requisito: ${o.req}</div>`:''}</div></div>
+     ${sel?'<span class="text-xs bg-amber-500 text-black font-bold px-2.5 py-1 rounded-lg">Ativa</span>':''}
+    </div>`}).join('')}
+   </div>`;
+ }else if(tab=='trophies'){
+  leftContent=`
+   <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[420px] overflow-y-auto pr-1">
+    ${TROPHIES.map(t=>{const ok=M.tr.includes(t.id);return`<div class="p-2.5 rounded-xl border ${ok?'bg-amber-500/15 border-amber-400/50':'bg-black/40 border-white/10 opacity-50'} flex items-center gap-2.5">
+     <div class="text-2xl">${ok?t.i:'🔒'}</div>
+     <div><div class="font-bold text-xs ${ok?'text-amber-300':''}">${t.n}</div><div class="text-[11px] opacity-80">${t.d}</div></div>
+    </div>`}).join('')}
+   </div>`;
  }else{
-  body=`<section class="lousa p-4 space-y-2.5">
-   <div class="f text-sm text-amber-300">MURAL DE CONQUISTAS DA VIDA (${M.tr.length}/${TROPHIES.length})</div>
-   <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${TROPHIES.map(t=>{const ok=M.tr.includes(t.id);return`<div class="p-2.5 rounded-xl border ${ok?'bg-amber-500/15 border-amber-400/50':'bg-black/40 border-white/10 opacity-50'} flex items-center gap-2.5">
-    <div class="text-2xl">${ok?t.i:'🔒'}</div>
-    <div><div class="font-bold text-xs ${ok?'text-amber-300':''}">${t.n}</div><div class="text-[11px] opacity-80">${t.d}</div></div>
-   </div>`}).join('')}</div>
-  </section>`;
+  leftContent=`
+   <div class="space-y-2.5 max-h-[420px] overflow-y-auto pr-1 text-xs">
+    <div class="p-3 rounded-xl bg-black/40 border border-amber-500/25"><b class="text-amber-300 block mb-1">💼 7 Degraus na Firma</b>${JOBS.map(j=>`<div class="flex justify-between py-0.5 border-b border-white/5"><span>${j.n}</span><span class="text-emerald-300 font-bold">R$ ${j.w}/h</span></div>`).join('')}</div>
+    <div class="p-3 rounded-xl bg-black/40 border border-amber-500/25"><b class="text-amber-300 block mb-1">🛍️ Bens & Conforto no Magazine</b>${ITEMS.map(it=>`<div class="flex justify-between py-0.5 border-b border-white/5"><span>${it.i} ${it.n} (R$ ${it.p})</span><span class="opacity-75">${it.d}</span></div>`).join('')}</div>
+   </div>`;
  }
 
- return`<div class="space-y-3 pt-3">
-  <div class="flex justify-between items-center text-sm"><a href="../../" class="opacity-75">← Sala de Jogos</a><span class="text-xs opacity-80">Melhor Nota aos 40: <b>${M.best||0} pts</b> · Vitórias: <b>${M.wins||0}</b></span></div>
-  <div class="text-center">
-   <div class="f text-5xl sm:text-6xl leading-none" style="color:#fde68a;text-shadow:0 4px 0 #b45309,0 8px 0 #000">Jogo da Vida BR</div>
-   <div class="text-xs sm:text-sm mt-1.5 text-emerald-100">Empregos, estudos, AirFryer e boletos. Quem chega melhor aos 40?</div>
+ return`<div class="w-full max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch my-auto">
+  <div class="lg:col-span-7 bg-[#0a1f1d]/90 backdrop-blur-xl rounded-3xl p-5 sm:p-7 gold-border flex flex-col justify-between space-y-4">
+   <div>
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-medium mb-2">
+     <i class="fa-solid fa-calendar-check"></i><span>Melhor Média aos 40: ${M.best||0} pts • Vitórias: ${M.wins||0}</span>
+    </div>
+    <h2 class="f text-2xl sm:text-4xl text-amber-100 leading-tight">Quem Chega Melhor aos 40 Anos?</h2>
+    <p class="text-xs sm:text-sm text-amber-100/70 mt-1">Distribua suas 60 horas semanais entre trabalho, SENAI, faculdade, mercado e lazer sem deixar o aluguel cair no SPC.</p>
+   </div>
+
+   <div class="grid grid-cols-4 gap-1 bg-black/45 p-1 rounded-xl border border-amber-500/30 text-[11px] font-bold">
+    ${tabs.map(([k,lbl])=>`<button onclick="tab='${k}';render()" class="py-2 rounded-lg transition ${tab==k?'bg-amber-500 text-black':'opacity-75 hover:opacity-100'}">${lbl}</button>`).join('')}
+   </div>
+
+   ${leftContent}
   </div>
-  <div class="grid grid-cols-3 gap-1.5 bg-black/40 p-1 rounded-xl border border-amber-500/30 text-xs font-bold">
-   ${tabs.map(([k,l])=>`<button onclick="tab='${k}';render()" class="py-2 rounded-lg ${tab==k?'bg-amber-500 text-black':'opacity-75'}">${l}</button>`).join('')}
+
+  <div class="lg:col-span-5 flex flex-col gap-5">
+   <div class="bg-[#0a1f1d]/85 backdrop-blur-xl rounded-3xl p-5 gold-border flex-1 flex flex-col justify-between space-y-3">
+    <div class="space-y-3">
+     <div class="flex items-center justify-between">
+      <h3 class="f text-base text-amber-300 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i><span>Os 4 Pilares da Vitória</span></h3>
+      <button onclick="$('rulesModal').classList.remove('hidden')" class="text-xs text-amber-300 underline">Regras completas</button>
+     </div>
+     <div class="grid grid-cols-2 gap-2 text-xs">
+      <div class="p-3 rounded-2xl bg-black/40 border border-emerald-400/30"><div class="text-lg">💰</div><b class="text-emerald-300">Patrimônio</b><p class="text-[11px] opacity-75 mt-0.5">Saldo, Tesouro Selic (+12%/turno), veículos e Casa Própria.</p></div>
+      <div class="p-3 rounded-2xl bg-black/40 border border-sky-400/30"><div class="text-lg">🎓</div><b class="text-sky-300">Carreira & Estudos</b><p class="text-[11px] opacity-75 mt-0.5">5 diplomas e 7 cargos na Firma (até Diretor).</p></div>
+      <div class="p-3 rounded-2xl bg-black/40 border border-rose-400/30"><div class="text-lg">❤️</div><b class="text-rose-300">Saúde & Energia</b><p class="text-[11px] opacity-75 mt-0.5">Coma bem, treine e evite cair na UPA por Burnout.</p></div>
+      <div class="p-3 rounded-2xl bg-black/40 border border-amber-400/30"><div class="text-lg">😎</div><b class="text-amber-300">Lazer & Conforto</b><p class="text-[11px] opacity-75 mt-0.5">Praia, sinuca no boteco e casa bem equipada.</p></div>
+     </div>
+     <div class="p-3 rounded-2xl bg-rose-950/40 border border-rose-500/30 text-xs">
+      <b class="text-rose-300"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Sobrevivência Urbana:</b>
+      <p class="text-[11px] opacity-85 mt-0.5">Nunca vire o ano sem comer no Mercadinho e deixe dinheiro para o Aluguel não virar bola de neve no SPC!</p>
+     </div>
+    </div>
+    <div class="pt-3 border-t border-amber-500/20 flex items-center justify-between text-xs text-amber-200/70">
+     <span><i class="fa-solid fa-users text-emerald-400 mr-1"></i> Até 4 Jogadores ou Bots</span>
+     <span><i class="fa-solid fa-bolt text-amber-400 mr-1"></i> Turnos Simultâneos</span>
+    </div>
+   </div>
+
+   <div class="bg-[#0a1f1d]/85 backdrop-blur-xl rounded-3xl p-5 gold-border">
+    <div class="flex items-center justify-between mb-1.5">
+     <h3 class="f text-sm text-amber-300 flex items-center gap-2"><i class="fa-solid fa-network-wired"></i><span>Status da Rede P2P</span></h3>
+     <span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Pronto (PeerJS)</span>
+    </div>
+    <p class="text-xs text-amber-100/70 leading-relaxed">
+     Crie uma sala online e envie o <strong class="text-emerald-300">Link Convite</strong> para seus amigos disputarem quem chega melhor aos 40 anos!
+    </p>
+   </div>
   </div>
-  ${body}
  </div>`;
 }
 
@@ -645,7 +846,7 @@ function rLocModal(p){
   </div>`;
  }
  return`<div class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-3" onclick="locModal=null;render()">
-  <div class="lousa max-w-lg w-full p-4 space-y-3" onclick="event.stopPropagation()">
+  <div class="lousa max-w-lg w-full p-5 space-y-3" onclick="event.stopPropagation()">
    <div class="flex justify-between items-center"><div class="f text-lg text-amber-300">${title}</div><button onclick="locModal=null;render()" class="px-2.5 py-1 rounded bg-rose-800 text-xs font-bold">Fechar ✕</button></div>
    <div class="text-xs opacity-80 flex justify-between"><span>Horas restantes: <b class="text-amber-300">${p.h}h</b></span><span>Na mão: <b class="text-emerald-300">R$ ${p.cash}</b></span></div>
    ${h}
@@ -665,53 +866,50 @@ function rPlay(){
   ['bank','🏦','Banco & Lotérica',`Poupança R$ ${p.bank}`],
   ['fun','🍻','Boteco & Praia','Lazer e mandar Perrengues']
  ];
- return`<div class="space-y-2.5">
-  <div class="lousa p-3 space-y-2">
+ return`<div class="max-w-4xl mx-auto w-full space-y-3 my-auto">
+  <div class="lousa p-3.5 space-y-2.5">
    <div class="flex justify-between items-center flex-wrap gap-2">
-    <div><span class="f text-xl text-amber-300">🎂 ${G.age} Anos</span> <span class="text-xs opacity-75">(Turno ${G.turn}/${G.maxT} · Rumo aos 40)</span></div>
-    <div class="flex gap-2 items-center">
-     <span class="px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-400/40 text-xs font-bold text-amber-300">⏰ ${p.h}h / ${p.maxH}h livres</span>
-     <button onclick="if(confirm('Sair da partida?')){G=null;render()}" class="px-2 py-1 rounded bg-rose-950 text-xs">Sair</button>
-    </div>
+    <div class="flex items-center gap-2"><span class="text-2xl">${AVS[p.av|0]||'😎'}</span><div><span class="f text-xl text-amber-300">🎂 ${G.age} Anos</span> <span class="text-xs opacity-75">(Turno ${G.turn}/${G.maxT} · Rumo aos 40)</span></div></div>
+    <span class="px-3 py-1 rounded-xl bg-amber-500/20 border border-amber-400/40 text-xs sm:text-sm font-bold text-amber-300">⏰ ${p.h}h / ${p.maxH}h disponíveis</span>
    </div>
-   <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs bg-black/35 p-2 rounded-xl">
+   <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs bg-black/35 p-2.5 rounded-xl">
     <div>💰 Carteira: <b class="text-emerald-300">R$ ${p.cash}</b>${p.debt?` <span class="text-rose-400">(SPC -R$${p.debt})</span>`:''}</div>
     <div>❤️ Saúde: <b>${p.hlth}%</b> · 😎 Feliz: <b>${p.hap}%</b></div>
     <div>🔥 Estresse: <b class="${p.str>=80?'text-rose-400':'text-amber-300'}">${p.str}%</b></div>
     <div>🍽️ Comida: <b class="${p.fed?'text-emerald-300':'text-rose-400'}">${p.fed?'Alimentado ✓':'Com fome!'}</b></div>
    </div>
-   <div class="grid grid-cols-4 gap-1.5 text-[11px] text-center">
-    <div class="bg-black/30 p-1.5 rounded-lg">💰 Patrimônio <b>${sc.w}</b><div class="bar mt-1"><i class="bg-emerald-400" style="width:${sc.w}%"></i></div></div>
-    <div class="bg-black/30 p-1.5 rounded-lg">🎓 Carreira <b>${sc.c}</b><div class="bar mt-1"><i class="bg-sky-400" style="width:${sc.c}%"></i></div></div>
-    <div class="bg-black/30 p-1.5 rounded-lg">❤️ Saúde <b>${sc.h}</b><div class="bar mt-1"><i class="bg-rose-400" style="width:${sc.h}%"></i></div></div>
-    <div class="bg-black/30 p-1.5 rounded-lg">😎 Lazer <b>${sc.l}</b><div class="bar mt-1"><i class="bg-amber-400" style="width:${sc.l}%"></i></div></div>
+   <div class="grid grid-cols-4 gap-2 text-[11px] text-center">
+    <div class="bg-black/30 p-2 rounded-xl">💰 Patrimônio <b>${sc.w}</b><div class="bar mt-1"><i class="bg-emerald-400" style="width:${sc.w}%"></i></div></div>
+    <div class="bg-black/30 p-2 rounded-xl">🎓 Carreira <b>${sc.c}</b><div class="bar mt-1"><i class="bg-sky-400" style="width:${sc.c}%"></i></div></div>
+    <div class="bg-black/30 p-2 rounded-xl">❤️ Saúde <b>${sc.h}</b><div class="bar mt-1"><i class="bg-rose-400" style="width:${sc.h}%"></i></div></div>
+    <div class="bg-black/30 p-2 rounded-xl">😎 Lazer <b>${sc.l}</b><div class="bar mt-1"><i class="bg-amber-400" style="width:${sc.l}%"></i></div></div>
    </div>
   </div>
 
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
    ${locs.map(([k,ic,nm,sub])=>`<div onclick="locModal='${k}';render()" class="card-loc flex flex-col justify-between">
-    <div class="flex items-center gap-2"><span class="text-2xl">${ic}</span><span class="font-bold text-xs sm:text-sm leading-tight">${nm}</span></div>
+    <div class="flex items-center gap-2"><span class="text-2xl">${ic}</span><span class="font-bold text-xs sm:text-sm leading-tight text-amber-100">${nm}</span></div>
     <div class="text-[11px] opacity-80 mt-2 truncate">${sub}</div>
    </div>`).join('')}
   </div>
 
   <div class="flex gap-2 items-center">
-   <button onclick="endMyTurn()" ${p.done?'disabled':''} class="bt flex-1 py-3 text-sm" style="background:linear-gradient(#f5b83d,#b7791f);color:#2a1a02">
+   <button onclick="endMyTurn()" ${p.done?'disabled':''} class="bt flex-1 py-3.5 text-sm shadow-lg" style="background:linear-gradient(#f5b83d,#b7791f);color:#2a1a02">
     ${p.done?'⏳ Aguardando os outros fecharem o ano…':`Fechar os ${G.age} Anos (Pagar Aluguel R$ ${hm.rent}) →`}
    </button>
   </div>
 
-  <div class="lousa p-3 space-y-2 text-xs">
-   <div class="f text-xs text-amber-300">PLACAR AO VIVO DA GALERA</div>
+  <div class="lousa p-3.5 space-y-2 text-xs">
+   <div class="f text-xs text-amber-300">PLACAR AO VIVO DA CIDADE & CRÔNICAS</div>
    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-    ${G.pls.map(x=>{const s=scores(x);return`<div class="p-2 rounded-xl bg-black/40 border ${x.uid==myUid?'border-amber-400/60':'border-white/10'}">
-     <div class="font-bold truncate">${esc(x.name)} ${x.done?'✅':''}</div>
+    ${G.pls.map(x=>{const s=scores(x);return`<div class="p-2.5 rounded-xl bg-black/40 border ${x.uid==myUid?'border-amber-400/60':'border-white/10'}">
+     <div class="font-bold truncate">${AVS[x.av|0]||'😎'} ${esc(x.name)} ${x.done?'✅':''}</div>
      <div class="text-[10px] opacity-75">${JOBS[x.job].n}</div>
      <div class="text-amber-300 font-bold mt-0.5">Média: ${s.tot} pts</div>
     </div>`}).join('')}
    </div>
-   <div class="text-[11px] opacity-80 bg-black/30 p-2 rounded-lg max-h-20 overflow-y-auto space-y-1">
-    ${G.log.slice(0,4).map(l=>`<div>${esc(l)}</div>`).join('')}
+   <div class="text-[11px] opacity-80 bg-black/30 p-2.5 rounded-xl max-h-20 overflow-y-auto space-y-1">
+    ${G.log.slice(0,5).map(l=>`<div>${esc(l)}</div>`).join('')}
    </div>
   </div>
   ${rLocModal(p)}
@@ -721,29 +919,34 @@ function rPlay(){
 function rEnd(){
  const rk=G.pls.slice().sort((a,b)=>scores(b).tot-scores(a).tot);
  const win=rk[0];
- return`<div class="space-y-4 pt-6 text-center">
+ return`<div class="max-w-lg mx-auto w-full bg-[#0a1f1d]/95 gold-border-strong rounded-3xl p-6 space-y-4 text-center my-auto">
   <div class="f text-4xl sm:text-5xl text-amber-300">🎂 Chegaram aos 40 Anos!</div>
   <div class="text-sm">🏆 <b>${esc(win.name)}</b> chegou melhor aos 40 anos com <b>${scores(win).tot} pontos de média</b>!</div>
-  <div class="lousa p-4 space-y-2.5 text-left">
-   ${rk.map((p,i)=>{const s=scores(p);return`<div class="p-3 rounded-xl bg-black/40 border ${i==0?'border-amber-400':'border-white/10'} flex justify-between items-center">
+  <div class="space-y-2 text-left">
+   ${rk.map((p,i)=>{const s=scores(p);return`<div class="p-3 rounded-2xl bg-black/40 border ${i==0?'border-amber-400':'border-white/10'} flex justify-between items-center">
     <div>
-     <div class="font-bold text-sm">${['🥇','🥈','🥉','4º'][i]} ${esc(p.name)} — <span class="text-amber-300">${s.tot} pts</span></div>
+     <div class="font-bold text-sm">${['🥇','🥈','🥉','4º'][i]} ${AVS[p.av|0]||'😎'} ${esc(p.name)} — <span class="text-amber-300">${s.tot} pts</span></div>
      <div class="text-xs opacity-80">${JOBS[p.job].n} · Patrimônio R$ ${netWorth(p)} · ${HOMES[p.home].n}</div>
      <div class="text-[11px] opacity-75 mt-0.5">💰 ${s.w} · 🎓 ${s.c} · ❤️ ${s.h} · 😎 ${s.l}</div>
     </div>
    </div>`}).join('')}
   </div>
-  <div class="flex flex-col gap-2 max-w-xs mx-auto">
-   <button onclick="G=null;render()" class="bt bg-amber-500 text-black">Voltar ao Menu & Troféus</button>
-   <a href="../../" class="bt bg-slate-700">← Sala de Jogos</a>
+  <div class="flex flex-col gap-2">
+   <button onclick="leaveRoom()" class="bt bg-amber-500 text-black py-3">Voltar ao Lobby & Troféus</button>
   </div>
  </div>`;
 }
 
 function render(){
+ $('roomHeaderBadge').classList.toggle('hidden',!G||offline);$('roomHeaderBadge').classList.toggle('flex',!!G&&!offline);
+ if(G&&!offline)$('roomCodeDisplay').textContent=roomCode;
+ $('btnExitGame').classList.toggle('hidden',!G);$('btnExitGame').classList.toggle('flex',!!G);
  $('app').innerHTML=(!G||G.ph=='lobby')?rMenu():G.ph=='play'?rPlay():rEnd();
 }
+
+const urlRoom=new URLSearchParams(location.search).get('room');
 render();
+if(urlRoom){setTimeout(()=>{if($('rc'))$('rc').value=urlRoom.toUpperCase();toast('Convite detectado para a sala '+urlRoom.toUpperCase()+'! Clique em Entrar.')},100)}
 </script>
 </body>
 </html>
