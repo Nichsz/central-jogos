@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="robots" content="noindex,nofollow">
+<title>Truco</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Pacifico&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<style>
+html,body{height:100%}
+body{margin:0;background:repeating-linear-gradient(90deg,#0004 0 2px,transparent 2px 46px) bottom/100% 42% no-repeat,repeating-linear-gradient(0deg,#0004 0 2px,transparent 2px 46px) bottom/100% 42% no-repeat,linear-gradient(transparent 58%,#235a49 58%),linear-gradient(#3b2410,#5a3517);background-color:#3b2410;color:#f8f1dc;font-family:Inter,sans-serif;user-select:none;overflow:hidden}
+.f{font-family:'Alfa Slab One',serif;font-weight:400}
+.card{width:54px;height:78px;background:#fffaf0;color:#111;border-radius:8px;border:1px solid #d4af37;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:18px;line-height:1.1;box-shadow:0 4px 10px #0009;transition:transform .2s;flex:none}
+.card.r{color:#b91c1c}
+.card.back{background:repeating-linear-gradient(45deg,#1d4ed8,#1d4ed8 5px,#1e3a8a 5px,#1e3a8a 10px);color:transparent}
+.card.man{box-shadow:0 0 16px 4px #fbbf24}
+.card.sm{width:30px;height:44px;font-size:11px;border-radius:4px}
+.card.lg{width:78px;height:112px;font-size:28px;cursor:pointer}
+.card.go:hover{transform:translateY(-14px)}
+.card.go{box-shadow:0 0 10px 2px #34d39988}
+.deal{animation:deal .6s cubic-bezier(.2,.8,.3,1) backwards}
+@keyframes deal{from{transform:translate(-45vw,-60vh) rotate(-220deg);opacity:0}to{transform:none;opacity:1}}
+.pl{animation:pl .35s ease-out}
+@keyframes pl{from{transform:translate(var(--dx),var(--dy)) scale(1.3) rotate(25deg);opacity:0}to{transform:none;opacity:1}}
+.bang{position:absolute;left:0;right:0;top:32%;text-align:center;font-size:min(17vw,110px);font-weight:900;text-shadow:0 5px 0 #000,0 0 30px currentColor;animation:bang 1.4s forwards}
+@keyframes bang{0%{transform:scale(3.5) rotate(-6deg);opacity:0}22%{transform:scale(1) rotate(2deg);opacity:1}85%{opacity:1}100%{transform:scale(1.15);opacity:0}}
+.fl{position:absolute;font-size:38px;text-align:center;text-shadow:0 2px 6px #000;animation:fl 2.4s ease-out forwards;white-space:nowrap}
+.fl svg{width:78px;height:78px;filter:drop-shadow(0 3px 4px #000)}
+svg.gs{width:100%;height:auto}
+.s *{animation:none!important}
+.wob,.knk,.blk,.brw{transform-box:fill-box}
+.wob{transform-origin:50% 100%;animation:wo .4s 6 alternate}
+.wob.wf{animation-duration:.25s}
+.knk{transform-origin:50% 50%;animation:kn .28s 7 alternate}
+.blk{transform-origin:center;animation:bl .5s 4}
+.brw{transform-origin:center;animation:br .5s 4 alternate}
+@keyframes wo{from{transform:rotate(-24deg)}to{transform:rotate(24deg)}}
+@keyframes kn{to{transform:translateY(12px)}}
+@keyframes bl{50%{transform:scaleY(.1)}}
+@keyframes br{to{transform:translateY(-7px) rotate(-12deg)}}
+.fl small{display:block;font-size:12px;background:#000b;border-radius:6px;padding:1px 8px}
+@keyframes wig{50%{transform:rotate(20deg) scale(1.2)}}
+@keyframes fl{0%{opacity:0;transform:translate(-50%,10px) scale(.4)}15%{opacity:1;transform:translate(-50%,-10px) scale(1.2)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-80px)}}
+.tst{background:#000d;border:1px solid #d4af37;padding:4px 12px;border-radius:10px;font-size:14px;animation:tf 2.4s forwards}
+@keyframes tf{0%{opacity:0;transform:translateY(-8px)}10%,85%{opacity:1;transform:none}100%{opacity:0}}
+.turn{box-shadow:0 0 0 2px #fcd34d,0 0 18px #fcd34d99}
+.lousa{background:#1c2b25;border:5px solid #8a5a2b;border-radius:14px;box-shadow:inset 0 0 30px #000a,0 6px 16px #0008}
+.neon{font-family:Pacifico,cursive;color:#fff;text-shadow:0 0 6px #fff,0 0 14px #ff3d6e,0 0 30px #ff3d6e,0 0 54px #ff3d6e;animation:fk 5s infinite}
+@keyframes fk{0%,92%,100%{opacity:1}94%{opacity:.55}96%{opacity:1}98%{opacity:.7}}
+.smk{transform-box:fill-box;animation:sm 3s infinite}
+@keyframes sm{0%{opacity:0;transform:translateY(8px)}40%{opacity:.85}100%{opacity:0;transform:translateY(-16px)}}
+button{cursor:pointer}
+</style>
+</head>
+<body>
+<!-- LOBBY -->
+<div id="lob" class="fixed inset-0 z-40 overflow-auto">
+ <svg class="fixed top-0 inset-x-0 pointer-events-none" width="100%" height="48"><defs><pattern id="bd" width="124" height="48" patternUnits="userSpaceOnUse"><path d="M0 3h124" stroke="#111" stroke-width="2"/><polygon points="4,3 34,3 19,42" fill="#009c3b"/><polygon points="35,3 65,3 50,42" fill="#ffdf00"/><polygon points="66,3 96,3 81,42" fill="#002776"/><polygon points="97,3 127,3 112,42" fill="#f4f1e6"/></pattern></defs><rect width="100%" height="48" fill="url(#bd)"/></svg>
+ <div class="max-w-xl mx-auto p-4 space-y-4">
+  <div class="flex items-center justify-between text-sm pt-9"><a href="../../" class="opacity-70 hover:opacity-100">← Sala de Jogos</a><span class="opacity-60">2x2 · voz ao vivo</span></div>
+  <div class="text-center"><div class="neon text-4xl">Boteco do</div><div class="f text-7xl leading-none" style="color:#f6eedc;text-shadow:0 5px 0 #b3141a,0 9px 0 #000">TRUCO</div><div class="text-sm mt-3 text-amber-100">Mesa de bar · cerveja gelada · zoeira liberada</div></div>
+  <section class="lousa p-4 space-y-3">
+   <div class="flex gap-3 items-center"><div id="pav" class="w-16 h-16 flex-none"></div><div class="flex-1 min-w-0"><input id="nm" maxlength="14" placeholder="Seu nome" class="w-full px-3 py-2 rounded-lg bg-black/50 border border-amber-500/30 outline-none"><div id="ptt" class="f text-sm text-amber-300 mt-1"></div><select id="tts" onchange="pickTt(this.value)" class="w-full mt-1 px-2 py-1 rounded bg-black/60 border border-amber-500/30 text-xs"></select></div></div>
+   <div id="avg" class="grid grid-cols-5 sm:grid-cols-7 gap-2 justify-items-center"></div>
+   <div class="grid grid-cols-3 gap-2 text-[11px]"><label>Verso das cartas<select id="scb" onchange="pickC('cb',this.value)" class="w-full px-1 py-1 rounded bg-black/60 border border-amber-500/30"></select></label><label>Mesa<select id="smz" onchange="pickC('mz',this.value)" class="w-full px-1 py-1 rounded bg-black/60 border border-amber-500/30"></select></label><label>Grito do truco<select id="ssn" onchange="pickC('sn',this.value)" class="w-full px-1 py-1 rounded bg-black/60 border border-amber-500/30"></select></label></div>
+   <div id="xpb" class="text-xs space-y-1"></div>
+  </section>
+  <div id="lm" class="space-y-2">
+   <button id="bBack" class="hidden w-full py-2.5 rounded-xl bg-sky-800 font-bold"></button>
+   <button id="bRes" class="hidden w-full py-2.5 rounded-xl bg-sky-800 font-bold"></button>
+   <button id="bHost" class="w-full py-3 rounded-xl font-bold text-lg" style="background:linear-gradient(#f5b83d,#b7791f);color:#2a1a02">Abrir a mesa (criar sala)</button>
+   <div class="flex gap-2"><input id="rc" maxlength="5" placeholder="CÓDIGO DA SALA" class="flex-1 px-3 py-2 rounded-xl bg-black/50 border border-amber-500/30 uppercase outline-none tracking-widest"><button id="bJoin" class="px-5 rounded-xl bg-emerald-700 font-bold">Sentar</button></div>
+   <button id="bTest" class="w-full py-2 rounded-xl bg-black/40 border border-white/20 text-sm">Treinar contra bots (offline)</button>
+  </div>
+  <div id="lr" class="hidden space-y-3">
+   <div class="text-center"><div class="text-xs opacity-70">Código da sala</div><div id="rl" class="f text-4xl text-amber-300 tracking-[.3em]"></div></div>
+   <div class="flex gap-2"><input id="lk" readonly class="flex-1 px-2 py-1 rounded bg-black/50 text-xs"><button id="bCp" class="px-3 rounded bg-slate-600 text-sm">Copiar link</button></div>
+   <div id="sl"></div>
+   <label class="flex items-center gap-3 rounded-xl bg-fuchsia-950/50 border border-fuchsia-400/30 p-3 text-sm"><input type="checkbox" id="chaos" class="w-5 h-5" onchange="send({t:'opt',v:this.checked})"><span><b>🌀 Modo Caos</b><br><span class="opacity-70 text-xs">Às vezes a mão vem com uma regra maluca: ordem invertida, sem manilha, às cegas...</span></span></label>
+   <p class="text-xs opacity-70 text-center">Parceiros sentam de frente. Vagas vazias viram bots.</p>
+   <button id="bStart" class="hidden w-full py-3 rounded-xl bg-emerald-600 font-bold text-lg">Embaralhar e começar</button>
+  </div>
+ </div>
+</div>
+<!-- JOGO -->
+<div id="game" class="hidden fixed inset-0 flex flex-col">
+ <div class="flex items-center justify-between px-3 py-2 bg-[#2a1608]/90 border-b-2 border-amber-900 gap-2 flex-wrap">
+  <div id="vira"></div>
+  <div id="score" class="f text-lg"></div>
+  <div class="flex gap-2"><button id="mic" class="px-2 py-1 rounded bg-slate-700 text-xs"></button><a href="../../" class="px-2 py-1 rounded bg-slate-700 text-xs">← Central</a><button onclick="leave()" class="px-2 py-1 rounded bg-rose-900 text-xs">Sair</button></div>
+ </div>
+ <div class="relative flex-1 min-h-0"><div id="tbl" class="absolute inset-0"></div><div id="board" class="absolute inset-0"></div></div>
+ <div class="p-2 bg-[#2a1608]/90 border-t-2 border-amber-900 space-y-2">
+  <div id="acts" class="flex flex-wrap gap-2 justify-center items-center min-h-[34px]"></div>
+  <div id="sigs" class="flex flex-wrap gap-1 justify-center items-center"></div>
+  <div id="hand" class="flex justify-center gap-3 min-h-[116px]"></div>
+ </div>
+</div>
+<div id="ov" class="hidden fixed inset-0 z-40 bg-black/75 flex flex-col items-center justify-center gap-4">
+ <div id="ovt" class="f text-5xl text-amber-300"></div>
+ <button id="bAgain" onclick="send({t:'again'})" class="px-6 py-2 rounded-lg bg-emerald-700 font-bold">Jogar de novo</button>
+</div>
+<div id="fxl" class="fixed inset-0 pointer-events-none z-50"><div id="tc" class="absolute top-14 inset-x-0 flex flex-col items-center gap-1"></div></div>
+
+<script>
+const RK=['4','5','6','7','Q','J','K','A','2','3'],SU=['♦','♠','♥','♣'];
+const NX={1:3,3:6,6:9,9:12},TL={3:'TRUCO',6:'SEIS',9:'NOVE',12:'DOZE'};
+const SG=[['😉','Tenho ZAP'],['🤨','Tenho manilha'],['😛','Tenho um 3'],['😬','Tô fraco'],['🤫','Pede truco'],['🙈','Foge dessa']];
+const AV=[
+['Seu Zé','Dono do Boteco','#2f855a','#14532d','#e2b184','#2b1b0e',{h:'bald',b:'mus',sh:'#f3efe6',ap:'#15803d',m:'grin'}],
+['Dona Cida','A Rainha do Truco','#d6336c','#701a3d','#f0c4a2','#1a1414',{h:'long',sh:'#ec4899',m:'smile',lip:1,ear:1}],
+['Tio Beto','Só Mais Uma','#e8a317','#7c4a03','#c98e61','#3b2a1a',{hat:'straw',b:'stub',sh:'#38bdf8',fl:1,m:'smirk'}],
+['Vó Nena','Fiado Só Amanhã','#8b5cf6','#3b1d78','#f3d2b5','#d9d9de',{h:'bun',g:'round',sh:'#7c3aed',pearl:1,m:'smile'}],
+['Dudu','Pavio Curto','#0f9d58','#064e2f','#a8704a','#16110d',{hat:'cap',sh:'#facc15',st:1,m:'angry'}],
+['Mestre Léo','Cara de Paisagem','#0ea5b7','#0b3b4a','#efc9a3','#6b3f1d',{h:'short',g:'sq',sh:'#93c5fd',m:'flat'}],
+['Zeca','O Embucha','#3b82f6','#16307a','#8a5a3c','#0d0d0d',{hat:'cap',b:'goat',sh:'#1d4ed8',m:'smirk'}],
+['Carol','A Manilheira','#ef4444','#6e1010','#f0c2a0','#c2410c',{h:'curly',fr:1,sh:'#dc2626',m:'grin'}],
+['Garçom Ligeiro','Equilibrista de Bandeja','#0ea5e9','#0c4a6e','#e8b98e','#2a1a10',{h:'short',bt:1,sh:'#f8fafc',m:'smile'}],
+['Malandro','Elegante Demais','#14b8a6','#0f3d3a','#b9805a','#111111',{hat:'panama',b:'mus',sh:'#f8fafc',m:'smirk'}],
+['Chef do Fogo','Mestre do Espeto','#f97316','#7c2d12','#e9bd96','#3b2a1a',{hat:'chef',b:'goat',sh:'#fafafa',m:'grin'}],
+['Rei do Truco','Majestade do Zap','#a855f7','#4a1d96','#e0ac80','#2b1b0e',{hat:'crown',b:'mus',sh:'#7e22ce',ch:1,m:'grin'}],
+['A Lenda','Lenda Viva do Boteco','#f59e0b','#78350f','#b9805a','#111111',{h:'bald',g:'sun',ch:1,sh:'#111827',m:'smirk'}]];
+const mkBot=n=>{const k=[5,6,3,7][n];return{uid:'b'+n,name:AV[k][0],av:k,bot:1,lv:{5:3,6:2,3:1,7:2}[k]}};
+let avN=0;
+const UL=[0,0,0,0,0,0,0,0,1,2,2,3,3];
+const CB=[['Azul clássico',0,'#1d4ed8','#1e3a8a'],['Verde boteco',1,'#15803d','#14532d'],['Brasil',2,'#16a34a','#facc15'],['Dourado',3,'#d4af37','#7c5a10']];
+const MZ=[['Vermelha de bar',0,'#e32a30','#b3141a','#8a0e13','#7a0d11'],['Verde feltro',1,'#1f8a48','#14532d','#0b3320','#0b3320'],['Azul sinuca',2,'#2a6fd6','#1b4a9a','#10306a','#0b2150'],['Preta VIP',3,'#3a3a40','#1c1c20','#0a0a0c','#d4af37']];
+const SN=[['Apito',0],['Soco na mesa',1],['Sino de boteco',2],['Fanfarra',3]];
+const cbs=i=>{const c=CB[i|0]||CB[0];return`background:repeating-linear-gradient(45deg,${c[2]},${c[2]} 5px,${c[3]} 5px,${c[3]} 10px)`};
+const okU=(v,A,lv)=>A[v|0]&&A[v|0][1]<=lv?v|0:0;
+function shout(k){[()=>bp(140,.35,'sawtooth'),()=>{bp(70,.25,'square');setTimeout(()=>bp(55,.3,'square'),120)},()=>[880,1175,880].forEach((f,i)=>setTimeout(()=>bp(f,.35,'triangle'),i*140)),()=>[392,523,659,784].forEach((f,i)=>setTimeout(()=>bp(f,.25,'sawtooth'),i*90))][k|0]()}
+const TTL=[['Do Balcão',0],['Fiel da Casa',1],['Manilheiro',1],['Embuchador Nato',2],['Mão de Ferro',2],['Terror dos Seis',3],['Zap Supremo',3],['Lenda Viva',3]];
+const ttName=p=>p.tt>=0&&TTL[p.tt]?TTL[p.tt][0]:AV[p.av|0][1];
+const mkSeat=d=>{const lv=Math.max(0,Math.min(3,d.lv|0)),av=(d.av|0)%AV.length,t=d.tt|0;return{uid:d.uid,name:String(d.name).slice(0,14),lv,cb:okU(d.cb,CB,lv),sn:okU(d.sn,SN,lv),av:UL[av]<=lv?av:0,tt:d.tt>=0&&TTL[t]&&TTL[t][1]<=lv?t:-1}};
+const LV=['Novato','Freguês','Chapa','Veterano'],XT=[0,40,120,300];
+const LIM=[5,4,3,2],PER=[.5,.7,.85,.95],SPY=[.06,.12,.2,.3],SLO=[1.6,1.2,.9,.7];
+let xp=0,xpDone=0,lastGain=0,myTt=-1,myCb=0,myMz=0,mySn=0;try{xp=+localStorage.getItem('truco_xp')||0}catch(e){}
+const lvOf=x=>XT.reduce((a,t,i)=>x>=t?i:a,0);
+function gainXP(n){xp+=n;try{localStorage.setItem('truco_xp',xp)}catch(e){}}
+function xpUpd(){const l=lvOf(xp),nx=XT[l+1],pc=nx?(xp-XT[l])/(nx-XT[l])*100:100;
+ $('xpb').innerHTML=`<div class="flex justify-between"><span><b class="text-amber-300">${LV[l]}</b> <span class="text-amber-300">${'★'.repeat(l+1)}</span></span><span class="opacity-70">${xp} XP${nx?` · faltam ${nx-xp} p/ ${LV[l+1]}`:' · nível máximo'}</span></div><div class="h-2 rounded bg-black/50 overflow-hidden"><i class="block h-full bg-amber-400" style="width:${pc}%"></i></div><details class="opacity-80"><summary class="cursor-pointer">Como funciona a experiência?</summary><p class="mt-1">Quanto mais você joga, melhor percebe os sinais do parceiro e dos adversários. Novatos percebem menos, mas podem mandar mais sinais, e os sinais deles vazam mais. Veteranos leem tudo, mas só mandam 2 sinais por mão, e cada sinal extra deixa a dupla mais manjada. Partidas contra bots rendem metade do XP.</p></details>`}
+function avt(i,z=56,lv=0){const[,,c1,c2,sk,hr,o]=AV[i|0]||AV[0],u=++avN;
+ const eye=x=>`<ellipse cx="${x}" cy="46" rx="4.6" ry="${o.m=='flat'?3:4.2}" fill="#fff"/><circle cx="${x}" cy="46.5" r="2.5" fill="#2a1a10"/><circle cx="${x+.9}" cy="45.6" r=".9" fill="#fff"/>`;
+ const brow=o.m=='angry'?`<path d="M32 38l14 4M68 38l-14 4" stroke="${hr}" stroke-width="3.2" stroke-linecap="round"/>`:`<path d="M33 39q6-3 12 0M55 39q6-3 12 0" stroke="${hr}" stroke-width="2.8" fill="none" stroke-linecap="round"/>`;
+ const mouth={smile:'<path d="M41 59q9 8 18 0" stroke="#7a2e2e" stroke-width="2.4" fill="none" stroke-linecap="round"/>',grin:'<path d="M40 58q10 11 20 0z" fill="#7a2e2e"/><path d="M42 58.5h16q-8 4-16 0z" fill="#fff"/>',smirk:'<path d="M42 60q8 5 17-2" stroke="#7a2e2e" stroke-width="2.4" fill="none" stroke-linecap="round"/>',flat:'<path d="M42 60h16" stroke="#7a2e2e" stroke-width="2.4" stroke-linecap="round"/>',angry:'<path d="M41 61q9-6 18 0" stroke="#7a2e2e" stroke-width="2.6" fill="none" stroke-linecap="round"/>'}[o.m];
+ let back='',top='';
+ if(o.h=='long')back=`<path d="M24 50C20 20 36 10 50 10s30 10 26 40c0 14 3 26 6 34H18c3-8 6-20 6-34z" fill="${hr}"/>`;
+ if(o.h=='curly')back=`<g fill="${hr}"><circle cx="26" cy="38" r="12"/><circle cx="74" cy="38" r="12"/><circle cx="34" cy="24" r="13"/><circle cx="66" cy="24" r="13"/><circle cx="50" cy="19" r="14"/><circle cx="22" cy="54" r="9"/><circle cx="78" cy="54" r="9"/></g>`;
+ if(o.h=='bun')back=`<circle cx="50" cy="14" r="9" fill="${hr}"/>`;
+ if(o.h=='long')top+=`<path d="M27 44C27 24 38 18 50 18s23 6 23 26c-4-10-12-16-23-16S31 34 27 44z" fill="${hr}"/>`;
+ else if(o.h=='curly')top+=`<path d="M28 40q4-16 22-16t22 16q-8-8-22-8t-22 8z" fill="${hr}"/>`;
+ else if(o.h=='bun')top+=`<path d="M28 42q2-18 22-18t22 18q-8-9-22-9T28 42z" fill="${hr}"/>`;
+ else if(o.h=='short')top+=`<path d="M28 42q0-20 22-20t22 20q-4-9-12-11-9 3-22 2-6 2-10 9z" fill="${hr}"/>`;
+ if(o.b=='mus')top+=`<path d="M34 55q8-6 16 0q8-6 16 0q-8 7-16 3-8 4-16-3z" fill="${hr}"/>`;
+ if(o.b=='stub')top+=`<path d="M30 52q0 20 20 22t20-22q-4 14-20 14T30 52z" fill="${hr}" opacity=".55"/>`;
+ if(o.b=='goat')top+=`<path d="M42 62q8 4 16 0l-3 10q-5 3-10 0z" fill="${hr}"/>`;
+ if(o.g=='round')top+=`<g fill="#fff3" stroke="#222" stroke-width="1.8"><circle cx="39" cy="46" r="8"/><circle cx="61" cy="46" r="8"/></g><path d="M47 46h6" stroke="#222" stroke-width="1.8"/>`;
+ if(o.g=='sq')top+=`<g fill="#fff2" stroke="#222" stroke-width="2"><rect x="31" y="40" width="17" height="12" rx="2"/><rect x="52" y="40" width="17" height="12" rx="2"/></g><path d="M48 45h4" stroke="#222" stroke-width="2"/>`;
+ if(o.hat=='straw')top+=`<ellipse cx="50" cy="32" rx="34" ry="8" fill="#e8c872" stroke="#a37f2d" stroke-width="1.5"/><path d="M30 32q0-18 20-18t20 18z" fill="#f1d78a" stroke="#a37f2d" stroke-width="1.5"/><path d="M30 29h40" stroke="${c2}" stroke-width="4"/>`;
+ if(o.hat=='cap')top+=`<path d="M27 36q0-20 23-20t23 20z" fill="${c1}" stroke="${c2}" stroke-width="1.5"/><path d="M60 35q18-2 26 4-14 4-26 0z" fill="${c2}"/><circle cx="50" cy="26" r="4" fill="#fde047"/>`;
+ if(o.hat=='panama')top+=`<ellipse cx="50" cy="32" rx="33" ry="7" fill="#f4efe2" stroke="#b8ad90" stroke-width="1.5"/><path d="M32 31q0-17 18-17t18 17z" fill="#f4efe2" stroke="#b8ad90" stroke-width="1.5"/><path d="M32 27h36" stroke="#111" stroke-width="4"/>`;
+ if(o.hat=='chef')top+=`<g fill="#fff" stroke="#cfcfcf" stroke-width="1.5"><circle cx="36" cy="18" r="10"/><circle cx="50" cy="13" r="11"/><circle cx="64" cy="18" r="10"/><rect x="30" y="22" width="40" height="13" rx="3"/></g>`;
+ if(o.hat=='crown')top+=`<path d="M28 34l4-20 10 12 8-16 8 16 10-12 4 20z" fill="#fbbf24" stroke="#a16207" stroke-width="2"/><circle cx="50" cy="26" r="3" fill="#dc2626"/>`;
+ if(o.g=='sun')top+=`<g fill="#111"><rect x="29" y="40" width="19" height="11" rx="4"/><rect x="52" y="40" width="19" height="11" rx="4"/></g><path d="M48 44h4" stroke="#111" stroke-width="2"/><path d="M31 43l6-1" stroke="#fff6" stroke-width="2"/>`;
+ let body=`<path d="M10 100C12 78 28 70 50 70s38 8 40 30z" fill="${o.sh}"/>`;
+ if(o.ap)body+=`<path d="M30 100V84q20 8 40 0v16z" fill="${o.ap}"/>`;
+ if(o.fl)body+=`<g fill="#fde047"><circle cx="28" cy="86" r="3"/><circle cx="72" cy="90" r="3"/><circle cx="50" cy="94" r="3"/></g><g fill="#fb7185"><circle cx="38" cy="95" r="2.5"/><circle cx="62" cy="84" r="2.5"/></g>`;
+ if(o.st)body+=`<path d="M20 100q4-20 16-26M80 100q-4-20-16-26" stroke="#15803d" stroke-width="5" fill="none"/>`;
+ if(o.pearl)body+=`<path d="M36 72q14 14 28 0" stroke="#fff" stroke-width="3" stroke-dasharray="2.5 2" fill="none"/>`;
+ if(o.bt)body+=`<path d="M50 72l-8-5v10zM50 72l8-5v10z" fill="#b91c1c"/><circle cx="50" cy="72" r="2.5" fill="#7f1d1d"/>`;
+ if(o.ch)body+=`<path d="M34 74q16 16 32 0" stroke="#fbbf24" stroke-width="3" fill="none"/>`;
+ const ex=(o.ear?`<circle cx="27" cy="56" r="2.6" fill="#fde047"/><circle cx="73" cy="56" r="2.6" fill="#fde047"/>`:'')+(o.fr?`<g fill="#a14d2a" opacity=".6"><circle cx="38" cy="54" r=".9"/><circle cx="42" cy="56" r=".9"/><circle cx="62" cy="54" r=".9"/><circle cx="58" cy="56" r=".9"/></g>`:'');
+ return`<svg viewBox="0 0 100 100" width="${z}" height="${z}"><defs><radialGradient id="ab${u}" cx=".5" cy=".3" r=".9"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></radialGradient><linearGradient id="as${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sk}"/><stop offset="1" stop-color="${sk}" stop-opacity=".82"/></linearGradient><clipPath id="ac${u}"><circle cx="50" cy="50" r="48"/></clipPath></defs><circle cx="50" cy="50" r="48" fill="url(#ab${u})"/><g clip-path="url(#ac${u})">${back}${body}<path d="M42 60h16v14q-8 6-16 0z" fill="${sk}"/><path d="M42 68q8 5 16 0v4q-8 5-16 0z" fill="#0003"/><circle cx="27" cy="48" r="5" fill="${sk}"/><circle cx="73" cy="48" r="5" fill="${sk}"/><ellipse cx="50" cy="45" rx="23" ry="26" fill="url(#as${u})"/><circle cx="36" cy="55" r="5" fill="#f87171" opacity=".22"/><circle cx="64" cy="55" r="5" fill="#f87171" opacity=".22"/>${eye(39)}${eye(61)}${brow}<path d="M50 48q-3 7 0 9h3" stroke="#0004" stroke-width="2" fill="none" stroke-linecap="round"/>${mouth}${o.lip?'<path d="M42 59q8 5 16 0q-8 2-16 0z" fill="#c1121f"/>':''}${ex}${top}</g><circle cx="50" cy="50" r="48" fill="none" stroke="${['#f6eedc','#cbd5e1','#fbbf24','#fde047'][lv]}" stroke-opacity="${lv?1:.7}" stroke-width="${[2.5,3.5,4.5,5][lv]}"/>${lv>2?'<circle cx="50" cy="50" r="43" fill="none" stroke="#f59e0b" stroke-width="1.3" stroke-dasharray="3 3"/>':''}</svg>`}
+const $=id=>document.getElementById(id),rnd=n=>Math.floor(Math.random()*n);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+let myUid='u'+Math.random().toString(36).slice(2,8),myAv=0,rj=0,left=0,jt=0;
+let G=null,V=null,me=0,isHost=false,offline=false,code='',peer=null,hconn=null,conns={},bt=null;
+let evSeen=-1,prevT=0,lastDK='',name='';
+let ac;function bp(f=440,d=.12,ty='sine'){try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain();o.type=ty;o.frequency.value=f;g.gain.value=.08;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}}
+
+/* ============ MOTOR (roda só no host) ============ */
+function newG(){return{hostUid:myUid,seats:[null,null,null,null],pts:[0,0],phase:'lobby',dealer:3,ev:[],eid:0}}
+function fx(k,o={}){G.ev.push({id:++G.eid,k,...o});if(G.ev.length>30)G.ev.shift()}
+const rk=c=>G.rev?9-c.r:c.r;
+const str=c=>c.r==G.man?100+c.s:rk(c);
+const sc=c=>c.r==G.man?8+c.s:rk(c)*.7;
+const pwr=h=>h.length?h.reduce((a,c)=>a+sc(c),0)/h.length:0;
+function startMatch(){G.seats.forEach((p,i)=>{if(!p)G.seats[i]=mkBot(i)});G.pts=[0,0];G.phase='play';G.winner=null;G.dealer=3;deal()}
+function deal(){
+ const d=[];for(let r=0;r<10;r++)for(let s=0;s<4;s++)d.push({r,s});
+ for(let i=39;i>0;i--){const j=rnd(i+1);[d[i],d[j]]=[d[j],d[i]]}
+ G.seats.forEach(p=>p.hand=[d.pop(),d.pop(),d.pop()]);
+ G.vira=d.pop();G.man=(G.vira.r+1)%10;
+ G.dealer=(G.dealer+1)%4;G.turn=G.first=(G.dealer+1)%4;
+ G.table=[];G.rs=[];G.val=1;G.pend=null;G.lastUp=-1;G.busy=0;
+ G.sigN=[0,0,0,0];G.sigT=[0,0];G.flag=[0,0];G.bs=[0,0,0,0];
+ const a=G.pts[0]==11,b=G.pts[1]==11;
+ G.lock=a||b;G.blind=a&&b;G.p11=a!=b?(a?0:1):null;
+ G.rev=0;G.chaosTxt='';
+ if(G.chaos&&!G.lock&&Math.random()<.55){const k=rnd(5);
+  if(k==0){G.val=3;G.chaosTxt='Mão valendo 3 desde o começo!'}
+  else if(k==1){G.rev=1;G.chaosTxt='Ordem invertida: o 4 é a mais forte!'}
+  else if(k==2){G.man=-1;G.chaosTxt='Sem manilha nesta mão!'}
+  else if(k==3){G.blind=true;G.chaosTxt='Mão às cegas: jogue sem ver!'}
+  else{const pk=G.seats.map(p=>p.hand.splice(rnd(3),1)[0]);G.seats.forEach((p,i)=>p.hand.push(pk[(i+3)%4]));G.chaosTxt='Roda-roda: cada um passou uma carta pro próximo!'}
+  fx('chaos',{txt:G.chaosTxt})}
+ fx('deal');
+}
+const canTruco=s=>!G.lock&&G.turn==s&&!G.pend&&G.lastUp!=s%2&&G.val<12&&G.p11==null;
+function callTruco(s){G.pend={by:s,val:NX[G.val]};G.lastUp=s%2;fx('truco',{txt:TL[NX[G.val]]+'!',team:s%2,s})}
+function respond(s,r){const pd=G.pend;
+ if(r=='ok'){G.val=pd.val;G.pend=null;fx('ok',{txt:'Aceitaram! ✅'})}
+ else if(r=='run'){G.pend=null;fx('ok',{txt:'Correu! 🏃'});endHand(pd.by%2)}
+ else if(r=='up'&&pd.val<12){G.val=pd.val;G.lastUp=s%2;G.pend={by:s,val:NX[pd.val]};fx('truco',{txt:TL[NX[pd.val]]+'!',team:s%2,s})}}
+function decide11(t,r){G.p11=null;if(r=='play'){G.val=3;fx('ok',{txt:'Mão de onze: vale 3!'})}else{fx('ok',{txt:'Mão de onze: correram'});endHand(1-t)}}
+function playCard(s,i){const c=G.seats[s].hand.splice(i,1)[0];G.table.push({seat:s,card:c});fx('play',{zap:c.r==G.man&&c.s==3});
+ if(G.table.length<4)G.turn=(s+1)%4;else{G.busy=1;setTimeout(trick,1500)}}
+function hw(){const r=G.rs,[a,b,c]=r;if(r.length<2)return null;
+ if(a!=='T'){if(b===a||b==='T')return a;if(r.length<3)return null;return c==='T'?a:c}
+ if(b!=='T')return b;if(r.length<3)return null;return c==='T'?G.first%2:c}
+function trick(){if(G.phase!='play')return;
+ let best=-1,w=[];G.table.forEach(t=>{const v=str(t.card);if(v>best){best=v;w=[t]}else if(v==best)w.push(t)});
+ const res=new Set(w.map(t=>t.seat%2)).size>1?'T':w[0].seat%2;
+ G.rs.push(res);G.table=[];G.busy=0;G.turn=w[0].seat;fx('rnd',{team:res});
+ const win=hw();if(win!==null)endHand(win);bcast()}
+function endHand(t){G.pts[t]+=G.val;fx('hand',{team:t,v:G.val});G.busy=1;
+ if(G.pts[t]>=12){G.phase='over';G.winner=t;G.busy=0}
+ else setTimeout(()=>{if(G.phase=='play'){deal();bcast()}},2400)}
+function sig(s,i){const lv=G.seats[s].lv|0;if(G.phase!='play'||G.sigN[s]>=LIM[lv]||!SG[i])return;G.sigN[s]++;G.sigT[s%2]++;
+ const pt=(s+2)%4,seen=Math.random()<PER[G.seats[pt].lv|0],heat=1+.15*(G.sigT[s%2]-1);
+ fx('sigs',{only:[s]});fx(seen?'sig':'sigm',{from:s,i,only:[pt]});
+ [(s+1)%4,(s+3)%4].forEach(o=>{if(Math.random()<Math.min(.5,SPY[G.seats[o].lv|0]*SLO[lv]*heat))fx('leak',{i,only:[o]})})}
+function act(u,a){
+ const s=G.seats.findIndex(p=>p&&p.uid==u);if(s<0)return;const P=G.phase;
+ if(a.t=='emo')fx('emo',{seat:s,e:String(a.e).slice(0,16)});
+ else if(P=='lobby'){
+  if(a.t=='sit'&&!G.seats[a.n]){G.seats[a.n]=G.seats[s];G.seats[s]=null}
+  else if(a.t=='bot'&&u==G.hostUid){const p=G.seats[a.n];if(!p)G.seats[a.n]=mkBot(a.n);else if(p.bot)G.seats[a.n]=null}
+  else if(a.t=='start'&&u==G.hostUid)startMatch();
+  else if(a.t=='opt'&&u==G.hostUid)G.chaos=!!a.v;
+ }else if(P=='over'){if(a.t=='again'&&u==G.hostUid){G.pts=[0,0];G.winner=null;G.phase='play';deal()}}
+ else if(a.t=='sig')sig(s,a.i);
+ else if(!G.busy){
+  if(a.t=='card'&&G.turn==s&&!G.pend&&G.p11==null&&G.seats[s].hand[a.i])playCard(s,a.i);
+  else if(a.t=='truco'&&canTruco(s))callTruco(s);
+  else if(a.t=='resp'&&G.pend&&s%2!=G.pend.by%2)respond(s,a.r);
+  else if(a.t=='p11'&&G.p11===s%2)decide11(s%2,a.r);
+ }
+ bcast();
+}
+/* ---- bots ---- */
+function botCard(s){const h=G.seats[s].hand,ix=h.map((_,i)=>i).sort((a,b)=>str(h[a])-str(h[b]));
+ if(!G.table.length)return G.rs.length?ix[ix.length-1]:ix[ix.length>>1];
+ let top=-1,ts=0;G.table.forEach(t=>{if(str(t.card)>top){top=str(t.card);ts=t.seat}});
+ if(ts%2==s%2)return ix[0];
+ const w=ix.find(i=>str(h[i])>top);return w===undefined?ix[0]:w}
+function botSig(s){const h=G.seats[s].hand;if(h.some(c=>c.r==G.man&&c.s==3))return 0;if(h.some(c=>c.r==G.man))return 1;if(h.some(c=>rk(c)==9))return 2;return pwr(h)<2.6?3:-1}
+function botTick(){
+ if(!G||G.phase!='play'||G.busy)return;const S=G.seats;
+ if(G.p11!=null){const t=G.p11;if(S[t].bot&&S[t+2].bot){decide11(t,(pwr(S[t].hand)+pwr(S[t+2].hand))/2>3.8?'play':'run');bcast()}return}
+ for(let s=0;s<4;s++){const p=S[s];if(!p.bot)continue;
+  if(!G.bs[s]&&!S[(s+2)%4].bot&&Math.random()<.5){G.bs[s]=1;const i=botSig(s);if(i>=0){sig(s,i);bcast();return}}
+  }
+ if(G.pend){const o=(G.pend.by+1)%4,p=S[o];if(!p.bot)return;
+  const w=G.rs.filter(x=>x===o%2).length,l=G.rs.filter(x=>x===1-o%2).length;
+  const pw=pwr(p.hand)+(w-l)*1.3+(Math.random()<.12?2:0);
+  respond(o,pw>5.6&&G.pend.val<12&&Math.random()<.3?'up':pw>3.2?'ok':'run');bcast();return}
+ const s=G.turn,p=S[s];if(!p.bot)return;
+ if(canTruco(s)&&pwr(p.hand)>5.4&&Math.random()<.3)callTruco(s);else playCard(s,botCard(s));
+ bcast()}
+
+/* ============ REDE ============ */
+function view(u){const s=G.seats.findIndex(p=>p&&p.uid==u);
+ return{...G,me:s,sigT:null,bs:null,seats:G.seats.map((p,i)=>p&&{uid:p.uid,name:p.name,bot:p.bot,pid:p.pid,av:p.av,tt:p.tt,cb:p.cb,sn:p.sn,lv:p.lv,away:p.away,n:p.hand?p.hand.length:0,
+  h:p.hand&&(i==s||(G.p11!=null&&G.p11==s%2&&i%2==s%2))?p.hand:null}),
+  ev:G.ev.filter(e=>!e.only||e.only.includes(s))}}
+function bcast(){
+ if(!offline)for(const u in conns){const c=conns[u];if(c.open)c.send({t:'st',v:view(u)})}
+ if(isHost&&!offline&&G.phase!='lobby')try{localStorage.setItem('truco_host',JSON.stringify({code,G,t:Date.now()}))}catch(e){}
+ render(view(myUid));clearTimeout(bt);bt=setTimeout(botTick,1100)}
+function send(a){if(isHost)act(myUid,a);else if(hconn&&hconn.open)hconn.send({...a,uid:myUid})}
+const PC=()=>({config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}});
+function getName(){name=($('nm').value.trim()||AV[myAv][0]).slice(0,14);try{localStorage.setItem('truco_prof',JSON.stringify(prof()))}catch(e){}return name}
+function profUpd(){xpUpd();const L=lvOf(xp);
+ $('avg').innerHTML=AV.map((a,i)=>`<button onclick="pickAv(${i})" class="relative rounded-full p-0.5 ring-amber-300 ${i==myAv?'ring-2':''} ${UL[i]>L?'opacity-40 grayscale':''}" title="${a[0]}${UL[i]>L?' (nível '+LV[UL[i]]+')':''}">${avt(i,46)}${UL[i]>L?'<span class="absolute inset-0 flex items-center justify-center text-lg">🔒</span>':''}</button>`).join('');
+ $('pav').innerHTML=avt(myAv,64,L);$('ptt').textContent='“'+ttName({tt:myTt,av:myAv})+'”';
+ const so=(A,cur)=>A.map((t,i)=>`<option value="${i}" ${t[1]>L?'disabled':''} ${i==cur?'selected':''}>${t[1]>L?'🔒 ':''}${t[0]}${t[1]>L?' ('+LV[t[1]]+')':''}</option>`).join('');
+ $('scb').innerHTML=so(CB,myCb);$('smz').innerHTML=so(MZ,myMz);$('ssn').innerHTML=so(SN,mySn);tblBuild();
+ $('tts').innerHTML='<option value="-1">Título do personagem</option>'+TTL.map((t,i)=>`<option value="${i}" ${t[1]>L?'disabled':''} ${i==myTt?'selected':''}>${t[1]>L?'🔒 ':''}${t[0]}${t[1]>L?' (nível '+LV[t[1]]+')':''}</option>`).join('')}
+const prof=()=>({name:$('nm').value.trim(),av:myAv,tt:myTt,cb:myCb,mz:myMz,sn:mySn});
+function pickC(k,v){v=+v;if(k=='cb')myCb=v;else if(k=='mz')myMz=v;else{mySn=v;shout(v)}profUpd();saveProf()}
+function saveProf(){try{localStorage.setItem('truco_prof',JSON.stringify(prof()))}catch(e){}}
+function pickAv(i){if(UL[i]>lvOf(xp)){toast('Libera no nível '+LV[UL[i]]);return}myAv=i;profUpd();saveProf()}
+function pickTt(v){myTt=+v;profUpd();saveProf()}
+function leave(){left=1;try{localStorage.removeItem('truco_sess');localStorage.removeItem('truco_host')}catch(e){}location.href=location.pathname}
+function hostGame(online,res){getName();isHost=true;offline=!online;
+ if(res){G=res.G;code=res.code;myUid=G.hostUid;G.seats.forEach(p=>{if(p&&!p.bot&&p.uid!=myUid){p.bot=1;p.away=1}});
+  if(G.phase=='play'){if(G.table.length==4){G.busy=1;setTimeout(trick,500)}else if(G.busy)deal()}}
+ else{G=newG();G.seats[0]={uid:myUid,name,av:myAv,tt:myTt,cb:myCb,sn:mySn,lv:lvOf(xp)}}
+ if(!online){startMatch();bcast();return}
+ if(!res)code=Array.from({length:5},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[rnd(32)]).join('');
+ hostPeer()}
+function hostPeer(n=0){peer=new Peer('truco-'+code,PC());
+ peer.on('open',id=>{G.seats.find(p=>p&&p.uid==myUid).pid=id;bcast();if(!ls)mic()});
+ peer.on('error',e=>{if(e.type=='unavailable-id'&&n<8){try{peer.destroy()}catch(x){}setTimeout(()=>hostPeer(n+1),2500)}else toast('Erro de rede: '+e.type)});
+ peer.on('call',onCall);
+ peer.on('connection',c=>{
+  c.on('data',d=>{
+   if(d.t=='join'){let s=G.seats.findIndex(p=>p&&p.uid==d.uid);
+    if(s<0){s=G.seats.findIndex(p=>!p);if(s<0||G.phase!='lobby'){c.close();return}G.seats[s]=mkSeat(d)}
+    else if(d.uid==G.hostUid){c.close();return}
+    else{G.seats[s].bot=0;G.seats[s].away=0;G.seats[s].lv=Math.max(0,Math.min(3,d.lv|0))}
+    G.seats[s].pid=d.pid;c.uid=d.uid;conns[d.uid]=c;bcast()}
+   else if(c.uid&&conns[c.uid]===c)act(c.uid,d)});
+  c.on('close',()=>{const u=c.uid;if(!u||conns[u]!==c)return;const s=G.seats.findIndex(p=>p&&p.uid==u);delete conns[u];
+   if(s>=0){if(G.phase=='lobby')G.seats[s]=null;else{G.seats[s].bot=1;G.seats[s].away=1}}bcast()})})}
+function joinGame(c0){getName();isHost=false;code=c0.toUpperCase();out={};
+ try{const ss=JSON.parse(localStorage.getItem('truco_sess')||'null');if(ss&&ss.code==code)myUid=ss.uid;localStorage.setItem('truco_sess',JSON.stringify({code,uid:myUid,t:Date.now()}))}catch(e){}
+ if(peer)try{peer.destroy()}catch(e){}
+ peer=new Peer('truco-'+code+'-'+myUid,PC());
+ peer.on('open',id=>{hconn=peer.connect('truco-'+code,{reliable:true});
+  hconn.on('open',()=>{jt=0;hconn.send({t:'join',uid:myUid,name,av:myAv,tt:myTt,cb:myCb,sn:mySn,lv:lvOf(xp),pid:id});if(!ls)mic()});
+  hconn.on('data',d=>{if(d.t=='st'){rj=1;render(d.v)}});
+  hconn.on('close',retry)});
+ peer.on('error',e=>{if(e.type=='peer-unavailable'&&!rj){toast('Sala não encontrada. Confira o código.');return}
+  if(['unavailable-id','peer-unavailable','network','disconnected','socket-error'].includes(e.type))retry();else toast('Erro: '+e.type)});
+ peer.on('call',onCall)}
+function retry(){if(left||jt>12)return;jt++;toast('Reconectando…');setTimeout(()=>joinGame(code),3500)}
+
+/* ============ VOZ (todos ouvem todos) ============ */
+let ls=null,out={},aud={};
+function updMic(){$('mic').textContent=!ls?'🎙️ Ativar voz':ls.getAudioTracks()[0].enabled?'🎙️ Voz ligada':'🔇 Mudo'}
+async function mic(){
+ if(ls){const t=ls.getAudioTracks()[0];t.enabled=!t.enabled;updMic();return}
+ try{ls=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch(e){toast('Microfone indisponível');return}
+ updMic();callAll()}
+function callAll(){if(!ls||!peer||!V)return;V.seats.forEach(p=>{if(!p||!p.pid)return;if(p.bot){delete out[p.pid];return}if(p.uid!=myUid&&!out[p.pid]){out[p.pid]=1;hook(peer.call(p.pid,ls))}})}
+function hook(c){c.on('stream',st=>{let a=aud[c.peer];if(!a){a=aud[c.peer]=new Audio();a.autoplay=true}a.srcObject=st;a.play().catch(()=>{})})}
+function onCall(c){c.answer(ls||undefined);hook(c)}
+
+/* ============ INTERFACE ============ */
+const cd=(c,cl='',st='',oc='')=>`<div ${oc?`onclick="${oc}"`:''} class="card ${c.s%2==0?'r':''} ${cl}" style="${st}"><span>${RK[c.r]}</span><span>${SU[c.s]}</span></div>`;
+const bk=(cl='',st='',oc='')=>`<div ${oc?`onclick="${oc}"`:''} class="card back ${cl}" style="${st}"></div>`;
+const B=(oc,t,c)=>`<button onclick="${oc}" class="px-3 py-1.5 rounded-lg font-bold text-sm ${c}">${t}</button>`;
+function gest(i){const sk='#f2c9a0',st='#7a4b2a';
+ const hand=(up,cl)=>`<g class="${cl}"><g fill="${sk}" stroke="${st}" stroke-width="2">${[16,24,32,40].map((x,k)=>`<rect x="${x}" y="${up[k]?6:26}" width="8" height="${up[k]?28:12}" rx="4"/>`).join('')}<rect x="12" y="32" width="38" height="26" rx="11"/><rect x="5" y="36" width="14" height="8" rx="4" transform="rotate(-28 12 40)"/></g></g>`;
+ const face=e=>`<circle cx="32" cy="32" r="24" fill="${sk}" stroke="${st}" stroke-width="2"/>${e}<path d="M22 42q10 8 20 0" fill="none" stroke="#7a2e2e" stroke-width="2.5" stroke-linecap="round"/>`;
+ const br='stroke="#222" stroke-width="3" stroke-linecap="round"';
+ let g;
+ if(i==0)g=face('<circle cx="23" cy="28" r="3.5" fill="#222"/><ellipse class="blk" cx="41" cy="28" rx="4" ry="4" fill="#222"/>');
+ else if(i==1)g=face(`<circle cx="23" cy="30" r="3.5" fill="#222"/><circle cx="41" cy="30" r="3.5" fill="#222"/><path d="M17 22h12" ${br}/><path class="brw" d="M35 22h12" ${br}/>`);
+ else if(i==2)g=hand([1,1,1,0],'');
+ else if(i==3)g=hand([1,1,1,1],'wob');
+ else if(i==4)g=hand([0,0,0,0],'knk');
+ else g=hand([1,0,0,0],'wob wf');
+ return`<svg class="gs" viewBox="0 0 64 64">${g}</svg>`}
+function toast(t){const d=document.createElement('div');d.className='tst';d.textContent=t;$('tc').appendChild(d);setTimeout(()=>d.remove(),2400)}
+function big(t,col){const d=document.createElement('div');d.className='bang f';d.style.color=col;d.textContent=t;$('fxl').appendChild(d);setTimeout(()=>d.remove(),1500)}
+function bub(rel,html){const el=$('st'+rel);if(!el)return;const r=el.getBoundingClientRect(),d=document.createElement('div');d.className='fl';d.style.cssText=`left:${r.left+r.width/2}px;top:${r.top}px`;d.innerHTML=html;$('fxl').appendChild(d);setTimeout(()=>d.remove(),2600)}
+function doFx(e){const rel=s=>(s-me+4)%4,mt=me%2;
+ switch(e.k){
+ case'truco':big(e.txt,e.team==mt?'#34d399':'#fb7185');document.body.animate([{transform:'translate(0)'},{transform:'translate(-9px,5px)'},{transform:'translate(9px,-5px)'},{transform:'translate(0)'}],{duration:300,iterations:2});shout(V.seats[e.s]&&V.seats[e.s].sn);break;
+ case'chaos':big('CAOS!','#c084fc');toast('🌀 '+e.txt);bp(200,.5,'sawtooth');break;
+ case'ok':toast(e.txt);bp(500,.1);break;
+ case'play':bp(260+rnd(80),.08,'square');if(e.zap){big('⚡ ZAP! ⚡','#fde047');bp(900,.4,'triangle')}break;
+ case'rnd':toast(e.team==='T'?'Embuchou! 🪢':e.team==mt?'Rodada nossa 🟢':'Rodada deles 🔴');break;
+ case'hand':toast((e.team==mt?'Mão nossa! +':'Mão deles +')+e.v);bp(620,.25);break;
+ case'sig':bub(rel(e.from),gest(e.i)+`<small>${SG[e.i][1]}</small>`);break;
+ case'sigm':bub(rel(e.from),'<small style="font-size:15px">…fez algo?</small>');break;
+ case'sigs':toast('Sinal enviado 🤝');break;
+ case'leak':toast('👀 Você notou um adversário sinalizando: '+SG[e.i][1]);bp(700,.2);break;
+ case'emo':bub(rel(e.seat),`<small style="font-size:17px;font-weight:700;color:#fde68a">${esc(e.e)}</small>`);break;
+ }}
+function render(v){
+ V=v;me=v.me;const L=v.phase=='lobby',mt=me%2;
+ $('lob').classList.toggle('hidden',!L);$('game').classList.toggle('hidden',L);$('ov').classList.toggle('hidden',v.phase!='over');
+ if(evSeen<0)evSeen=v.ev.reduce((m,e)=>Math.max(m,e.id),0);
+ if(L){$('lm').classList.add('hidden');$('lr').classList.remove('hidden');$('rl').textContent=offline?'':code;
+  $('lk').value=location.href.split('?')[0]+'?room='+code;
+  const slot=i=>{const p=v.seats[i],A=i%2==0;return`<div class="rounded-2xl p-3 text-center border ${A?'bg-emerald-900/50 border-emerald-400/40':'bg-rose-900/40 border-rose-400/40'}">${p?`<div class="w-14 h-14 mx-auto">${avt(p.av,56,p.lv|0)}</div><div class="font-bold text-sm mt-1 truncate">${esc(p.name)}${p.uid==myUid?' (você)':''}</div><div class="text-[11px] opacity-70">${ttName(p)} <span class="text-amber-300">${'★'.repeat((p.lv|0)+1)}</span></div>${isHost&&p.bot?`<button onclick="send({t:'bot',n:${i}})" class="text-xs mt-1 underline opacity-70">remover bot</button>`:''}`:`<div class="w-14 h-14 mx-auto rounded-full border-2 border-dashed border-white/30 flex items-center justify-center text-2xl opacity-50">+</div><div class="mt-2 flex gap-1 justify-center"><button onclick="send({t:'sit',n:${i}})" class="px-2 py-0.5 rounded bg-amber-600 text-xs font-bold">Sentar</button>${isHost?`<button onclick="send({t:'bot',n:${i}})" class="px-2 py-0.5 rounded bg-slate-600 text-xs">+🤖</button>`:''}</div>`}</div>`};
+  $('sl').innerHTML=`<div class="grid grid-cols-3 gap-2 items-center"><div></div>${slot(2)}<div></div>${slot(1)}<div class="text-center f text-amber-300 text-sm leading-tight">Dupla<br>verde × vermelha</div>${slot(3)}<div></div>${slot(0)}<div></div></div>`;
+  $('chaos').checked=!!v.chaos;$('chaos').disabled=!isHost;
+  $('bStart').classList.toggle('hidden',!isHost);callAll();return}
+ $('score').innerHTML=`Nós <b class="text-emerald-300">${v.pts[mt]}</b> × <b class="text-rose-300">${v.pts[1-mt]}</b> Eles <span class="text-sm ml-2">Mão vale <b class="text-amber-300">${v.val}</b> ${v.rs.map(r=>r==='T'?'🟰':r==mt?'🟢':'🔴').join('')}</span>`;
+ $('vira').innerHTML=`<div class="flex items-center gap-1 text-xs">Vira ${cd(v.vira,'sm')} Manilha <b class="text-amber-300 text-lg">${RK[v.man]||'—'}</b>${v.chaosTxt?`<span class="ml-2 text-fuchsia-300">🌀 ${esc(v.chaosTxt)}</span>`:''}</div>`;
+ const pos=['left:50%;bottom:4px;transform:translateX(-50%)','left:6px;top:50%;transform:translateY(-50%)','left:50%;top:4px;transform:translateX(-50%)','right:6px;top:50%;transform:translateY(-50%)'];
+ let h='';
+ for(let r=0;r<4;r++){const i=(me+r)%4,p=v.seats[i],t=i%2==mt;
+  h+=`<div id="st${r}" class="absolute text-center rounded-lg px-2 py-1 bg-black/60 ${v.turn==i&&v.phase=='play'?'turn':''}" style="${pos[r]}"><div class="flex items-center gap-1.5"><span class="w-8 h-8 flex-none">${avt(p.av,32,p.lv|0)}</span><span class="text-left leading-tight"><span class="block text-xs font-semibold ${t?'text-emerald-300':'text-rose-300'}">${i==me?'Você':esc(p.name)}${p.away?' 💤':p.bot?' 🤖':''}${t&&i!=me?' (parceiro)':''}</span><span class="block text-[10px] opacity-70">${ttName(p)} <span class="text-amber-300">${'★'.repeat((p.lv|0)+1)}</span></span></span></div>${r&&p.h?`<div class="flex gap-0.5 justify-center mt-1">${p.h.map(c=>cd(c,'sm')).join('')}</div>`:r?`<div class="flex gap-0.5 justify-center mt-1">${('<div class="card back sm" style="'+cbs(p.cb)+'"></div>').repeat(p.n)}</div>`:''}</div>`}
+ const old=prevT;prevT=v.table.length;
+ h+='<div class="absolute left-1/2 top-1/2" style="width:0;height:0">';
+ v.table.forEach((t,k)=>{const r=(t.seat-me+4)%4,p=[[0,44],[-62,0],[0,-44],[62,0]][r];
+  h+=cd(t.card,(t.card.r==v.man?'man ':'')+(k>=old?'pl':''),`position:absolute;left:${p[0]-27}px;top:${p[1]-39}px;--dx:${[0,-160,0,160][r]}px;--dy:${[140,0,-140,0][r]}px`)});
+ $('board').innerHTML=h+'</div>';
+ const mp=v.seats[me],ml=mp.lv|0,dk=''+v.vira.r+v.vira.s+v.dealer,dl=dk!=lastDK;lastDK=dk;if(dl)bp(500,.1);
+ const myT=v.phase=='play'&&v.turn==me&&!v.pend&&v.p11==null&&!v.busy;
+ $('hand').innerHTML=(mp.h||[]).map((c,i)=>{const st=dl?`animation-delay:${i*130}ms`:'',oc=`send({t:'card',i:${i}})`;
+  return v.blind?bk('lg '+(dl?'deal':''),st+';'+cbs(mp.cb),oc):cd(c,'lg '+(dl?'deal ':'')+(myT?'go ':'')+(c.r==v.man?'man':''),st,oc)}).join('');
+ let a='';const pl=v.phase=='play';
+ if(pl&&v.p11===mt)a=`<span class="text-amber-300 text-sm">Mão de onze! Veja as cartas da dupla.</span>`+B("send({t:'p11',r:'play'})",'Jogar (vale 3)','bg-emerald-600')+B("send({t:'p11',r:'run'})",'Correr','bg-rose-700');
+ else if(pl&&v.p11!=null)a='<span class="text-sm">Adversários decidindo a mão de onze…</span>';
+ else if(pl&&v.pend){if(v.pend.by%2!=mt)a=`<b class="text-amber-300">${TL[v.pend.val]}!</b>`+B("send({t:'resp',r:'ok'})",'Aceitar','bg-emerald-600')+B("send({t:'resp',r:'run'})",'Correr','bg-rose-700')+(v.pend.val<12?B("send({t:'resp',r:'up'})",TL[NX[v.pend.val]]+'!','bg-amber-600'):'');
+  else a='<span class="text-sm">Aguardando resposta…</span>'}
+ else if(pl&&!v.lock&&v.turn==me&&v.lastUp!=mt&&v.val<12&&!v.busy)a=B("send({t:'truco'})",TL[NX[v.val]]+'!','bg-amber-600');
+ else if(pl&&v.turn==me&&!v.busy)a='<span class="text-sm text-emerald-300">Sua vez</span>';
+ $('acts').innerHTML=a;
+ $('sigs').innerHTML=pl?`<span class="text-xs opacity-70 mr-1">Sinais p/ parceiro (${LIM[ml]-v.sigN[me]}) · ${LV[ml]}:</span>`+SG.map((s,i)=>`<button onclick="send({t:'sig',i:${i}})" class="px-2 py-0.5 rounded bg-black/40 text-center ${v.sigN[me]>=LIM[ml]?'opacity-40':''}"><span class="s block w-9 mx-auto">${gest(i)}</span><span class="block text-[9px]">${s[1]}</span></button>`).join('')+'<span class="ml-2">'+['Põe na conta!','Sobe mais uma!','Aham, Cláudia','Tá feio, hein'].map(e=>`<button onclick="send({t:'emo',e:'${e}'})" class="px-2 py-0.5 rounded bg-black/40 text-xs">${e}</button>`).join('')+'</span>':'';
+ if(v.phase=='over'){if(!xpDone){xpDone=1;const o=lvOf(xp);lastGain=Math.round((v.winner==mt?18:10)*(offline?.5:1));gainXP(lastGain);if(lvOf(xp)>o){const n=lvOf(xp),nw=[...AV.filter((_,i)=>UL[i]==n).map(a=>a[0]),...TTL.filter(t=>t[1]==n).map(t=>t[0]),...CB.filter(t=>t[1]==n).map(t=>'verso '+t[0]),...MZ.filter(t=>t[1]==n).map(t=>'mesa '+t[0]),...SN.filter(t=>t[1]==n).map(t=>'grito '+t[0])];toast('⭐ Nível '+LV[n]+'! Liberou: '+nw.join(', '))}}$('ovt').textContent=(v.winner==mt?'🏆 Vitória!':'💀 Derrota…')+' +'+lastGain+' XP';$('bAgain').classList.toggle('hidden',!isHost)}else xpDone=0;
+ v.ev.filter(e=>e.id>evSeen).forEach(doFx);evSeen=Math.max(evSeen,...v.ev.map(e=>e.id),0);
+ updMic();callAll()}
+
+const BOT=`<svg viewBox="0 0 40 120"><path d="M16 3h8v14c0 6 8 10 8 24v68c0 5-3 8-8 8h-8c-5 0-8-3-8-8V41c0-14 8-18 8-24z" fill="#6a3811" stroke="#2a1505" stroke-width="2"/><rect x="15" y="1" width="10" height="5" rx="1.5" fill="#d4af37"/><rect x="8" y="62" width="24" height="32" fill="#f2e3b3"/><text x="20" y="79" text-anchor="middle" font-size="7" font-family="Alfa Slab One" fill="#b3141a">GELADA</text><text x="20" y="89" text-anchor="middle" font-size="5" fill="#333">BOTECO</text><path d="M12 40q-2 12 0 20" stroke="#fff6" stroke-width="2.5" fill="none"/></svg>`;
+const ASH=`<svg viewBox="0 0 80 70"><ellipse cx="40" cy="55" rx="34" ry="11" fill="#2b2b2b"/><ellipse cx="40" cy="52" rx="28" ry="8" fill="#555"/><rect x="22" y="45" width="34" height="5" rx="2" fill="#f4efe2" transform="rotate(-10 40 47)"/><rect x="50" y="40" width="8" height="5" fill="#e0662b" transform="rotate(-10 54 42)"/><path class="smk" d="M56 38q-6-8 0-14t0-14" stroke="#fffc" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`;
+const CUP=`<svg viewBox="0 0 50 60"><path d="M5 5h40l-5 52a3 3 0 0 1-3 3H13a3 3 0 0 1-3-3z" fill="#ffffff33" stroke="#ffffffaa" stroke-width="2"/><path d="M7.5 16h35l-3.7 40H11.2z" fill="#f4b223"/><path d="M5 5h40l-1.2 12H6.2z" fill="#fffbea"/><circle cx="20" cy="38" r="1.6" fill="#fff9"/><circle cx="30" cy="28" r="1.4" fill="#fff9"/><circle cx="26" cy="46" r="1.6" fill="#fff9"/></svg>`;
+const NUT=`<svg viewBox="0 0 70 46"><ellipse cx="35" cy="30" rx="32" ry="14" fill="#efe6cf" stroke="#2a1505" stroke-width="2"/><ellipse cx="35" cy="26" rx="27" ry="10" fill="#c98a4b"/><g fill="#e0a867" stroke="#8a5a2b"><ellipse cx="22" cy="24" rx="5" ry="3.2"/><ellipse cx="33" cy="20" rx="5" ry="3.2"/><ellipse cx="45" cy="24" rx="5" ry="3.2"/><ellipse cx="30" cy="28" rx="5" ry="3.2"/><ellipse cx="41" cy="30" rx="5" ry="3.2"/></g></svg>`;
+const CAP=`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#d4af37" stroke="#7a5a10" stroke-width="1.5"/><circle cx="12" cy="12" r="6" fill="none" stroke="#7a5a10" stroke-dasharray="2 2"/></svg>`;
+const DC=(css,svg)=>`<div class="absolute pointer-events-none" style="${css}">${svg}</div>`;
+const tblBuild=()=>{const z=MZ[myMz];$('tbl').innerHTML=`<div class="absolute inset-x-1 inset-y-1 rounded-[26px]" style="background:radial-gradient(ellipse at 50% 42%,${z[2]},${z[3]} 62%,${z[4]});box-shadow:inset 0 0 0 5px ${z[5]},inset 0 0 0 8px #f6eedc99,inset 0 0 90px #000a,0 10px 30px #000a"></div>
+<div class="absolute left-1/2 top-1/2 f text-center rounded-full flex flex-col items-center justify-center" style="width:min(44vw,250px);height:min(44vw,250px);transform:translate(-50%,-50%);border:4px solid #f6eedc44;color:#f6eedc44;line-height:1.1"><span style="font-size:11px;letter-spacing:.3em">★ GELADA ★</span><span style="font-size:min(11vw,52px)">TRUCO</span><span style="font-size:10px;letter-spacing:.3em">DESDE SEMPRE</span></div>`
++DC('left:3%;top:3%;width:clamp(26px,7vw,40px);transform:rotate(14deg)',BOT)
++DC('right:3%;top:3%;width:clamp(44px,12vw,72px)',ASH)
++DC('left:3%;bottom:3%;width:clamp(44px,12vw,70px)',NUT)
++DC('right:3%;bottom:3%;width:clamp(30px,8vw,46px)',CUP)
++DC('right:13%;bottom:2%;width:clamp(24px,6vw,36px);transform:rotate(-8deg)',BOT)
++DC('left:21%;top:5%;width:22px',CAP)+DC('left:27%;top:9%;width:18px',CAP);};tblBuild();
+$('bTest').onclick=()=>hostGame(false);
+$('bHost').onclick=()=>hostGame(true);
+$('bJoin').onclick=()=>{const c=$('rc').value.trim();if(c.length>=4)joinGame(c);else toast('Digite o código da sala')};
+$('bStart').onclick=()=>send({t:'start'});
+$('bCp').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText($('lk').value);toast('Link copiado!')};
+$('mic').onclick=mic;
+try{const pf=JSON.parse(localStorage.getItem('truco_prof')||'null');if(pf){$('nm').value=pf.name||'';myAv=pf.av|0;myTt=pf.tt>=0?pf.tt|0:-1;myCb=pf.cb|0;myMz=pf.mz|0;mySn=pf.sn|0}if(UL[myAv]>lvOf(xp))myAv=0;if(myTt>=0&&(!TTL[myTt]||TTL[myTt][1]>lvOf(xp)))myTt=-1;const L0=lvOf(xp);if(!CB[myCb]||CB[myCb][1]>L0)myCb=0;if(!MZ[myMz]||MZ[myMz][1]>L0)myMz=0;if(!SN[mySn]||SN[mySn][1]>L0)mySn=0;}catch(e){}
+profUpd();
+try{const ss=JSON.parse(localStorage.getItem('truco_sess')||'null');if(ss&&Date.now()-ss.t<216e5){$('bBack').textContent='↩ Voltar para a sala '+ss.code;$('bBack').classList.remove('hidden');$('bBack').onclick=()=>{rj=1;joinGame(ss.code)}}
+ const hs=JSON.parse(localStorage.getItem('truco_host')||'null');if(hs&&Date.now()-hs.t<216e5){$('bRes').textContent='↩ Retomar minha sala '+hs.code;$('bRes').classList.remove('hidden');$('bRes').onclick=()=>hostGame(true,hs)}}catch(e){}
+const q=new URLSearchParams(location.search).get('room');if(q)$('rc').value=q.toUpperCase();
+updMic();
+</script>
+</body>
+</html>
