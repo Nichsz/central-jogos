@@ -5,84 +5,224 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Sala de Jogos</title>
-<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0e0f14;--ink:#f3efe6;--mut:#9a98a3;--line:#262833}
+:root{--bg:#0b0c10;--ink:#f5f2eb;--mut:#9ca3af;--line:#262936}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 20% -10%,#1e2233,var(--bg) 60%);color:var(--ink);font-family:Inter,sans-serif}
-header{max-width:1000px;margin:0 auto;padding:48px 20px 20px}
-h1{font-family:'Alfa Slab One',serif;font-weight:400;font-size:clamp(38px,8vw,72px);line-height:1;margin:0;letter-spacing:.01em}
-header p{color:var(--mut);margin:12px 0 0;max-width:46ch;line-height:1.5}
-main{max-width:1000px;margin:0 auto;padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px}
-a.g{display:block;color:inherit;text-decoration:none;border-radius:14px;overflow:hidden;background:#15161d;border:1px solid var(--line);transition:transform .25s,box-shadow .25s}
-a.g:hover,a.g:focus-visible{transform:translateY(-8px) rotate(-1deg);box-shadow:0 18px 40px #000a;outline:none}
-.cv{display:block;width:100%;aspect-ratio:3/4}
-.in{padding:14px 16px 16px}
-.in h2{margin:0;font-size:19px;font-family:'Alfa Slab One',serif;font-weight:400}
-.in p{margin:6px 0 10px;color:var(--mut);font-size:13.5px;line-height:1.45}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#1f2437,var(--bg) 65%);color:var(--ink);font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased}
+header{max-width:1040px;margin:0 auto;padding:44px 20px 18px}
+h1{font-family:'Alfa Slab One',serif;font-weight:400;font-size:clamp(36px,7vw,64px);line-height:1.05;margin:0;letter-spacing:.02em;color:#fef3c7;text-shadow:0 4px 20px #000a}
+header p{color:var(--mut);margin:10px 0 0;max-width:52ch;line-height:1.5;font-size:15px}
+main{max-width:1040px;margin:0 auto;padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px}
+a.g{display:flex;flex-direction:column;color:inherit;text-decoration:none;border-radius:16px;overflow:hidden;background:#14161f;border:1px solid var(--line);box-shadow:0 10px 25px #0008;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;backface-visibility:hidden}
+a.g:hover,a.g:focus-visible{transform:translateY(-6px);box-shadow:0 20px 40px #000c;border-color:#d4af3788;outline:none}
+.cv{display:block;width:100%;aspect-ratio:3/4;background:#0f1117}
+.cv text{font-family:'Alfa Slab One',serif;font-weight:400;text-rendering:geometricPrecision}
+.in{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1;justify-content:space-between}
+.in h2{margin:0;font-size:19px;font-family:'Alfa Slab One',serif;font-weight:400;color:#fde68a;letter-spacing:.02em}
+.in p{margin:6px 0 12px;color:var(--mut);font-size:13.5px;line-height:1.45}
 .tg{display:flex;flex-wrap:wrap;gap:6px}
-.tg span{font-size:11.5px;padding:3px 9px;border-radius:99px;background:#232634;color:#cfcddb}
-footer{max-width:1000px;margin:0 auto;padding:30px 20px 50px;color:var(--mut);font-size:13px}
+.tg span{font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:#212432;color:#d1d5db;border:1px solid #ffffff12}
+footer{max-width:1040px;margin:0 auto;padding:28px 20px 48px;color:var(--mut);font-size:13px}
 @media(prefers-reduced-motion:reduce){a.g{transition:none}a.g:hover{transform:none}}
 </style>
 </head>
 <body>
 <header>
  <h1>Sala de Jogos</h1>
- <p>Jogos para jogar com a galera, direto no navegador. Escolha um, crie a sala e mande o link.</p>
+ <p>Jogos para jogar com a galera ou contra bots, direto no navegador. Escolha um, crie a sala e mande o link.</p>
 </header>
 <main id="m"></main>
-<footer>Dica: libere o microfone ao entrar numa sala para conversar por voz durante a partida.</footer>
+<footer>Dica: todos os jogos possuem guia rápido de regras, efeitos sonoros e suporte a convite por link direto.</footer>
 <script>
 const covers={
 coup:`<svg class="cv" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
-<defs><radialGradient id="a" cx="50%" cy="35%" r="80%"><stop offset="0" stop-color="#6b1d3a"/><stop offset="1" stop-color="#1a0812"/></radialGradient></defs>
-<rect width="300" height="400" fill="url(#a)"/>
-<rect x="10" y="10" width="280" height="380" rx="10" fill="none" stroke="#d4af37" stroke-width="2" opacity=".6"/>
-<g transform="translate(150 215)">
- <g transform="rotate(-16) translate(-95 -10)"><rect width="84" height="120" rx="8" fill="#2a1020" stroke="#d4af37" stroke-width="2"/><circle cx="42" cy="60" r="20" fill="none" stroke="#d4af37" stroke-width="3"/><circle cx="42" cy="60" r="8" fill="#d4af37"/></g>
- <g transform="rotate(16) translate(11 -10)"><rect width="84" height="120" rx="8" fill="#2a1020" stroke="#d4af37" stroke-width="2"/><path d="M42 25v70M30 40h24" stroke="#d4af37" stroke-width="4" stroke-linecap="round"/></g>
- <g transform="translate(-42 -22)"><rect width="84" height="120" rx="8" fill="#3a1630" stroke="#f5e19c" stroke-width="2.5"/><path d="M14 90l14-28 14 16 14-16 14 28z" fill="#d4af37"/><circle cx="42" cy="38" r="9" fill="#d4af37"/></g>
+<defs>
+ <radialGradient id="bgCoup" cx="50%" cy="38%" r="75%"><stop offset="0%" stop-color="#6b1d3a"/><stop offset="100%" stop-color="#14060d"/></radialGradient>
+ <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fef08a"/><stop offset="50%" stop-color="#d4af37"/><stop offset="100%" stop-color="#926f1b"/></linearGradient>
+</defs>
+<rect width="300" height="400" fill="url(#bgCoup)"/>
+<rect x="12" y="12" width="276" height="376" rx="12" fill="none" stroke="url(#goldGrad)" stroke-width="2" opacity=".75"/>
+<rect x="18" y="18" width="264" height="364" rx="9" fill="none" stroke="#d4af37" stroke-width="1" stroke-dasharray="4 4" opacity=".4"/>
+<!-- Selo Superior -->
+<rect x="75" y="28" width="150" height="24" rx="12" fill="#1a0812" stroke="#d4af37" stroke-width="1.5"/>
+<text x="150" y="44" text-anchor="middle" font-size="11" fill="#fde68a" letter-spacing="1.5">BLEFE &amp; INFLUÊNCIA</text>
+<!-- Cartas em Leque -->
+<g transform="translate(150 205)">
+ <g transform="rotate(-18) translate(-88 -62)">
+  <rect width="84" height="122" rx="8" fill="#2a1020" stroke="#d4af37" stroke-width="2.5"/>
+  <circle cx="42" cy="52" r="22" fill="#4a1228" stroke="#d4af37" stroke-width="2"/>
+  <path d="M32 58 L42 36 L52 58 Z" fill="#f43f5e"/>
+  <rect x="14" y="88" width="56" height="14" rx="4" fill="#14060d"/>
+ </g>
+ <g transform="rotate(18) translate(4 -62)">
+  <rect width="84" height="122" rx="8" fill="#2a1020" stroke="#d4af37" stroke-width="2.5"/>
+  <circle cx="42" cy="52" r="22" fill="#064e3b" stroke="#d4af37" stroke-width="2"/>
+  <circle cx="42" cy="52" r="9" fill="#34d399"/>
+  <rect x="14" y="88" width="56" height="14" rx="4" fill="#14060d"/>
+ </g>
+ <g transform="translate(-44 -72)">
+  <rect width="88" height="128" rx="9" fill="#3d142c" stroke="#fef08a" stroke-width="3"/>
+  <circle cx="44" cy="54" r="25" fill="#581c87" stroke="#fde047" stroke-width="2"/>
+  <path d="M28 62 L33 44 L44 52 L55 44 L60 62 Z" fill="#fde047"/>
+  <rect x="14" y="94" width="60" height="16" rx="4" fill="#1a0812" stroke="#d4af37" stroke-width="1"/>
+ </g>
 </g>
-<path d="M85 118l18-44 30 28 17-38 17 38 30-28 18 44z" fill="#d4af37" stroke="#f5e19c" stroke-width="2"/>
-<rect x="85" y="118" width="130" height="12" fill="#b8932b"/>
-<text x="150" y="350" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="25" fill="#f5e19c">INTRIGAS</text>
-<text x="150" y="374" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="17" fill="#d4af37">DA CORTE</text></svg>`,
+<!-- Coroa Real no Topo -->
+<g transform="translate(150 96)">
+ <path d="M-52 16 L-38 -22 L-16 2 L0 -28 L16 2 L38 -22 L52 16 Z" fill="url(#goldGrad)" stroke="#fef9c3" stroke-width="2"/>
+ <rect x="-52" y="16" width="104" height="10" rx="3" fill="#b48a28" stroke="#fef08a" stroke-width="1"/>
+ <circle cx="0" cy="-4" r="4.5" fill="#e11d48"/><circle cx="-26" cy="4" r="3.5" fill="#38bdf8"/><circle cx="26" cy="4" r="3.5" fill="#34d399"/>
+</g>
+<!-- Placa de Título -->
+<rect x="24" y="316" width="252" height="58" rx="10" fill="#12060c" stroke="url(#goldGrad)" stroke-width="2"/>
+<text x="150" y="343" text-anchor="middle" font-size="22" fill="#fef08a" letter-spacing="1">INTRIGAS</text>
+<text x="150" y="364" text-anchor="middle" font-size="14" fill="#d4af37" letter-spacing="2">DA CORTE</text>
+</svg>`,
+
 truco:`<svg class="cv" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
-<defs><radialGradient id="b" cx="50%" cy="45%" r="75%"><stop offset="0" stop-color="#e32a30"/><stop offset="1" stop-color="#7a0d11"/></radialGradient></defs>
-<rect width="300" height="400" fill="url(#b)"/>
-<g font-family="Alfa Slab One,serif" font-weight="900">
- <g transform="translate(150 230) rotate(-20) translate(-45 -70)"><rect width="90" height="130" rx="9" fill="#fffaf0"/><text x="12" y="34" font-size="26" fill="#b91c1c">7</text><text x="45" y="92" font-size="46" fill="#b91c1c" text-anchor="middle">♥</text></g>
- <g transform="translate(150 230) rotate(20) translate(-45 -70)"><rect width="90" height="130" rx="9" fill="#fffaf0"/><text x="12" y="34" font-size="26" fill="#111">A</text><text x="45" y="92" font-size="46" fill="#111" text-anchor="middle">♠</text></g>
- <g transform="translate(150 240) translate(-48 -75)"><rect width="96" height="140" rx="9" fill="#fffaf0" stroke="#fbbf24" stroke-width="4"/><text x="12" y="36" font-size="28" fill="#111">4</text><text x="48" y="100" font-size="56" fill="#111" text-anchor="middle">♣</text></g>
+<defs>
+ <radialGradient id="bgTruco" cx="50%" cy="42%" r="75%"><stop offset="0%" stop-color="#dc2626"/><stop offset="65%" stop-color="#7f1d1d"/><stop offset="100%" stop-color="#310a0b"/></radialGradient>
+</defs>
+<rect width="300" height="400" fill="url(#bgTruco)"/>
+<rect x="12" y="12" width="276" height="376" rx="12" fill="none" stroke="#fbbf24" stroke-width="2" opacity=".75"/>
+<!-- Bandeirinhas de Boteco -->
+<g opacity=".9">
+ <polygon points="20,14 48,14 34,40" fill="#16a34a"/>
+ <polygon points="52,14 80,14 66,40" fill="#facc15"/>
+ <polygon points="220,14 248,14 234,40" fill="#2563eb"/>
+ <polygon points="252,14 280,14 266,40" fill="#f8fafc"/>
 </g>
-<g transform="translate(200 95) rotate(-9)"><path d="M-95 -38l30 8 16-22 22 20 26-24 12 24 34-4-14 26 30 14-34 14 12 24-30-6-16 22-22-18-26 22-12-22-34 6 14-26-30-16z" fill="#fde047" stroke="#7f1d1d" stroke-width="4"/>
-<text y="14" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="40" fill="#b91c1c">TRUCO!</text></g>
-<g transform="translate(36 190) rotate(-12)"><path d="M16 3h8v14c0 6 8 10 8 24v68c0 5-3 8-8 8h-8c-5 0-8-3-8-8V41c0-14 8-18 8-24z" fill="#6a3811" stroke="#2a1505" stroke-width="2"/><rect x="15" y="1" width="10" height="5" rx="1.5" fill="#d4af37"/><rect x="8" y="62" width="24" height="32" fill="#f2e3b3"/></g><text x="150" y="372" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="22" fill="#fde68a">BOTECO · 2×2 & 2×2×2</text></svg>`,
+<!-- Explosão TRUCO Centralizada -->
+<g transform="translate(150 72)">
+ <polygon points="-86,-6 -62,-26 -38,-14 -18,-32 6,-16 34,-30 50,-10 82,-16 68,8 88,24 56,28 42,46 14,30 -12,46 -32,26 -68,34 -56,10" fill="#fde047" stroke="#450a0a" stroke-width="4" stroke-linejoin="round"/>
+ <text x="0" y="11" text-anchor="middle" font-size="30" fill="#991b1b" letter-spacing="1">TRUCO!</text>
+</g>
+<!-- 3 Cartas de Truco -->
+<g transform="translate(150 218)">
+ <g transform="rotate(-18) translate(-85 -62)">
+  <rect width="80" height="116" rx="8" fill="#fffaf0" stroke="#d4af37" stroke-width="2"/>
+  <text x="12" y="28" font-size="22" fill="#dc2626">7</text>
+  <text x="40" y="78" text-anchor="middle" font-size="42" fill="#dc2626">♥</text>
+ </g>
+ <g transform="rotate(18) translate(5 -62)">
+  <rect width="80" height="116" rx="8" fill="#fffaf0" stroke="#d4af37" stroke-width="2"/>
+  <text x="12" y="28" font-size="22" fill="#111827">A</text>
+  <text x="40" y="78" text-anchor="middle" font-size="42" fill="#111827">♠</text>
+ </g>
+ <!-- 4 de Paus (ZAP) em Destaque -->
+ <g transform="translate(-43 -70)">
+  <rect width="86" height="124" rx="9" fill="#fffbeb" stroke="#fbbf24" stroke-width="4"/>
+  <text x="12" y="30" font-size="24" fill="#111827">4</text>
+  <text x="43" y="84" text-anchor="middle" font-size="50" fill="#111827">♣</text>
+  <rect x="15" y="96" width="56" height="16" rx="5" fill="#fbbf24"/>
+  <text x="43" y="108" text-anchor="middle" font-size="10" fill="#450a0a">★ ZAP ★</text>
+ </g>
+</g>
+<!-- Copo Americano de Cerveja -->
+<g transform="translate(46 254) rotate(-8)">
+ <path d="M4 4 H34 L30 44 H8 Z" fill="#f59e0b" stroke="#fff" stroke-width="2"/>
+ <rect x="3" y="0" width="32" height="9" rx="4" fill="#fffbeb"/>
+</g>
+<!-- Placa de Título -->
+<rect x="24" y="316" width="252" height="58" rx="10" fill="#230708" stroke="#fbbf24" stroke-width="2"/>
+<text x="150" y="343" text-anchor="middle" font-size="21" fill="#fef08a" letter-spacing="1">BOTECO DO TRUCO</text>
+<text x="150" y="364" text-anchor="middle" font-size="13" fill="#fca5a5" letter-spacing="1.5">MESA 2×2 &amp; 2×2×2</text>
+</svg>`,
+
 vida:`<svg class="cv" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
-<defs><radialGradient id="v" cx="50%" cy="35%" r="80%"><stop offset="0" stop-color="#0f766e"/><stop offset="1" stop-color="#042f2e"/></radialGradient></defs>
-<rect width="300" height="400" fill="url(#v)"/>
-<g transform="translate(150 185) rotate(-8) translate(-85 -55)"><rect width="170" height="96" rx="10" fill="#fef3c7" stroke="#b45309" stroke-width="3"/><text x="16" y="28" font-family="Alfa Slab One,serif" font-size="15" fill="#991b1b">BOLETO · VENC. HOJE</text><g fill="#111"><rect x="18" y="48" width="4" height="32"/><rect x="26" y="48" width="8" height="32"/><rect x="38" y="48" width="3" height="32"/><rect x="45" y="48" width="10" height="32"/><rect x="60" y="48" width="5" height="32"/><rect x="70" y="48" width="8" height="32"/><rect x="84" y="48" width="4" height="32"/><rect x="94" y="48" width="12" height="32"/><rect x="112" y="48" width="6" height="32"/><rect x="124" y="48" width="10" height="32"/><rect x="140" y="48" width="5" height="32"/></g></g>
-<g transform="translate(150 235) rotate(10) translate(-75 -42)"><rect width="150" height="80" rx="10" fill="#16a34a" stroke="#fde047" stroke-width="3"/><circle cx="75" cy="40" r="24" fill="#15803d"/><text x="75" y="49" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="24" fill="#fef08a">R$ 100</text></g>
-<g transform="translate(150 92)"><polygon points="0,-38 68,-10 0,18 -68,-10" fill="#1e293b" stroke="#fbbf24" stroke-width="3"/><rect x="-34" y="8" width="68" height="18" rx="4" fill="#334155"/><path d="M48,-4 v32" stroke="#fbbf24" stroke-width="4"/><circle cx="48" cy="30" r="6" fill="#fbbf24"/></g>
-<text x="150" y="348" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="25" fill="#fef08a">JOGO DA VIDA</text>
-<text x="150" y="376" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="20" fill="#5eead4">RUMO AOS 40 · BR</text></svg>`,
-conta:`<svg class="cv" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="c" cx="50%" cy="40%" r="80%"><stop offset="0" stop-color="#1d6b5a"/><stop offset="1" stop-color="#08241f"/></radialGradient></defs><rect width="300" height="400" fill="url(#c)"/>
-<g font-family="Alfa Slab One,serif"><g transform="translate(150 230) rotate(-24) translate(-42 -66)"><rect width="84" height="122" rx="9" fill="#fffaf0"/><text x="10" y="32" font-size="28" fill="#111">A</text><text x="42" y="90" font-size="50" fill="#111" text-anchor="middle">♠</text></g>
-<g transform="translate(150 230) rotate(-8) translate(-42 -70)"><rect width="84" height="122" rx="9" fill="#fffaf0"/><text x="10" y="32" font-size="28" fill="#b91c1c">K</text><text x="42" y="90" font-size="50" fill="#b91c1c" text-anchor="middle">♥</text></g>
-<g transform="translate(150 230) rotate(8) translate(-42 -70)"><rect width="84" height="122" rx="9" fill="#fffaf0"/><text x="10" y="32" font-size="28" fill="#b91c1c">Q</text><text x="42" y="90" font-size="50" fill="#b91c1c" text-anchor="middle">♦</text></g>
-<g transform="translate(150 230) rotate(24) translate(-42 -66)"><rect width="84" height="122" rx="9" fill="#fffaf0" stroke="#fbbf24" stroke-width="4"/><text x="10" y="32" font-size="28" fill="#111">J</text><text x="42" y="90" font-size="50" fill="#111" text-anchor="middle">♣</text></g></g>
-<rect x="30" y="52" width="104" height="44" rx="8" fill="#1d4ed8" stroke="#fff" stroke-width="3"/><text x="82" y="84" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="26" fill="#fff">120</text>
-<text x="150" y="82" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="30" fill="#fde68a">×</text>
-<rect x="166" y="52" width="104" height="44" rx="8" fill="#7f1d1d" stroke="#fff" stroke-width="3"/><text x="218" y="84" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="26" fill="#fff">8</text>
-<text x="150" y="356" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="26" fill="#f6eedc">FECHOU</text><text x="150" y="384" text-anchor="middle" font-family="Alfa Slab One,serif" font-size="26" fill="#fde68a">A CONTA</text></svg>`
+<defs>
+ <radialGradient id="bgVida" cx="50%" cy="38%" r="75%"><stop offset="0%" stop-color="#0f766e"/><stop offset="100%" stop-color="#042f2e"/></radialGradient>
+</defs>
+<rect width="300" height="400" fill="url(#bgVida)"/>
+<rect x="12" y="12" width="276" height="376" rx="12" fill="none" stroke="#5eead4" stroke-width="2" opacity=".7"/>
+<!-- Capelo de Formatura no Topo -->
+<g transform="translate(150 74)">
+ <polygon points="0,-28 62,-6 0,16 -62,-6" fill="#1e293b" stroke="#fbbf24" stroke-width="2.5"/>
+ <rect x="-30" y="8" width="60" height="15" rx="4" fill="#334155" stroke="#fbbf24" stroke-width="1.5"/>
+ <path d="M44,-2 V24" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
+ <circle cx="44" cy="25" r="5" fill="#fbbf24"/>
+</g>
+<!-- Boleto + Carteira + Nota de R$ 100 -->
+<g transform="translate(150 192)">
+ <!-- Boleto -->
+ <g transform="rotate(-10) translate(-82 -52)">
+  <rect width="146" height="84" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/>
+  <rect x="10" y="10" width="126" height="16" rx="4" fill="#dc2626"/>
+  <text x="73" y="22" text-anchor="middle" font-size="10" fill="#fff">BOLETO DO MÊS</text>
+  <g fill="#1f2937"><rect x="14" y="42" width="4" height="28"/><rect x="22" y="42" width="7" height="28"/><rect x="33" y="42" width="3" height="28"/><rect x="40" y="42" width="9" height="28"/><rect x="54" y="42" width="4" height="28"/><rect x="62" y="42" width="8" height="28"/><rect x="74" y="42" width="4" height="28"/><rect x="82" y="42" width="10" height="28"/><rect x="96" y="42" width="5" height="28"/><rect x="105" y="42" width="8" height="28"/><rect x="118" y="42" width="12" height="28"/></g>
+ </g>
+ <!-- Carteira de Trabalho Azul -->
+ <g transform="rotate(12) translate(-8 -44)">
+  <rect width="84" height="106" rx="8" fill="#1d4ed8" stroke="#93c5fd" stroke-width="2.5"/>
+  <circle cx="42" cy="40" r="16" fill="none" stroke="#fde047" stroke-width="2"/>
+  <text x="42" y="44" text-anchor="middle" font-size="10" fill="#fde047">CLT</text>
+  <text x="42" y="82" text-anchor="middle" font-size="11" fill="#dbeafe">CARREIRA</text>
+ </g>
+ <!-- Nota de R$ 100 -->
+ <g transform="rotate(-3) translate(-66 10)">
+  <rect width="132" height="66" rx="8" fill="#16a34a" stroke="#fde047" stroke-width="3"/>
+  <circle cx="66" cy="33" r="20" fill="#15803d" stroke="#86efac" stroke-width="1.5"/>
+  <text x="66" y="41" text-anchor="middle" font-size="22" fill="#fef08a">R$ 100</text>
+ </g>
+</g>
+<!-- Placa de Título -->
+<rect x="24" y="316" width="252" height="58" rx="10" fill="#042221" stroke="#fbbf24" stroke-width="2"/>
+<text x="150" y="343" text-anchor="middle" font-size="21" fill="#fef08a" letter-spacing="1">JOGO DA VIDA BR</text>
+<text x="150" y="364" text-anchor="middle" font-size="13" fill="#5eead4" letter-spacing="1.5">RUMO AOS 40 ANOS</text>
+</svg>`,
+
+conta:`<svg class="cv" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+<defs>
+ <radialGradient id="bgConta" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#15803d"/><stop offset="70%" stop-color="#064e3b"/><stop offset="100%" stop-color="#022c22"/></radialGradient>
+</defs>
+<rect width="300" height="400" fill="url(#bgConta)"/>
+<rect x="12" y="12" width="276" height="376" rx="12" fill="none" stroke="#fbbf24" stroke-width="2" opacity=".75"/>
+<!-- Placar Fichas x Mult -->
+<g transform="translate(0 38)">
+ <rect x="34" y="0" width="96" height="42" rx="9" fill="#1d4ed8" stroke="#fff" stroke-width="2.5"/>
+ <text x="82" y="29" text-anchor="middle" font-size="24" fill="#fff">120</text>
+ <text x="150" y="29" text-anchor="middle" font-size="26" fill="#fde047">×</text>
+ <rect x="170" y="0" width="96" height="42" rx="9" fill="#b91c1c" stroke="#fff" stroke-width="2.5"/>
+ <text x="218" y="29" text-anchor="middle" font-size="24" fill="#fff">8</text>
+</g>
+<!-- Leque de 4 Cartas de Pôquer -->
+<g transform="translate(150 218)">
+ <g transform="rotate(-21) translate(-38 -64)">
+  <rect width="76" height="112" rx="8" fill="#fffaf0" stroke="#d4af37" stroke-width="2"/>
+  <text x="10" y="27" font-size="22" fill="#111827">A</text>
+  <text x="38" y="76" text-anchor="middle" font-size="42" fill="#111827">♠</text>
+ </g>
+ <g transform="rotate(-7) translate(-38 -68)">
+  <rect width="76" height="112" rx="8" fill="#fffaf0" stroke="#d4af37" stroke-width="2"/>
+  <text x="10" y="27" font-size="22" fill="#dc2626">K</text>
+  <text x="38" y="76" text-anchor="middle" font-size="42" fill="#dc2626">♥</text>
+ </g>
+ <g transform="rotate(7) translate(-38 -68)">
+  <rect width="76" height="112" rx="8" fill="#fffaf0" stroke="#d4af37" stroke-width="2"/>
+  <text x="10" y="27" font-size="22" fill="#dc2626">Q</text>
+  <text x="38" y="76" text-anchor="middle" font-size="42" fill="#dc2626">♦</text>
+ </g>
+ <g transform="rotate(21) translate(-38 -64)">
+  <rect width="76" height="112" rx="8" fill="#fef08a" stroke="#f59e0b" stroke-width="3.5"/>
+  <text x="10" y="27" font-size="22" fill="#111827">J</text>
+  <text x="38" y="76" text-anchor="middle" font-size="42" fill="#111827">♣</text>
+ </g>
+</g>
+<!-- Placa de Título -->
+<rect x="24" y="316" width="252" height="58" rx="10" fill="#04221b" stroke="#fbbf24" stroke-width="2"/>
+<text x="150" y="343" text-anchor="middle" font-size="21" fill="#fef08a" letter-spacing="1">FECHOU A CONTA</text>
+<text x="150" y="364" text-anchor="middle" font-size="13" fill="#6ee7b7" letter-spacing="1.5">PÔQUER &amp; AMULETOS</text>
+</svg>`
 };
+
 const games=[
 {t:'Intrigas da Corte',d:'Blefe e influência. Engane, desafie e sobreviva na corte.',href:'games/intrigas-da-corte/',c:covers.coup,tg:['2 a 6 jogadores','Online','Bots','Voz e vídeo']},
-{t:'Truco',d:'Duplas, manilha pela vira, sinais secretos e modo caos.',href:'games/truco/',c:covers.truco,tg:['2x2 e 2x2x2','Online','Bots','Voz','Modo caos']},
-{t:'Jogo da Vida BR',d:'Empregos, estudos e boletos. Quem chega melhor aos 40?',href:'games/jogo-da-vida-br/',c:covers.vida,tg:['Solo ou Online','Bots','Carreira','Boletos']},
-{t:'Fechou a Conta',d:'Monte mãos de pôquer, junte amuletos e pague as contas do boteco.',href:'games/fechou-a-conta/',c:covers.conta,tg:['Solo ou Online','Chefões','Pacotes','Troféus']}];
-document.getElementById('m').innerHTML=games.map(g=>`<a class="g" href="${g.href}">${g.c}<div class="in"><h2>${g.t}</h2><p>${g.d}</p><div class="tg">${g.tg.map(x=>`<span>${x}</span>`).join('')}</div></div></a>`).join('');
+{t:'Boteco do Truco',d:'Duplas 2x2 ou 2x2x2, manilha pela vira, sinais secretos e modo caos.',href:'games/truco/',c:covers.truco,tg:['2x2 e 2x2x2','Online','Bots','Voz','Modo caos']},
+{t:'Jogo da Vida BR',d:'Empregos, estudos, AirFryer e boletos. Quem chega melhor aos 40?',href:'games/jogo-da-vida-br/',c:covers.vida,tg:['Solo ou Online','Bots','Carreira','Boletos']},
+{t:'Fechou a Conta',d:'Monte mãos de pôquer, junte amuletos, vença chefões e pague o boteco.',href:'games/fechou-a-conta/',c:covers.conta,tg:['Solo ou Online','Chefões','Pacotes','Troféus']}];
+
+document.getElementById('m').innerHTML=games.map(g=>`<a class="g" href="${g.href}">${g.c}<div class="in"><div><h2>${g.t}</h2><p>${g.d}</p></div><div class="tg">${g.tg.map(x=>`<span>${x}</span>`).join('')}</div></div></a>`).join('');
 </script>
 </body>
 </html>
