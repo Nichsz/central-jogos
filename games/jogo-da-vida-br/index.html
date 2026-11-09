@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="robots" content="noindex,nofollow">
-<title>JOGO DA VIDA BR: Rumo aos 40</title>
+<title>JOGO DA VIDA BR: Edição UFABC & Rumo aos 40</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -12,15 +12,69 @@
 <style>
 *{box-sizing:border-box;user-select:none;-webkit-user-select:none}
 html,body{height:100%}
-body{margin:0;background:radial-gradient(circle at 50% 25%,rgba(15,118,110,.42) 0%,rgba(6,28,26,.96) 70%,#030d0c 100%);color:#f8f1dc;font-family:Inter,sans-serif;overflow-x:hidden}
+body{margin:0;background:radial-gradient(circle at 50% 20%,rgba(15,118,110,.38) 0%,rgba(6,24,22,.96) 70%,#030b0a 100%);color:#f8f1dc;font-family:Inter,sans-serif;overflow-x:hidden}
 .f{font-family:'Alfa Slab One',serif;font-weight:400;letter-spacing:.03em}
 .gold-border{border:1px solid rgba(212,175,55,.42);box-shadow:0 8px 30px -4px rgba(0,0,0,.7),inset 0 1px 0 0 rgba(245,225,156,.18)}
 .gold-border-strong{border:2px solid #d4af37;box-shadow:0 0 25px rgba(212,175,55,.35),inset 0 0 12px rgba(212,175,55,.15)}
-.lousa{background:#0c2421;border:2px solid rgba(212,175,55,.45);border-radius:20px;box-shadow:inset 0 0 30px #0009,0 8px 20px #0009}
-.card-loc{background:linear-gradient(160deg,#133531,#091b19);border:1.5px solid rgba(94,234,212,.28);border-radius:16px;padding:12px;transition:transform .18s,border-color .18s,box-shadow .18s;cursor:pointer}
-.card-loc:hover{transform:translateY(-4px);border-color:#fbbf24;box-shadow:0 12px 24px #000a}
+
+/* Tabuleiro da Cidade */
+.board-map{
+ position:relative;width:100%;height:clamp(430px,62vh,540px);
+ background:
+  radial-gradient(circle at 50% 50%,rgba(16,185,129,.12) 0%,transparent 65%),
+  repeating-linear-gradient(0deg,rgba(255,255,255,.02) 0 1px,transparent 1px 32px),
+  repeating-linear-gradient(90deg,rgba(255,255,255,.02) 0 1px,transparent 1px 32px),
+  linear-gradient(160deg,#0b2926 0%,#071c1a 60%,#051311 100%);
+ border:3px solid rgba(212,175,55,.55);border-radius:28px;
+ box-shadow:inset 0 0 70px #000c,0 16px 40px #000a;overflow:hidden
+}
+.bldg{
+ position:absolute;transform:translate(-50%,-50%);
+ width:clamp(108px,24vw,152px);padding:8px 10px;border-radius:18px;
+ background:rgba(10,31,29,.92);border:2px solid rgba(255,255,255,.16);
+ box-shadow:0 8px 20px #000b;cursor:pointer;
+ transition:transform .2s cubic-bezier(.2,.8,.2,1),border-color .2s,box-shadow .2s;z-index:10
+}
+.bldg:hover{transform:translate(-50%,-54%) scale(1.05);border-color:#fbbf24;box-shadow:0 12px 28px #000e,0 0 18px rgba(251,191,36,.3)}
+.bldg.active-loc{border-color:#34d399;box-shadow:0 0 0 3px rgba(52,211,153,.35),0 10px 25px #000c}
+.bldg-alert{position:absolute;top:-8px;right:-8px;background:#ef4444;color:#fff;font-size:10px;font-weight:800;padding:2px 6px;border-radius:99px;border:2px solid #091917;animation:pulseAlert 1.4s infinite}
+@keyframes pulseAlert{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+
+/* Peão do Jogador e Bots no Mapa */
+.pawn{
+ position:absolute;transform:translate(-50%,-50%);
+ transition:left .52s cubic-bezier(.22,1,.36,1),top .52s cubic-bezier(.22,1,.36,1);
+ z-index:25;pointer-events:none
+}
+.pawn-me{
+ width:44px;height:44px;border-radius:99px;background:linear-gradient(135deg,#fbbf24,#d97706);
+ border:3px solid #fff;box-shadow:0 6px 16px #000d,0 0 16px #fbbf24aa;
+ display:flex;align-items:center;justify-content:center;font-size:22px;
+ animation:pawnBounce 2.2s infinite ease-in-out
+}
+@keyframes pawnBounce{0%,100%{margin-top:0}50%{margin-top:-5px}}
+.pawn-bot{
+ width:30px;height:30px;border-radius:99px;background:#0f172a;
+ border:2px solid #38bdf8;box-shadow:0 4px 10px #000b;
+ display:flex;align-items:center;justify-content:center;font-size:15px;opacity:.9
+}
+
+/* Efeitos Flutuantes no Mapa */
+.fx-pop{
+ position:absolute;transform:translate(-50%,-50%);pointer-events:none;z-index:40;
+ font-weight:800;font-size:14px;padding:4px 10px;border-radius:99px;
+ box-shadow:0 6px 16px #000b;white-space:nowrap;
+ animation:floatUp 1.5s cubic-bezier(.16,1,.3,1) forwards
+}
+@keyframes floatUp{
+ 0%{opacity:0;transform:translate(-50%,10px) scale(.6)}
+ 20%{opacity:1;transform:translate(-50%,-12px) scale(1.1)}
+ 80%{opacity:1;transform:translate(-50%,-42px) scale(1)}
+ 100%{opacity:0;transform:translate(-50%,-62px) scale(.85)}
+}
+
 .bt{padding:10px 15px;border-radius:12px;font-weight:700;transition:all .15s}.bt:disabled{opacity:.38;cursor:not-allowed}
-.bar{height:8px;background:#051210;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;transition:width .35s}
+.bar{height:7px;background:#04100e;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;transition:width .4s ease}
 .tst{position:fixed;top:64px;left:50%;transform:translateX(-50%);background:#071715f5;border:2px solid #fbbf24;padding:8px 16px;border-radius:12px;font-size:13px;font-weight:600;z-index:90;max-width:92vw;text-align:center;box-shadow:0 10px 25px #000c}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:rgba(6,20,18,.6)}
@@ -32,31 +86,31 @@ button{cursor:pointer}
 
 <div id="tc"></div>
 
-<!-- CABEÇALHO FIXO PADRÃO INTRIGAS DA CORTE -->
-<header class="w-full bg-[#071715]/95 backdrop-blur-md border-b border-amber-500/25 px-3 sm:px-6 py-2.5 flex items-center justify-between z-40 sticky top-0">
+<!-- CABEÇALHO FIXO -->
+<header class="w-full bg-[#061513]/95 backdrop-blur-md border-b border-amber-500/25 px-3 sm:px-6 py-2.5 flex items-center justify-between z-40 sticky top-0">
  <div class="flex items-center gap-2.5 sm:gap-3">
   <a href="../../" title="Voltar para a Sala de Jogos" class="px-2.5 py-2 rounded-xl bg-[#0f2926] hover:bg-[#163a36] border border-amber-500/30 text-amber-200 transition flex items-center gap-1.5 text-xs sm:text-sm font-semibold">
    <i class="fa-solid fa-arrow-left text-amber-400"></i><span class="hidden sm:inline">Central</span>
   </a>
-  <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-teal-400 via-emerald-600 to-teal-900 flex items-center justify-center shadow-lg border border-amber-300/50">
+  <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-400 via-teal-600 to-emerald-950 flex items-center justify-center shadow-lg border border-amber-300/50">
    <i class="fa-solid fa-graduation-cap text-slate-950 text-lg"></i>
   </div>
   <div>
    <div class="flex items-center gap-2">
     <h1 class="f text-sm sm:text-lg tracking-wider bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-200 bg-clip-text text-transparent">JOGO DA VIDA BR</h1>
-    <span class="hidden md:inline-block text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-teal-500/15 text-teal-300 border border-teal-500/30">Rumo aos 40 Anos</span>
+    <span class="hidden md:inline-block text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Edição UFABC & ABC</span>
    </div>
-   <p class="text-[11px] text-amber-200/60 hidden sm:block">Empregos, Estudos, AirFryer & Boletos • Solo ou Online P2P</p>
+   <p class="text-[11px] text-amber-200/60 hidden sm:block">Tabuleiro Interativo • Estudos, Carreira, RU & Boletos</p>
   </div>
  </div>
 
  <div id="roomHeaderBadge" class="hidden items-center gap-1.5 sm:gap-2 bg-[#0f2926] border border-amber-500/40 rounded-xl px-2.5 py-1.5">
   <span class="text-xs text-amber-200/70 hidden sm:inline">Sala:</span>
   <span id="roomCodeDisplay" class="font-mono font-bold text-sm sm:text-base text-amber-300 tracking-widest">-----</span>
-  <button onclick="copyCode()" title="Copiar Código" class="text-xs bg-amber-500/20 hover:bg-amber-500/35 text-amber-200 px-2 py-1 rounded-lg transition flex items-center gap-1">
+  <button onclick="copyCode()" class="text-xs bg-amber-500/20 hover:bg-amber-500/35 text-amber-200 px-2 py-1 rounded-lg transition flex items-center gap-1">
    <i class="fa-regular fa-copy"></i><span class="hidden md:inline">Código</span>
   </button>
-  <button onclick="copyLink()" title="Copiar Link Direto" class="text-xs bg-emerald-500/20 hover:bg-emerald-500/35 border border-emerald-400/40 text-emerald-200 px-2 py-1 rounded-lg transition flex items-center gap-1 font-semibold">
+  <button onclick="copyLink()" class="text-xs bg-emerald-500/20 hover:bg-emerald-500/35 border border-emerald-400/40 text-emerald-200 px-2 py-1 rounded-lg transition flex items-center gap-1 font-semibold">
    <i class="fa-solid fa-link"></i><span class="hidden md:inline">Link Convite</span>
   </button>
  </div>
@@ -65,11 +119,11 @@ button{cursor:pointer}
   <button onclick="toggleSfx()" title="Efeitos Sonoros" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-[#0f2926] hover:bg-[#163a36] border border-amber-500/30 text-amber-200 transition text-xs sm:text-sm">
    <i id="sfxIcon" class="fa-solid fa-volume-high"></i>
   </button>
+  <button onclick="openTut(0)" class="px-2.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/35 border border-amber-400/50 text-amber-200 transition flex items-center gap-1.5 text-xs sm:text-sm font-bold">
+   <i class="fa-solid fa-circle-question text-amber-400"></i><span>Como Jogar</span>
+  </button>
   <button onclick="$('inviteModal').classList.remove('hidden')" class="px-2.5 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-200 transition flex items-center gap-1.5 text-xs sm:text-sm font-medium">
    <i class="fa-solid fa-user-group text-emerald-400"></i><span class="hidden sm:inline">Convite</span>
-  </button>
-  <button onclick="$('rulesModal').classList.remove('hidden')" class="px-2.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/30 border border-amber-400/40 text-amber-200 transition flex items-center gap-1.5 text-xs sm:text-sm font-medium">
-   <i class="fa-solid fa-scroll text-amber-400"></i><span class="hidden sm:inline">Guia & Regras</span>
   </button>
   <button id="btnExitGame" onclick="if(confirm('Sair da partida e voltar ao Lobby?')){leaveRoom()}" class="hidden p-2 sm:px-3 sm:py-2 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-500/40 text-rose-200 transition text-xs sm:text-sm items-center gap-1.5">
    <i class="fa-solid fa-right-from-bracket"></i><span class="hidden md:inline">Sair</span>
@@ -77,43 +131,12 @@ button{cursor:pointer}
  </div>
 </header>
 
-<div id="app" class="flex-1 flex flex-col justify-center p-3 sm:p-6"></div>
+<div id="app" class="flex-1 flex flex-col justify-center p-2.5 sm:p-5"></div>
 
-<!-- MODAL: REGRAS E LOCAIS DA CIDADE -->
-<div id="rulesModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onclick="this.classList.add('hidden')">
- <div class="w-full max-w-3xl max-h-[86vh] bg-[#0a1f1d] gold-border-strong rounded-3xl p-5 sm:p-7 flex flex-col overflow-hidden shadow-2xl" onclick="event.stopPropagation()">
-  <div class="flex items-center justify-between pb-3 border-b border-amber-500/30">
-   <h3 class="f text-lg sm:text-2xl text-amber-200 flex items-center gap-2"><i class="fa-solid fa-scroll text-amber-400"></i><span>Manual da Vida Adulta — Como Vencer aos 40</span></h3>
-   <button onclick="$('rulesModal').classList.add('hidden')" class="w-8 h-8 rounded-xl bg-black/50 text-amber-200"><i class="fa-solid fa-xmark"></i></button>
-  </div>
-  <div class="flex-1 overflow-y-auto py-4 space-y-4 text-xs sm:text-sm text-amber-100/85 pr-1">
-   <div class="p-3.5 rounded-2xl bg-black/40 border border-amber-500/25">
-    <h4 class="f text-amber-300 mb-1">🎂 Os 12 Turnos (Dos 18 aos 40 Anos)</h4>
-    <p>A partida dura <b>12 turnos</b> (cada turno avança 2 anos). Você começa toda semana com <b>60 Horas Livres</b> (ou até 86h com Moto, Carro e AirFryer) para gastar nos 8 pontos da cidade. Vence quem tiver a maior <b>Média Geral</b> entre os 4 pilares:</p>
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2 text-center text-xs">
-     <div class="p-2 rounded-xl bg-emerald-950/60 border border-emerald-400/30">💰 <b>Patrimônio</b><br><span class="text-[11px] opacity-80">Saldo + Selic + Bens</span></div>
-     <div class="p-2 rounded-xl bg-sky-950/60 border border-sky-400/30">🎓 <b>Carreira</b><br><span class="text-[11px] opacity-80">Diplomas + Cargo</span></div>
-     <div class="p-2 rounded-xl bg-rose-950/60 border border-rose-400/30">❤️ <b>Saúde</b><br><span class="text-[11px] opacity-80">Comida + Academia</span></div>
-     <div class="p-2 rounded-xl bg-amber-950/60 border border-amber-400/30">😎 <b>Lazer</b><br><span class="text-[11px] opacity-80">Casa + Praia + Bar</span></div>
-    </div>
-   </div>
-   <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-    <div class="p-3.5 rounded-2xl bg-black/40 border border-amber-500/25">
-     <h4 class="f text-amber-300 mb-1">⚠️ Comida, Boletos e SPC</h4>
-     <ul class="space-y-1.5 text-xs">
-      <li><b>Alimentação Obrigatória:</b> Coma pelo menos 1 vez por turno no Mercadinho. Virar o ano sem comer te leva para a <b>UPA (-15h no próximo turno)</b>!</li>
-      <li><b>Aluguel e SPC:</b> Todo fim de turno desconta o aluguel da sua moradia. Se faltar saldo, entra no <b>SPC / Cheque Especial</b> (cobra 25% de juros por turno e derruba sua felicidade).</li>
-     </ul>
-    </div>
-    <div class="p-3.5 rounded-2xl bg-black/40 border border-amber-500/25">
-     <h4 class="f text-amber-300 mb-1">🚑 Burnout & Sabotagens (Perrengues)</h4>
-     <ul class="space-y-1.5 text-xs">
-      <li><b>Estresse (0 a 100%):</b> Trabalhar e estudar aumenta o estresse. Se bater 100%, você sofre <b>Burnout</b> e perde 15h na semana seguinte.</li>
-      <li><b>Perrengues no Boteco:</b> No Boteco você pode mandar <i>Vizinho com Som Alto às 3h</i>, <i>Parente Pedindo Dinheiro</i> ou <i>Obra na Rua</i> para atrasar a vida de um concorrente!</li>
-     </ul>
-    </div>
-   </div>
-  </div>
+<!-- MODAL: TUTORIAL INTERATIVO PASSO A PASSO -->
+<div id="tutModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4" onclick="this.classList.add('hidden')">
+ <div class="w-full max-w-lg bg-[#0a1f1d] gold-border-strong rounded-3xl p-6 shadow-2xl text-center space-y-4" onclick="event.stopPropagation()">
+  <div id="tutBody"></div>
  </div>
 </div>
 
@@ -127,97 +150,151 @@ button{cursor:pointer}
   <div class="space-y-3 text-xs sm:text-sm text-amber-100/85">
    <div class="p-3 rounded-2xl bg-black/40 border border-amber-500/25 flex gap-3">
     <span class="w-6 h-6 rounded-full bg-amber-500 text-black font-black text-xs flex items-center justify-center shrink-0">1</span>
-    <div><b class="text-amber-300 block">Escolha sua Origem e Crie a Sala</b>Selecione seu avatar e sua origem aos 18 anos e clique em <b>Criar Sala Online</b>.</div>
+    <div><b class="text-amber-300 block">Escolha sua Origem e Crie a Sala</b>Selecione seu avatar, sua origem aos 18 anos e clique em <b>Criar Nova Sala</b>.</div>
    </div>
    <div class="p-3 rounded-2xl bg-black/40 border border-amber-500/25 flex gap-3">
     <span class="w-6 h-6 rounded-full bg-amber-500 text-black font-black text-xs flex items-center justify-center shrink-0">2</span>
-    <div><b class="text-amber-300 block">Copie o Link de Convite</b>Clique em <b>Link Convite</b> no topo e mande no WhatsApp ou Discord. O código da sala já abre preenchido para seus amigos!</div>
+    <div><b class="text-amber-300 block">Envie o Link Direto no WhatsApp/Discord</b>Clique em <b>Link Convite</b> no topo. Seus amigos entram direto no mesmo mapa da cidade!</div>
    </div>
    <div class="p-3 rounded-2xl bg-black/40 border border-amber-500/25 flex gap-3">
     <span class="w-6 h-6 rounded-full bg-amber-500 text-black font-black text-xs flex items-center justify-center shrink-0">3</span>
-    <div><b class="text-amber-300 block">Turnos Simultâneos Rápidos</b>Todos planejam sua semana ao mesmo tempo! Quando todos clicam em "Fechar Ano", os boletos vencem e o próximo ano começa.</div>
+    <div><b class="text-amber-300 block">Ande pelo Mapa em Tempo Real</b>Todos movem seus bonecos pelo mapa simultaneamente. Quando todos fecham o ano, os boletos e bolsas são calculados!</div>
    </div>
   </div>
-  <button onclick="$('inviteModal').classList.add('hidden')" class="mt-5 w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 text-black font-bold text-sm">Entendi, Bora Vencer na Vida!</button>
+  <button onclick="$('inviteModal').classList.add('hidden')" class="mt-5 w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 text-black font-bold text-sm">Bora pro Jogo!</button>
  </div>
 </div>
 
 <script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
-let ac,sfxOn=true;
+let ac,sfxOn=true,tutStep=0;
 function bp(f=440,d=.1,ty='sine'){if(!sfxOn)return;try{ac=ac||new AudioContext();const o=ac.createOscillator(),v=ac.createGain();o.type=ty;o.frequency.value=f;v.gain.value=.07;o.connect(v);v.connect(ac.destination);o.start();v.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}}
 function toggleSfx(){sfxOn=!sfxOn;$('sfxIcon').className=sfxOn?'fa-solid fa-volume-high':'fa-solid fa-volume-xmark text-rose-400';toast(sfxOn?'Efeitos sonoros ativados':'Áudio silenciado')}
-function toast(t){const d=document.createElement('div');d.className='tst';d.textContent=t;$('tc').appendChild(d);setTimeout(()=>d.remove(),2800)}
+function toast(t){const d=document.createElement('div');d.className='tst';d.textContent=t;$('tc').appendChild(d);setTimeout(()=>d.remove(),2600)}
 function copyCode(){if(!roomCode)return;navigator.clipboard&&navigator.clipboard.writeText(roomCode);toast('Código '+roomCode+' copiado!')}
 function copyLink(){const u=location.href.split('?')[0]+(roomCode?'?room='+roomCode:'');navigator.clipboard&&navigator.clipboard.writeText(u);toast('Link de convite copiado!')}
 
-/* ============ AVATARES, ORIGENS E DADOS DO JOGO ============ */
+/* ============ TUTORIAL INTERATIVO EM 4 PASSOS ============ */
+const TUT_STEPS=[
+ {
+  ic:'🗺️',t:'1. Bem-vindo ao Tabuleiro da Vida!',
+  d:'Você começa aos <b>18 anos</b> e joga até os <b>40 anos</b> (12 turnos). Em cada turno você tem <b>60 Horas na Semana</b> para clicar nos prédios do mapa, andar até lá com seu boneco e fazer suas escolhas.'
+ },
+ {
+  ic:'🍛',t:'2. As Duas Regras de Sobrevivência',
+  d:'Todo turno você precisa fazer <b>1 refeição no RU / Restaurante</b> (se virar o ano sem comer, passa mal e perde 15h na UPA!). Além disso, deixe dinheiro na mão ou no Banco para o <b>Aluguel</b> que vence no fim de todo turno.'
+ },
+ {
+  ic:'🎓',t:'3. UFABC, Iniciação Científica e Carreira',
+  d:'Estude na <b>UFABC</b> (do <i>BC&T</i> até o <i>BCC/Engenharia</i> e <i>Mestrado</i>) para liberar salários muito maiores na <b>Firma</b>. Dica de ouro: concluir a <b>Iniciação Científica (FAPESP)</b> te rende <b>+R$ 180 de bolsa todo turno!</b>'
+ },
+ {
+  ic:'🏆',t:'4. Como Vencer aos 40 Anos?',
+  d:'Não adianta só trabalhar e ter um Burnout! Vence quem chegar aos 40 anos com a maior <b>Média Geral</b> entre os 4 medidores do topo: <br><br>💰 <b>Patrimônio</b> · 🎓 <b>Carreira</b> · ❤️ <b>Saúde</b> · 😎 <b>Lazer</b>'
+ }
+];
+function openTut(step=0){
+ tutStep=step;
+ const s=TUT_STEPS[step];
+ $('tutModal').classList.remove('hidden');
+ $('tutBody').innerHTML=`
+  <div class="w-16 h-16 mx-auto rounded-2xl bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-4xl shadow-lg">${s.ic}</div>
+  <div class="text-[11px] font-bold uppercase tracking-widest text-emerald-300">Tutorial Rápido • Passo ${step+1} de ${TUT_STEPS.length}</div>
+  <h3 class="f text-xl sm:text-2xl text-amber-200">${s.t}</h3>
+  <p class="text-xs sm:text-sm text-amber-100/85 leading-relaxed">${s.d}</p>
+  <div class="flex justify-center gap-1.5 py-1">
+   ${TUT_STEPS.map((_,i)=>`<span class="w-2.5 h-2.5 rounded-full ${i==step?'bg-amber-400 scale-125':'bg-white/20'}"></span>`).join('')}
+  </div>
+  <div class="flex gap-2 pt-2">
+   ${step>0?`<button onclick="openTut(${step-1})" class="bt bg-black/50 border border-white/15 text-xs flex-1">← Anterior</button>`:`<button onclick="$('tutModal').classList.add('hidden')" class="bt bg-black/50 border border-white/15 text-xs flex-1">Pular</button>`}
+   ${step<TUT_STEPS.length-1
+    ?`<button onclick="openTut(${step+1})" class="bt bg-gradient-to-r from-amber-500 to-yellow-600 text-black text-xs flex-1">Próximo →</button>`
+    :`<button onclick="closeTut()" class="bt bg-gradient-to-r from-emerald-500 to-teal-500 text-black text-xs flex-1">Entendi, Bora Jogar! 🚀</button>`}
+  </div>`;
+}
+function closeTut(){
+ $('tutModal').classList.add('hidden');
+ try{localStorage.setItem('vida_br_tut_ok','1')}catch(e){}
+}
+
+/* ============ COORDENADAS DOS 8 PRÉDIOS NO TABULEIRO ============ */
+const MAP_LOCS={
+ ufabc:{k:'study',ic:'🎓',n:'UFABC',sub:'BC&T, IC & BCC',x:20,y:21,col:'border-emerald-400/60'},
+ work: {k:'work', ic:'🏢',n:'Polo Tech & Firma',sub:'Trabalhar & Promoção',x:50,y:17,col:'border-sky-400/60'},
+ bank: {k:'bank', ic:'🏦',n:'Banco & Lotérica',sub:'Selic +12% & Mega',x:80,y:21,col:'border-amber-400/60'},
+ food: {k:'food', ic:'🍛',n:'Bandejão RU & PF',sub:'Matar a Fome',x:16,y:52,col:'border-orange-400/60'},
+ shop: {k:'shop', ic:'🛍️',n:'Shopping ABC',sub:'PC, AirFryer & Moto',x:84,y:52,col:'border-purple-400/60'},
+ home: {k:'home', ic:'🏠',n:'Sua Moradia',sub:'República → Casa',x:20,y:82,col:'border-teal-400/60'},
+ health:{k:'health',ic:'🏥',n:'SmartFit & UPA',sub:'Saúde & Desestressar',x:50,y:84,col:'border-rose-400/60'},
+ fun:  {k:'fun',  ic:'🍻',n:'Bar & Praia',sub:'Lazer & Perrengues',x:80,y:82,col:'border-yellow-400/60'}
+};
+
 const AVS=['😎','🤓','🤠','👩‍💻','🧑‍🔧','👩‍🎓','🧔','👵'];
 
 const ORIGINS=[
-{id:'padrao',i:'🎒',n:'Recém-Formado',d:'Equilibrado: começa com R$ 350 na mão e 60h por semana.',req:'Inicial',ok:()=>true},
-{id:'bolsista',i:'🎓',n:'Bolsista Dedicado',d:'Já começa com o Curso de Informática & Inglês concluído.',req:'Chegar aos 40 anos 1 vez',ok:m=>m.plays>=1},
-{id:'correria',i:'⚡',n:'Rei da Correria',d:'Tem +6h extras toda semana (66h) e ganha +R$ 2/h em bicos.',req:'Conquistar 2 Troféus',ok:m=>m.tr.length>=2},
-{id:'herdeiro',i:'👵',n:'Xodó da Vó',d:'Começa com R$ 800 na Poupança e uma AirFryer Inox em casa.',req:'Conquistar 4 Troféus',ok:m=>m.tr.length>=4},
-{id:'faria',i:'📈',n:'Faria Limer Mirim',d:'Poupança rende 16% por turno (em vez de 12%) e já tem Roupa Social.',req:'Vencer 1 partida',ok:m=>m.wins>=1}
+{id:'padrao',i:'🎒',n:'Ingressante do Enem',d:'Equilibrado: começa com R$ 350 na carteira e 60h por semana.',req:'Inicial',ok:()=>true},
+{id:'bolsista',i:'🎓',n:'Veterano da UFABC',d:'Já começa com a base de Inglês & Lógica concluída e no BC&T.',req:'Chegar aos 40 anos 1 vez',ok:m=>m.plays>=1},
+{id:'correria',i:'⚡',n:'Rei do Fretado',d:'Tem +6h extras toda semana (66h) e ganha +R$ 3/h nos primeiros empregos.',req:'Conquistar 2 Troféus',ok:m=>m.tr.length>=2},
+{id:'herdeiro',i:'👵',n:'Xodó da Vó',d:'Começa com R$ 800 rendendo na Selic e uma AirFryer Inox em casa.',req:'Conquistar 4 Troféus',ok:m=>m.tr.length>=4},
+{id:'faria',i:'📈',n:'Dev Faria Limer',d:'Selic rende 16% por turno (em vez de 12%) e já tem Roupa de Entrevista.',req:'Vencer 1 partida',ok:m=>m.wins>=1}
 ];
 
 const JOBS=[
-{id:0,n:'Entregador de App',w:14,edu:0,suit:0,xp:0},
-{id:1,n:'Atendente de Lanchonete',w:18,edu:0,suit:0,xp:12},
-{id:2,n:'Auxiliar de Escritório',w:25,edu:1,suit:1,xp:28},
-{id:3,n:'Analista Técnico',w:35,edu:2,suit:1,xp:50},
-{id:4,n:'Coordenador Pleno',w:48,edu:3,suit:1,xp:80},
-{id:5,n:'Gerente / Concursado',w:65,edu:4,suit:1,xp:115},
-{id:6,n:'Diretor / Sócio da Firma',w:88,edu:5,suit:1,xp:155}
+{id:0,n:'Entregador / Bico',w:15,edu:0,suit:0,xp:0},
+{id:1,n:'Monitor / Bolsista',w:20,edu:0,suit:0,xp:12},
+{id:2,n:'Estagiário de TI',w:28,edu:1,suit:1,xp:24},
+{id:3,n:'Dev / Analista Júnior',w:38,edu:2,suit:1,xp:46},
+{id:4,n:'Engenheiro Pleno',w:52,edu:3,suit:1,xp:72},
+{id:5,n:'Tech Lead / Sênior',w:70,edu:4,suit:1,xp:105},
+{id:6,n:'Diretor / CTO',w:95,edu:5,suit:1,xp:140}
 ];
 
 const COURSES=[
-{id:1,n:'Informática & Inglês',cost:180,hrs:18,pts:15},
-{id:2,n:'Curso Técnico (SENAI)',cost:350,hrs:24,pts:20},
-{id:3,n:'Faculdade (Graduação)',cost:650,hrs:32,pts:25},
-{id:4,n:'Pós-Graduação / MBA',cost:950,hrs:28,pts:20},
-{id:5,n:'Mentoria Executiva / Concurso',cost:1300,hrs:30,pts:20}
+{id:1,n:'Inglês Técnico & Lógica',cost:160,hrs:16,d:'Abre vaga de Estagiário na Firma'},
+{id:2,n:'BC&T na UFABC (FUV + BM)',cost:280,hrs:24,d:'Sobreviva ao quadri e vire Analista Júnior'},
+{id:3,n:'Iniciação Científica (FAPESP)',cost:380,hrs:24,d:'BÔNUS: Paga +R$ 180 de bolsa todo turno!'},
+{id:4,n:'BCC / Engenharia na UFABC',cost:620,hrs:30,d:'Diploma específico para Tech Lead Sênior'},
+{id:5,n:'Mestrado / Pós em IA',cost:980,hrs:30,d:'Topo acadêmico: libera cargo de Diretor/CTO'}
 ];
 
 const HOMES=[
-{id:0,n:'Quarto em República',rent:140,buy:0,hap:0,str:0,hlth:0,d:'Beliche, banheiro dividido e miojo na pia.'},
-{id:1,n:'Quitinete no Centro',rent:300,buy:0,hap:5,str:-5,hlth:2,d:'Pequena, mas é seu cantinho sem bagunça.'},
-{id:2,n:'Apê de 2 Quartos',rent:560,buy:0,hap:12,str:-10,hlth:5,d:'Sacada com churrasqueira e portaria 24h.'},
-{id:3,n:'Casa Própria Quitada',rent:0,buy:5800,hap:22,str:-15,hlth:8,d:'Sem aluguel nunca mais! Patrimônio garantido.'}
+{id:0,n:'República perto da UFABC',rent:140,buy:0,hap:0,str:0,hlth:0,d:'Beliche, geladeira colada com ímã e miojo.'},
+{id:1,n:'Quitinete em Santo André',rent:300,buy:0,hap:6,str:-5,hlth:3,d:'Pertinho da estação e sem fila pro banheiro.'},
+{id:2,n:'Apê 2 Quartos no ABC',rent:550,buy:0,hap:13,str:-10,hlth:6,d:'Sacada gourmet e portaria 24h.'},
+{id:3,n:'Cobertura Própria Quitada',rent:0,buy:5600,hap:24,str:-16,hlth:10,d:'Sem aluguel nunca mais! Patrimônio máximo.'}
 ];
 
 const ITEMS=[
-{id:'suit',i:'👔',n:'Roupa de Entrevista',p:240,val:200,d:'Obrigatória para cargos de Escritório ou maiores.'},
-{id:'air',i:'🍟',n:'AirFryer Inox',p:380,val:300,d:'Economiza +4h toda semana e libera a Feira Completa.'},
-{id:'bed',i:'🛏️',n:'Colchão Ortopédico',p:620,val:500,d:'Recupera +6 Saúde e -8 Estresse todo fim de turno.'},
-{id:'pc',i:'💻',n:'Notebook Turbo',p:1150,val:900,d:'Estudar rende +50% mais rápido e dá +4 Feliz/turno.'},
-{id:'moto',i:'🏍️',n:'Moto CG 160',p:2300,val:1900,d:'+8h livres toda semana e imune a Greve de Ônibus.'},
-{id:'car',i:'🚗',n:'Carro Hatch Quitado',p:4800,val:4000,d:'+14h livres toda semana e +8 Feliz todo turno.'}
+{id:'suit',i:'👔',n:'Roupa de Entrevista',p:220,val:180,d:'Exigida para cargos a partir de Estagiário.'},
+{id:'air',i:'🍟',n:'AirFryer Inox',p:360,val:300,d:'+4h livres toda semana e libera Marmita Fit.'},
+{id:'bed',i:'🛏️',n:'Colchão Ortopédico',p:600,val:480,d:'+6 Saúde e -8 Estresse todo fim de turno.'},
+{id:'pc',i:'💻',n:'PC Dev (Linux + RTX)',p:1150,val:950,d:'Estudar na UFABC rende +50% mais rápido!'},
+{id:'moto',i:'🏍️',n:'Moto CG 160',p:2200,val:1850,d:'+8h livres toda semana e imune a Greve da CPTM.'},
+{id:'car',i:'🚗',n:'Carro Hatch Quitado',p:4600,val:3900,d:'+14h livres toda semana e +8 Feliz por turno.'}
 ];
 
 const EVENTS=[
-{n:'🦁 Restituição do Imposto de Renda!',d:'Caiu um Pix inesperado da Receita: +R$ 220 na conta.',fn:p=>{p.cash+=220}},
-{n:'🚌 Chuva Torrencial e Ônibus Lotado',d:'Quem não tem Moto ou Carro perdeu 8h preso no trânsito.',fn:p=>{if(!p.it.includes('moto')&&!p.it.includes('car'))p.h=Math.max(20,p.h-8)}},
-{n:'🎉 Décimo Terceiro Adiantado!',d:'A firma pagou um bônus extra equivalente a 8h de trabalho!',fn:p=>{p.cash+=JOBS[p.job].w*8}},
-{n:'🦷 Dor de Dente Surpresa',d:'Gasto de emergência no dentista (-R$ 130) ou perda de saúde.',fn:p=>{if(p.cash>=130)p.cash-=130;else p.hlth=Math.max(10,p.hlth-12)}},
-{n:'☀️ Feriadão Prolongado!',d:'Semana mais leve: todo mundo ganhou +6h e -10 Estresse.',fn:p=>{p.h+=6;p.str=Math.max(0,p.str-10)}},
-{n:'📈 Inflação no Mercado',d:'O custo de vida apertou: +8 Estresse nesta fase.',fn:p=>{p.str=Math.min(100,p.str+8)}},
-{n:'💵 Nota de R$ 100 no Bolso da Calça!',d:'Achou dinheiro esquecido lavando roupa: +R$ 100 e +5 Feliz.',fn:p=>{p.cash+=100;p.hap=Math.min(100,p.hap+5)}}
+{n:'🔬 Saiu o Auxílio / Restituição!',d:'Caiu um Pix extra na conta de todo mundo: +R$ 220!',fn:p=>{p.cash+=220}},
+{n:'🚆 Chuva em Santo André e Linha 10 Parada!',d:'Quem não tem Moto ou Carro perdeu 8h esperando ônibus/trem.',fn:p=>{if(!p.it.includes('moto')&&!p.it.includes('car'))p.h=Math.max(20,p.h-8)}},
+{n:'🎉 Décimo Terceiro / Bônus da Firma!',d:'Você recebeu um bônus de 8h extras do seu salário atual!',fn:p=>{p.cash+=JOBS[p.job].w*8}},
+{n:'📚 Chute no Quadrimestre da UFABC!',d:'Pegar matéria deu trabalho: +10% de Estresse, mas +4h de XP!',fn:p=>{p.str=Math.min(100,p.str+10);p.xp+=4}},
+{n:'☀️ Feriadão Emendado!',d:'Semana mais tranquila: +6h livres e -12% de Estresse.',fn:p=>{p.h+=6;p.str=Math.max(0,p.str-12)}},
+{n:'🦷 Siso Inflamou na Semana de Provas',d:'Gastou R$ 120 no dentista (ou perdeu 10% de Saúde se estava liso).',fn:p=>{if(p.cash>=120)p.cash-=120;else p.hlth=Math.max(10,p.hlth-10)}},
+{n:'💵 Achou R$ 100 no Bolso do Moletom!',d:'Alegria de estudante: +R$ 100 na mão e +6% de Lazer.',fn:p=>{p.cash+=100;p.hap=Math.min(100,p.hap+6)}}
 ];
 
 const TROPHIES=[
-{id:'play1',i:'🎂',n:'Quarentou!',d:'Chegue aos 40 anos pela primeira vez'},
+{id:'play1',i:'🎂',n:'Quarentou no ABC!',d:'Chegue aos 40 anos pela primeira vez'},
 {id:'win1',i:'🏆',n:'Venceu na Vida',d:'Termine aos 40 anos em 1º lugar geral'},
-{id:'casa',i:'🏡',n:'Sonho da Casa Própria',d:'Compre a Casa Própria Quitada'},
-{id:'dir',i:'💼',n:'Chefe da Firma',d:'Chegue ao cargo máximo de Diretor / Sócio'},
-{id:'phd',i:'🎓',n:'Currículo Invejável',d:'Conclua todas as 5 formações de estudo'},
+{id:'casa',i:'🏡',n:'Adeus Aluguel!',d:'Compre a Cobertura Própria Quitada'},
+{id:'dir',i:'💼',n:'CTO da Firma',d:'Chegue ao cargo máximo de Diretor / CTO'},
+{id:'ic',i:'🔬',n:'Bolsista FAPESP',d:'Conclua a Iniciação Científica na UFABC'},
+{id:'phd',i:'🎓',n:'Mestre pela UFABC',d:'Conclua todas as 5 etapas acadêmicas'},
 {id:'rich',i:'🤑',n:'Barão do Tesouro Selic',d:'Acumule R$ 10.000+ de Patrimônio Total'},
-{id:'car',i:'🚗',n:'Garagem Completa',d:'Tenha Moto ou Carro quitado na garagem'},
-{id:'mega',i:'🍀',n:'Premiado na Lotérica',d:'Ganhe um prêmio na Mega da Virada'},
-{id:'zen',i:'🏖️',n:'Vida Mansa',d:'Chegue aos 40 anos sem nunca sofrer Burnout'},
-{id:'clean',i:'✨',n:'Nome Limpo',d:'Termine a partida sem nenhuma dívida no SPC'}
+{id:'car',i:'🚗',n:'Fora do Hora de Pico',d:'Tenha Moto ou Carro quitado na garagem'},
+{id:'zen',i:'🏖️',n:'Saúde Mental em Dia',d:'Chegue aos 40 anos sem nunca ter Burnout'},
+{id:'clean',i:'✨',n:'Score 1000 no Serasa',d:'Termine a partida sem nenhuma dívida no SPC'}
 ];
 
 let M={plays:0,wins:0,best:0,tr:[],orig:'padrao',av:0};
@@ -225,23 +302,23 @@ try{const sv=JSON.parse(localStorage.getItem('vida_br_meta')||'null');if(sv)M={.
 function saveM(){try{localStorage.setItem('vida_br_meta',JSON.stringify(M))}catch(e){}}
 function unlockTr(id){if(!M.tr.includes(id)){const t=TROPHIES.find(x=>x.id==id);if(t){M.tr.push(id);toast(`🏆 Troféu Desbloqueado: ${t.n}!`);bp(880,.25,'triangle');saveM()}}}
 
-/* ============ ESTADO E MULTIPLAYER PEERJS ============ */
+/* ============ ESTADO, MAPA E MULTIPLAYER ============ */
 const BOT_NMS=[
  {n:'Enzo (Faria Limer)',av:0,o:'faria'},
  {n:'Valentina (Bolsista)',av:5,o:'bolsista'},
- {n:'Cleitinho (Correria)',av:4,o:'correria'}
+ {n:'Cleitinho (Fretado)',av:4,o:'correria'}
 ];
-let myUid='u'+Math.random().toString(36).slice(2,8),myName='Brasileiro',tab='play',locModal=null;
+let myUid='u'+Math.random().toString(36).slice(2,8),myName='Veterano',tab='play',locModal=null,turnReport=null;
 let G=null,peer=null,conns={},hconn=null,isHost=true,offline=true,roomCode='';
-try{myName=localStorage.getItem('vida_br_nm')||'Brasileiro'}catch(e){}
+try{myName=localStorage.getItem('vida_br_nm')||'Veterano'}catch(e){}
 function getNm(){const el=$('nm');if(el&&el.value.trim())myName=el.value.trim().slice(0,14);try{localStorage.setItem('vida_br_nm',myName)}catch(e){}return myName}
 
 function mkPlayer(uid,name,orig='padrao',av=0,bot=0){
  return{
-  uid,name,orig,av,bot,
+  uid,name,orig,av,bot,loc:'home',
   cash:350,bank:orig=='herdeiro'?800:0,debt:0,
   job:0,xp:0,edu:orig=='bolsista'?1:0,eduP:0,
-  hlth:85,hap:75,str:15,
+  hlth:85,hap:78,str:15,
   home:0,it:orig=='herdeiro'?['air']:orig=='faria'?['suit']:[],
   h:60,maxH:60,fed:0,done:0,burn:0,hadBurn:0,curse:[]
  };
@@ -271,21 +348,60 @@ function scores(p){
  return{w,c,h,l,tot};
 }
 
+/* Animação Flutuante no Mapa */
+function popMap(txt,col='bg-emerald-500 text-black'){
+ const mp=$('bmap'),p=meP();if(!mp||!p)return;
+ const pos=MAP_LOCS[p.loc]||MAP_LOCS.home;
+ const el=document.createElement('div');
+ el.className=`fx-pop ${col}`;
+ el.style.left=pos.x+'%';el.style.top=(pos.y-6)+'%';
+ el.textContent=txt;
+ mp.appendChild(el);
+ setTimeout(()=>el.remove(),1500);
+}
+
+/* Move o boneco pelo mapa até o prédio clicado */
+function goToBuilding(locKey){
+ const p=meP();if(!p||p.done)return;
+ p.loc=locKey;
+ const pawn=$('pawn-me');
+ if(pawn&&MAP_LOCS[locKey]){
+  pawn.style.left=MAP_LOCS[locKey].x+'%';
+  pawn.style.top=MAP_LOCS[locKey].y+'%';
+ }
+ bp(520,.06,'sine');
+ setTimeout(()=>{locModal=MAP_LOCS[locKey].k;render()},220);
+}
+
+/* Dica Inteligente Contextual */
+function getSmartHint(p){
+ if(p.done)return'⏳ Aguardando os outros participantes fecharem o ano…';
+ if(!p.fed)return'🍛 Dica: Clique no "Bandejão RU & PF" no mapa para comer antes de fechar o ano!';
+ const nxJ=JOBS[p.job+1];
+ if(nxJ&&p.edu>=nxJ.edu&&p.xp>=nxJ.xp&&(!nxJ.suit||p.it.includes('suit')))return`🎉 Você já cumpre todos os requisitos para ser promovido a ${nxJ.n}! Vá ao Polo Tech & Firma!`;
+ if(nxJ&&nxJ.suit&&!p.it.includes('suit')&&p.cash>=220)return'👔 Dica: Compre a Roupa de Entrevista no Shopping ABC para destravar promoções na Firma!';
+ if(p.str>=75)return'⚠️ Seu Estresse está alto! Passe na SmartFit & UPA ou no Bar & Praia para não ter Burnout!';
+ if(p.h>=12&&p.cash<HOMES[p.home].rent)return`💼 Atenção: Seu aluguel é R$ ${HOMES[p.home].rent}. Faça um turno no Polo Tech & Firma para não cair no SPC!`;
+ if(p.h>=6)return`⏰ Você ainda tem ${p.h}h livres na semana! Clique nos prédios do mapa para estudar na UFABC ou trabalhar.`;
+ return'✅ Semana bem aproveitada! Clique no botão dourado abaixo para Fechar o Ano.';
+}
+
 function startSolo(nBots=2){
- getNm();offline=true;isHost=true;roomCode='SOLO';
+ getNm();offline=true;isHost=true;roomCode='SOLO';turnReport=null;
  const pls=[mkPlayer(myUid,myName,M.orig,M.av,0)];
  for(let i=0;i<nBots;i++){
   const b=BOT_NMS[i];
   pls.push(mkPlayer('bot'+i,b.n,b.o,b.av,1));
  }
- G={turn:1,maxT:12,age:18,ph:'play',ev:null,pls,log:['🎉 A vida adulta começou aos 18 anos! Gerencie suas horas, pague os boletos e chegue bem aos 40!']};
+ G={turn:1,maxT:12,age:18,ph:'play',ev:null,pls,log:['🎉 Ingressou aos 18 anos! Clique nos prédios do mapa para mover seu personagem.']};
  prepTurn(true);
  render();
+ try{if(!localStorage.getItem('vida_br_tut_ok'))openTut(0)}catch(e){}
 }
 
 const PC=()=>({config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}});
 function hostOnline(){
- getNm();offline=false;isHost=true;
+ getNm();offline=false;isHost=true;turnReport=null;
  roomCode=Array.from({length:5},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*32)]).join('');
  G={turn:1,maxT:12,age:18,ph:'lobby',ev:null,pls:[mkPlayer(myUid,myName,M.orig,M.av,0)],log:[]};
  if(peer)try{peer.destroy()}catch(e){}
@@ -309,7 +425,7 @@ function hostOnline(){
 
 function joinOnline(c0){
  getNm();const c=String(c0||'').trim().toUpperCase();if(c.length<4)return toast('Digite o código da sala');
- offline=false;isHost=false;roomCode=c;
+ offline=false;isHost=false;roomCode=c;turnReport=null;
  if(peer)try{peer.destroy()}catch(e){}
  peer=new Peer('vidabr-'+c+'-'+myUid,PC());
  peer.on('open',()=>{
@@ -320,15 +436,8 @@ function joinOnline(c0){
  peer.on('error',()=>toast('Sala não encontrada'));
 }
 
-function leaveRoom(){
- if(peer)try{peer.destroy()}catch(e){}
- peer=null;conns={};hconn=null;G=null;roomCode='';locModal=null;render();
-}
-
-function bcast(){
- if(!offline&&isHost)for(const u in conns)if(conns[u]&&conns[u].open)conns[u].send({t:'st',G});
- render();
-}
+function leaveRoom(){if(peer)try{peer.destroy()}catch(e){}peer=null;conns={};hconn=null;G=null;roomCode='';locModal=null;turnReport=null;render()}
+function bcast(){if(!offline&&isHost)for(const u in conns)if(conns[u]&&conns[u].open)conns[u].send({t:'st',G});render()}
 function syncMeToHost(curseTarget=null,curseType=null){
  if(isHost){if(curseTarget)applyCurseHost(myName,curseTarget,curseType);chkAllDone();bcast()}
  else if(hconn&&hconn.open){const me=G.pls.find(x=>x.uid==myUid);hconn.send({t:'syncP',p:me,curseTarget,curseType});render()}
@@ -336,7 +445,7 @@ function syncMeToHost(curseTarget=null,curseType=null){
 function applyCurseHost(fromNm,targetUid,k){
  const t=G.pls.find(x=>x.uid==targetUid);if(!t)return;
  t.curse.push({from:fromNm,k});
- const lbl={som:'🔊 Vizinho com Som Alto (-8h)',parente:'🤑 Parente Pedindo R$ 150',obra:'🚧 Obra na Rua (-12h)'}[k];
+ const lbl={som:'🔊 República Vizinha com Som Alto (-8h)',parente:'🤑 Parente Pedindo R$ 150',obra:'🚧 Fretado Quebrou na Avenida (-12h)'}[k];
  G.log.unshift(`😈 ${fromNm} mandou "${lbl}" para ${t.name}!`);
 }
 
@@ -359,58 +468,62 @@ function prepTurn(first=false){
  if(ev)G.log.unshift(`📰 Aos ${G.age} anos: ${ev.n} — ${ev.d}`);
 }
 
-/* ============ AÇÕES NOS 8 LOCAIS ============ */
+/* ============ AÇÕES NOS 8 PRÉDIOS COM FEEDBACK VISUAL ============ */
 const meP=()=>G&&G.pls.find(x=>x.uid==myUid);
 function useH(p,h){if(p.h<h){toast('⏰ Horas insuficientes nesta semana!');return false}p.h-=h;return true}
 
 function actWork(hrs,over=false){
  const p=meP();if(!p||p.done||!useH(p,hrs))return;
- const jb=JOBS[p.job],bonus=p.orig=='correria'&&p.job<=1?2:0;
+ const jb=JOBS[p.job],bonus=p.orig=='correria'&&p.job<=1?3:0;
  const pay=Math.round(hrs*(jb.w+bonus)*(over?1.35:1));
  p.cash+=pay;p.xp+=hrs;
  p.str=Math.min(100,p.str+(over?18:Math.round(hrs*1.1)));
  if(over)p.hap=Math.max(0,p.hap-6);
- bp(620,.1,'triangle');toast(`💼 +R$ ${pay} na Firma!`);
+ bp(620,.1,'triangle');
  chkBurn(p);syncMeToHost();
+ setTimeout(()=>popMap(`+R$ ${pay} 💸 · -${hrs}h`,'bg-emerald-400 text-black'),40);
 }
 
 function actPromote(){
  const p=meP();if(!p||p.done)return;
- const nx=JOBS[p.job+1];if(!nx)return toast('Você já é Diretor da Firma!');
- if(p.edu<nx.edu)return toast(`Exige concluir: ${COURSES[nx.edu-1].n}`);
- if(nx.suit&&!p.it.includes('suit'))return toast('Exige comprar Roupa de Entrevista no Magazine!');
+ const nx=JOBS[p.job+1];if(!nx)return toast('Você já é CTO / Diretor!');
+ if(p.edu<nx.edu)return toast(`Exige concluir na UFABC: ${COURSES[nx.edu-1].n}`);
+ if(nx.suit&&!p.it.includes('suit'))return toast('Exige comprar Roupa de Entrevista no Shopping ABC!');
  if(p.xp<nx.xp)return toast(`Exige ${nx.xp}h de experiência (você tem ${p.xp}h)`);
  if(!useH(p,4))return;
  p.job++;bp(880,.2,'triangle');
- toast(`🎉 Promovido para ${nx.n} (R$ ${nx.w}/h)!`);
  if(p.job==6)unlockTr('dir');
  syncMeToHost();
+ setTimeout(()=>popMap(`🎉 Promovido: ${nx.n}!`,'bg-amber-400 text-black'),40);
 }
 
 function actStudy(hrs){
  const p=meP();if(!p||p.done)return;
- const nx=COURSES[p.edu];if(!nx)return toast('Você já concluiu todas as formações!');
+ const nx=COURSES[p.edu];if(!nx)return toast('Você já concluiu o Mestrado na UFABC!');
  const cost=Math.round(nx.cost*(hrs/nx.hrs));
- if(p.cash<cost)return toast(`Custa R$ ${cost} de mensalidade`);
+ if(p.cash<cost)return toast(`Custa R$ ${cost} de material/taxa`);
  if(!useH(p,hrs))return;
  p.cash-=cost;
  const gain=Math.round(hrs*(p.it.includes('pc')?1.5:1));
  p.eduP+=gain;p.str=Math.min(100,p.str+Math.round(hrs*.9));
+ let msg=`📚 +${gain}h na UFABC!`;
  if(p.eduP>=nx.hrs){
-  p.edu++;p.eduP=0;p.hap=Math.min(100,p.hap+10);
-  bp(920,.25,'triangle');toast(`🎓 Formado em ${nx.n}!`);
+  p.edu++;p.eduP=0;p.hap=Math.min(100,p.hap+12);
+  bp(920,.25,'triangle');msg=`🎓 Concluiu: ${nx.n}!`;
+  if(p.edu>=3)unlockTr('ic');
   if(p.edu>=5)unlockTr('phd');
- }else{bp(540,.1);toast(`📚 +${gain}h de progresso no curso!`)}
+ }else bp(540,.1);
  chkBurn(p);syncMeToHost();
+ setTimeout(()=>popMap(msg,'bg-sky-400 text-black'),40);
 }
 
 function actFood(k){
  const p=meP();if(!p||p.done)return;
  const MFD={
-  miojo:{c:25,h:2,hl:-4,hp:0,st:0,n:'Miojo com Ovo'},
-  pf:{c:70,h:3,hl:5,hp:4,st:-4,n:'PF Caprichado'},
-  feira:{c:130,h:4,hl:12,hp:6,st:-10,n:'Feira Completa',req:'air'},
-  churras:{c:220,h:6,hl:8,hp:16,st:-18,n:'Churrascão de Domingo'}
+  miojo:{c:25,h:2,hl:-4,hp:0,st:0,n:'Miojo da Madrugada'},
+  ru:{c:40,h:3,hl:6,hp:5,st:-5,n:'Bandejão do RU da UFABC'},
+  feira:{c:130,h:4,hl:14,hp:7,st:-10,n:'Marmita Fit na AirFryer',req:'air'},
+  churras:{c:210,h:5,hl:9,hp:16,st:-18,n:'Churrascão da República'}
  }[k];
  if(MFD.req&&!p.it.includes(MFD.req))return toast('Exige ter uma AirFryer Inox em casa!');
  if(p.cash<MFD.c)return toast('Saldo insuficiente!');
@@ -419,22 +532,24 @@ function actFood(k){
  p.hlth=Math.max(0,Math.min(100,p.hlth+MFD.hl));
  p.hap=Math.max(0,Math.min(100,p.hap+MFD.hp));
  p.str=Math.max(0,p.str+MFD.st);
- bp(500,.12);toast(`🍽️ Mandou ver no ${MFD.n}!`);syncMeToHost();
+ bp(500,.12);syncMeToHost();
+ setTimeout(()=>popMap(`🍛 ${MFD.n} ✓`,'bg-orange-400 text-black'),40);
 }
 
 function actHome(id){
  const p=meP();if(!p||p.done)return;
  const hm=HOMES[id];
  if(hm.buy){
-  if(p.cash<hm.buy)return toast(`Custa R$ ${hm.buy} à vista (resgate da poupança se precisar)`);
+  if(p.cash<hm.buy)return toast(`Custa R$ ${hm.buy} à vista (resgate da Selic no Banco se precisar)`);
   if(!useH(p,4))return;
   p.cash-=hm.buy;p.home=id;p.hap=Math.min(100,p.hap+25);
-  unlockTr('casa');bp(950,.3,'triangle');toast('🏡 Parabéns! Casa Própria Quitada!');
+  unlockTr('casa');bp(950,.3,'triangle');
  }else{
   if(!useH(p,3))return;
-  p.home=id;bp(520,.1);toast(`🔑 Mudou-se para: ${hm.n}`);
+  p.home=id;bp(520,.1);
  }
  syncMeToHost();
+ setTimeout(()=>popMap(`🏠 ${hm.n}!`,'bg-teal-400 text-black'),40);
 }
 
 function actBuyItem(id){
@@ -445,68 +560,74 @@ function actBuyItem(id){
  if(!useH(p,3))return;
  p.cash-=it.p;p.it.push(id);p.hap=Math.min(100,p.hap+8);
  if(id=='moto'||id=='car')unlockTr('car');
- bp(740,.18,'triangle');toast(`🛍️ Comprou ${it.n}!`);syncMeToHost();
+ bp(740,.18,'triangle');syncMeToHost();
+ setTimeout(()=>popMap(`${it.i} Comprou ${it.n}!`,'bg-purple-400 text-black'),40);
 }
 
 function actHealth(k){
  const p=meP();if(!p||p.done)return;
  const MH={
-  gym:{c:45,h:6,hl:14,st:-14,hp:4,n:'Treino na Academia'},
-  sus:{c:0,h:10,hl:18,st:-6,hp:0,n:'Check-up no Postinho SUS'},
-  spa:{c:160,h:5,hl:14,st:-28,hp:10,n:'Terapia & Massagem'}
+  gym:{c:45,h:5,hl:14,st:-15,hp:5,n:'Treino na SmartFit'},
+  sus:{c:0,h:9,hl:18,st:-8,hp:0,n:'Check-up no Postinho'},
+  spa:{c:150,h:4,hl:14,st:-30,hp:12,n:'Terapia & Massagem'}
  }[k];
  if(p.cash<MH.c)return toast('Saldo insuficiente!');
  if(!useH(p,MH.h))return;
  p.cash-=MH.c;
  p.hlth=Math.min(100,p.hlth+MH.hl);p.str=Math.max(0,p.str+MH.st);p.hap=Math.min(100,p.hap+MH.hp);
- bp(600,.14);toast(`❤️ ${MH.n} concluído!`);syncMeToHost();
+ bp(600,.14);syncMeToHost();
+ setTimeout(()=>popMap(`❤️ +${MH.hl} Saúde · ${MH.st} Estresse`,'bg-rose-400 text-black'),40);
 }
 
 function actBank(k,amt=200){
  const p=meP();if(!p||p.done)return;
+ let msg='';
  if(k=='dep'){
   const v=amt=='all'?p.cash:Math.min(p.cash,amt);
   if(v<=0)return toast('Sem saldo para depositar');
   if(!useH(p,2))return;
-  p.cash-=v;p.bank+=v;bp(680,.1);toast(`🏦 Aplicou R$ ${v} no Tesouro Selic!`);
+  p.cash-=v;p.bank+=v;bp(680,.1);msg=`🏦 +R$ ${v} na Selic`;
  }else if(k=='wit'){
   const v=amt=='all'?p.bank:Math.min(p.bank,amt);
-  if(v<=0)return toast('Sem saldo na poupança');
+  if(v<=0)return toast('Sem saldo na Selic');
   if(!useH(p,2))return;
-  p.bank-=v;p.cash+=v;bp(580,.1);toast(`💵 Resgatou R$ ${v} da poupança.`);
+  p.bank-=v;p.cash+=v;bp(580,.1);msg=`💵 Sacou R$ ${v}`;
  }else if(k=='debt'){
   const v=Math.min(p.cash,p.debt);
-  if(v<=0)return toast('Você não tem dívida ou saldo na mão');
+  if(v<=0)return toast('Sem dívida ou saldo na mão');
   if(!useH(p,2))return;
-  p.cash-=v;p.debt-=v;bp(760,.15);toast(`🧾 Pagou R$ ${v} da dívida do SPC!`);
+  p.cash-=v;p.debt-=v;bp(760,.15);msg=`🧾 Quitou R$ ${v} do SPC!`;
  }else if(k=='lotto'){
   if(p.cash<35)return toast('Custa R$ 35');
   if(!useH(p,2))return;
   p.cash-=35;const r=Math.random();
-  if(r<.08){p.cash+=2200;p.hap=Math.min(100,p.hap+25);unlockTr('mega');bp(980,.35,'triangle');toast('🍀 ACERTOU NA MEGA! Ganhou R$ 2.200!')}
-  else if(r<.28){p.cash+=280;bp(780,.2);toast('🍀 Fez a Quadra na Lotérica! +R$ 280!')}
-  else{bp(240,.1,'sawtooth');toast('📄 Não foi dessa vez… quem sabe na próxima!')}
+  if(r<.09){p.cash+=2200;p.hap=Math.min(100,p.hap+25);bp(980,.35,'triangle');msg='🍀 GANHOU R$ 2.200 NA MEGA!'}
+  else if(r<.30){p.cash+=280;bp(780,.2);msg='🍀 Quadra na Lotérica! +R$ 280'}
+  else{bp(240,.1,'sawtooth');msg='📄 Bilhete premiou zero…'}
  }
  syncMeToHost();
+ setTimeout(()=>popMap(msg,'bg-amber-400 text-black'),40);
 }
 
 function actFun(k,targetUid=null){
  const p=meP();if(!p||p.done)return;
  if(k=='bar'){
-  if(p.cash<60||!useH(p,6))return toast('Precisa de R$ 60 e 6h');
-  p.cash-=60;p.hap=Math.min(100,p.hap+15);p.str=Math.max(0,p.str-18);
-  bp(660,.15);toast('🍻 Gelada e sinuca com a galera! +15 Feliz');syncMeToHost();
+  if(p.cash<55||!useH(p,5))return toast('Precisa de R$ 55 e 5h');
+  p.cash-=55;p.hap=Math.min(100,p.hap+16);p.str=Math.max(0,p.str-20);
+  bp(660,.15);syncMeToHost();
+  setTimeout(()=>popMap('🍻 +16 Lazer · -20 Estresse','bg-yellow-400 text-black'),40);
  }else if(k=='beach'){
-  if(p.cash<180||!useH(p,10))return toast('Precisa de R$ 180 e 10h');
-  p.cash-=180;p.hap=Math.min(100,p.hap+26);p.str=Math.max(0,p.str-32);p.hlth=Math.min(100,p.hlth+6);
-  bp(720,.2);toast('🏖️ Fim de semana na Praia Grande! Renovado!');syncMeToHost();
+  if(p.cash<170||!useH(p,9))return toast('Precisa de R$ 170 e 9h');
+  p.cash-=170;p.hap=Math.min(100,p.hap+26);p.str=Math.max(0,p.str-34);p.hlth=Math.min(100,p.hlth+6);
+  bp(720,.2);syncMeToHost();
+  setTimeout(()=>popMap('🏖️ Desceu pra Praia! +26 Lazer','bg-yellow-400 text-black'),40);
  }else{
   const cost={som:140,parente:180,obra:220}[k];
   if(!targetUid)return toast('Escolha um adversário!');
   if(p.cash<cost||!useH(p,3))return toast(`Precisa de R$ ${cost} e 3h`);
   p.cash-=cost;bp(320,.2,'sawtooth');
-  toast('😈 Perrengue enviado para o adversário!');
   syncMeToHost(targetUid,k);
+  setTimeout(()=>popMap('😈 Perrengue Enviado!','bg-rose-500 text-white'),40);
  }
 }
 
@@ -517,21 +638,22 @@ function chkBurn(p){
  }
 }
 
-/* ============ FIM DE TURNO E IA DOS BOTS ============ */
+/* ============ FIM DE TURNO E RELATÓRIO ANIMADO DO ANO ============ */
 function simBotTurn(b){
- b.fed=1;b.cash=Math.max(0,b.cash-70);
+ const keys=Object.keys(MAP_LOCS);b.loc=keys[Math.floor(Math.random()*keys.length)];
+ b.fed=1;b.cash=Math.max(0,b.cash-50);
  const nxC=COURSES[b.edu],nxJ=JOBS[b.job+1];
  if(nxJ&&b.edu>=nxJ.edu&&b.xp>=nxJ.xp&&(!nxJ.suit||b.it.includes('suit'))){b.job++;b.h-=4}
- if(nxJ&&nxJ.suit&&!b.it.includes('suit')&&b.cash>=300){b.cash-=240;b.it.push('suit')}
+ if(nxJ&&nxJ.suit&&!b.it.includes('suit')&&b.cash>=260){b.cash-=220;b.it.push('suit')}
  if(nxC&&b.cash>=nxC.cost*.6&&b.h>=16){
   b.cash-=Math.round(nxC.cost*.5);b.eduP+=16;b.h-=16;
   if(b.eduP>=nxC.hrs){b.edu++;b.eduP=0}
  }
  const workH=Math.min(b.h-8,28);
  if(workH>0){b.cash+=workH*JOBS[b.job].w;b.xp+=workH;b.h-=workH}
- if(!b.it.includes('moto')&&b.cash>=2800){b.cash-=2300;b.it.push('moto')}
+ if(!b.it.includes('moto')&&b.cash>=2600){b.cash-=2200;b.it.push('moto')}
  else if(b.home<2&&b.cash>=1200){b.home++}
- else if(b.home<3&&b.cash>=6200){b.cash-=5800;b.home=3}
+ else if(b.home<3&&b.cash>=6000){b.cash-=5600;b.home=3}
  if(b.cash>500){const save=Math.round((b.cash-350)*.6);b.cash-=save;b.bank+=save}
  b.hlth=Math.min(100,Math.max(55,b.hlth+2));
  b.hap=Math.min(100,Math.max(55,b.hap+3));
@@ -550,32 +672,41 @@ function chkAllDone(){
  G.pls.forEach(p=>{if(p.bot&&!p.done)simBotTurn(p)});
  if(!G.pls.every(p=>p.done))return;
 
+ const oldAge=G.age;
+ let myRep={oldAge,selic:0,fapesp:0,rent:0,spc:0,hungry:false};
+
  G.pls.forEach(p=>{
   const rate=p.orig=='faria'?.16:.12;
-  if(p.bank>0)p.bank+=Math.round(p.bank*rate);
+  const gainSelic=p.bank>0?Math.round(p.bank*rate):0;
+  p.bank+=gainSelic;
+  const gainIc=p.edu>=3?180:0;
+  p.cash+=gainIc;
+
   if(p.debt>0){p.debt=Math.round(p.debt*1.25);p.hap=Math.max(0,p.hap-10)}
   const hm=HOMES[p.home];
   p.hap=Math.max(0,Math.min(100,p.hap+hm.hap+(p.it.includes('pc')?4:0)+(p.it.includes('car')?8:0)));
   p.str=Math.max(0,p.str+hm.str+(p.it.includes('bed')?-8:0));
   p.hlth=Math.max(0,Math.min(100,p.hlth+hm.hlth+(p.it.includes('bed')?6:0)));
 
-  if(!p.fed){
-   p.hlth=Math.max(5,p.hlth-18);p.hap=Math.max(5,p.hap-12);p.burn=1;
-   if(p.uid==myUid)toast('🚑 Você virou o ano sem comer e parou na UPA (-15h)!');
-  }
-  let rent=hm.rent;
+  const wasHungry=!p.fed;
+  if(wasHungry){p.hlth=Math.max(5,p.hlth-18);p.hap=Math.max(5,p.hap-12);p.burn=1}
+
+  let rent=hm.rent,addedSpc=0;
   if(rent>0){
    if(p.cash>=rent)p.cash-=rent;
    else{
     rent-=p.cash;p.cash=0;
     if(p.bank>=rent)p.bank-=rent;
-    else{rent-=p.bank;p.bank=0;p.debt+=rent;p.hap=Math.max(0,p.hap-10);if(p.uid==myUid)toast(`🧾 Aluguel atrasou! +R$ ${rent} no SPC!`)}
+    else{rent-=p.bank;p.bank=0;p.debt+=rent;addedSpc=rent;p.hap=Math.max(0,p.hap-10)}
    }
+  }
+  if(p.uid==myUid){
+   myRep={oldAge,selic:gainSelic,fapesp:gainIc,rent:hm.rent,spc:addedSpc,hungry:wasHungry};
   }
  });
 
  if(G.turn>=G.maxT){
-  G.ph='end';
+  G.ph='end';turnReport=null;
   const me=meP();
   if(me){
    M.plays=(M.plays||0)+1;unlockTr('play1');
@@ -589,10 +720,12 @@ function chkAllDone(){
   }
  }else{
   G.turn++;prepTurn(false);
+  myRep.newAge=G.age;myRep.ev=G.ev;
+  turnReport=myRep;
  }
 }
 
-/* ============ LOBBY 12 COLUNAS (PADRÃO INTRIGAS DA CORTE) ============ */
+/* ============ LOBBY 12 COLUNAS ============ */
 function rMenu(){
  if(G&&G.ph=='lobby'){
   return`<div class="max-w-lg mx-auto w-full bg-[#0a1f1d]/95 gold-border-strong rounded-3xl p-6 space-y-4 text-center my-auto">
@@ -610,7 +743,7 @@ function rMenu(){
   </div>`;
  }
 
- const tabs=[['play','🏙️ Jogar'],['origins','🎒 Origens (5)'],['trophies','🏆 Troféus ('+M.tr.length+'/10)'],['career','🏢 Guia da Cidade']];
+ const tabs=[['play','🗺️ Jogar'],['origins','🎒 Origens (5)'],['trophies','🏆 Troféus ('+M.tr.length+'/10)'],['career','🎓 Carreira & UFABC']];
  let leftContent='';
 
  if(tab=='play'){
@@ -619,12 +752,12 @@ function rMenu(){
    <div class="space-y-4">
     <div class="p-3.5 rounded-2xl bg-black/40 border border-amber-500/30 space-y-2.5">
      <div class="flex justify-between items-center">
-      <span class="text-xs font-bold uppercase tracking-wider text-amber-300">Seu Perfil & Origem aos 18 Anos</span>
+      <span class="text-xs font-bold uppercase tracking-wider text-amber-300">Seu Personagem & Origem aos 18 Anos</span>
       <button onclick="tab='origins';render()" class="text-xs text-amber-300 underline">Trocar Origem →</button>
      </div>
      <div class="flex gap-2.5 items-center">
       <div class="text-3xl bg-black/50 w-12 h-12 rounded-2xl flex items-center justify-center border border-amber-400/40">${AVS[M.av|0]}</div>
-      <input id="nm" value="${esc(myName)}" maxlength="14" placeholder="Seu nome na corrida" class="flex-1 px-3.5 py-2.5 rounded-xl bg-black/60 border border-amber-500/40 text-sm outline-none focus:border-amber-400">
+      <input id="nm" value="${esc(myName)}" maxlength="14" placeholder="Seu apelido" class="flex-1 px-3.5 py-2.5 rounded-xl bg-black/60 border border-amber-500/40 text-sm outline-none focus:border-amber-400">
      </div>
      <div class="grid grid-cols-8 gap-1.5 pt-1">
       ${AVS.map((ic,idx)=>`<button onclick="M.av=${idx};saveM();render()" class="py-1.5 rounded-xl text-lg border ${M.av==idx?'bg-amber-500/25 border-amber-400':'bg-black/40 border-white/10 opacity-70'}">${ic}</button>`).join('')}
@@ -636,7 +769,7 @@ function rMenu(){
     </div>
 
     <div class="space-y-2 pt-1 border-t border-amber-500/20">
-     <label class="block text-xs font-bold uppercase tracking-wider text-amber-300">Partida Rápida Solo (Contra Bots)</label>
+     <label class="block text-xs font-bold uppercase tracking-wider text-amber-300">Jogar no Tabuleiro (Contra Bots)</label>
      <div class="grid grid-cols-3 gap-2">
       <button onclick="startSolo(1)" class="bt bg-emerald-700 hover:bg-emerald-600 text-xs sm:text-sm"><i class="fa-solid fa-robot mr-1"></i>Solo (1 Bot)</button>
       <button onclick="startSolo(2)" class="bt bg-gradient-to-r from-amber-500 to-yellow-600 text-black text-xs sm:text-sm"><i class="fa-solid fa-bolt mr-1"></i>Solo (2 Bots)</button>
@@ -676,8 +809,8 @@ function rMenu(){
  }else{
   leftContent=`
    <div class="space-y-2.5 max-h-[420px] overflow-y-auto pr-1 text-xs">
-    <div class="p-3 rounded-xl bg-black/40 border border-amber-500/25"><b class="text-amber-300 block mb-1">💼 7 Degraus na Firma</b>${JOBS.map(j=>`<div class="flex justify-between py-0.5 border-b border-white/5"><span>${j.n}</span><span class="text-emerald-300 font-bold">R$ ${j.w}/h</span></div>`).join('')}</div>
-    <div class="p-3 rounded-xl bg-black/40 border border-amber-500/25"><b class="text-amber-300 block mb-1">🛍️ Bens & Conforto no Magazine</b>${ITEMS.map(it=>`<div class="flex justify-between py-0.5 border-b border-white/5"><span>${it.i} ${it.n} (R$ ${it.p})</span><span class="opacity-75">${it.d}</span></div>`).join('')}</div>
+    <div class="p-3 rounded-xl bg-black/40 border border-emerald-500/30"><b class="text-emerald-300 block mb-1">🎓 Trilha UFABC (Estudos & Bolsas)</b>${COURSES.map(c=>`<div class="flex justify-between py-1 border-b border-white/5"><span><b>${c.id}. ${c.n}</b> (${c.hrs}h)</span><span class="text-amber-300">${c.d}</span></div>`).join('')}</div>
+    <div class="p-3 rounded-xl bg-black/40 border border-amber-500/25"><b class="text-amber-300 block mb-1">💼 Cargos no Polo Tech & Firma</b>${JOBS.map(j=>`<div class="flex justify-between py-0.5 border-b border-white/5"><span>${j.n}</span><span class="text-emerald-300 font-bold">R$ ${j.w}/h</span></div>`).join('')}</div>
    </div>`;
  }
 
@@ -685,10 +818,10 @@ function rMenu(){
   <div class="lg:col-span-7 bg-[#0a1f1d]/90 backdrop-blur-xl rounded-3xl p-5 sm:p-7 gold-border flex flex-col justify-between space-y-4">
    <div>
     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-medium mb-2">
-     <i class="fa-solid fa-calendar-check"></i><span>Melhor Média aos 40: ${M.best||0} pts • Vitórias: ${M.wins||0}</span>
+     <i class="fa-solid fa-map-location-dot"></i><span>Melhor Nota aos 40: ${M.best||0} pts • Vitórias: ${M.wins||0}</span>
     </div>
-    <h2 class="f text-2xl sm:text-4xl text-amber-100 leading-tight">Quem Chega Melhor aos 40 Anos?</h2>
-    <p class="text-xs sm:text-sm text-amber-100/70 mt-1">Distribua suas 60 horas semanais entre trabalho, SENAI, faculdade, mercado e lazer sem deixar o aluguel cair no SPC.</p>
+    <h2 class="f text-2xl sm:text-4xl text-amber-100 leading-tight">Tabuleiro da Vida no ABC</h2>
+    <p class="text-xs sm:text-sm text-amber-100/70 mt-1">Ande pelo mapa entre a UFABC, o Bandejão do RU, a Firma e o Bar. Equilibre carreira, saúde, lazer e boletos até os 40 anos!</p>
    </div>
 
    <div class="grid grid-cols-4 gap-1 bg-black/45 p-1 rounded-xl border border-amber-500/30 text-[11px] font-bold">
@@ -702,137 +835,165 @@ function rMenu(){
    <div class="bg-[#0a1f1d]/85 backdrop-blur-xl rounded-3xl p-5 gold-border flex-1 flex flex-col justify-between space-y-3">
     <div class="space-y-3">
      <div class="flex items-center justify-between">
-      <h3 class="f text-base text-amber-300 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i><span>Os 4 Pilares da Vitória</span></h3>
-      <button onclick="$('rulesModal').classList.remove('hidden')" class="text-xs text-amber-300 underline">Regras completas</button>
+      <h3 class="f text-base text-amber-300 flex items-center gap-2"><i class="fa-solid fa-compass"></i><span>Como Funciona o Tabuleiro</span></h3>
+      <button onclick="openTut(0)" class="text-xs text-amber-300 underline font-semibold">Abrir Tutorial</button>
      </div>
      <div class="grid grid-cols-2 gap-2 text-xs">
-      <div class="p-3 rounded-2xl bg-black/40 border border-emerald-400/30"><div class="text-lg">💰</div><b class="text-emerald-300">Patrimônio</b><p class="text-[11px] opacity-75 mt-0.5">Saldo, Tesouro Selic (+12%/turno), veículos e Casa Própria.</p></div>
-      <div class="p-3 rounded-2xl bg-black/40 border border-sky-400/30"><div class="text-lg">🎓</div><b class="text-sky-300">Carreira & Estudos</b><p class="text-[11px] opacity-75 mt-0.5">5 diplomas e 7 cargos na Firma (até Diretor).</p></div>
-      <div class="p-3 rounded-2xl bg-black/40 border border-rose-400/30"><div class="text-lg">❤️</div><b class="text-rose-300">Saúde & Energia</b><p class="text-[11px] opacity-75 mt-0.5">Coma bem, treine e evite cair na UPA por Burnout.</p></div>
-      <div class="p-3 rounded-2xl bg-black/40 border border-amber-400/30"><div class="text-lg">😎</div><b class="text-amber-300">Lazer & Conforto</b><p class="text-[11px] opacity-75 mt-0.5">Praia, sinuca no boteco e casa bem equipada.</p></div>
-     </div>
-     <div class="p-3 rounded-2xl bg-rose-950/40 border border-rose-500/30 text-xs">
-      <b class="text-rose-300"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Sobrevivência Urbana:</b>
-      <p class="text-[11px] opacity-85 mt-0.5">Nunca vire o ano sem comer no Mercadinho e deixe dinheiro para o Aluguel não virar bola de neve no SPC!</p>
+      <div class="p-3 rounded-2xl bg-black/40 border border-emerald-400/30"><div class="text-xl">💰</div><b class="text-emerald-300">Patrimônio</b><p class="text-[11px] opacity-75 mt-0.5">Saldo, Selic (+12%/turno), Bolsa FAPESP e bens.</p></div>
+      <div class="p-3 rounded-2xl bg-black/40 border border-sky-400/30"><div class="text-xl">🎓</div><b class="text-sky-300">UFABC & Carreira</b><p class="text-[11px] opacity-75 mt-0.5">Do BC&T ao Mestrado e cargo de CTO na Firma.</p></div>
+      <div class="p-3 rounded-2xl bg-black/40 border border-rose-400/30"><div class="text-xl">❤️</div><b class="text-rose-300">Saúde & RU</b><p class="text-[11px] opacity-75 mt-0.5">Coma 1x por turno no RU e evite Burnout.</p></div>
+      <div class="p-3 rounded-2xl bg-black/40 border border-amber-400/30"><div class="text-xl">😎</div><b class="text-amber-300">Lazer & Conforto</b><p class="text-[11px] opacity-75 mt-0.5">Desça pra Praia, melhore sua casa e relaxe.</p></div>
      </div>
     </div>
     <div class="pt-3 border-t border-amber-500/20 flex items-center justify-between text-xs text-amber-200/70">
-     <span><i class="fa-solid fa-users text-emerald-400 mr-1"></i> Até 4 Jogadores ou Bots</span>
-     <span><i class="fa-solid fa-bolt text-amber-400 mr-1"></i> Turnos Simultâneos</span>
+     <span><i class="fa-solid fa-person-walking text-emerald-400 mr-1"></i> Mapa Interativo</span>
+     <span><i class="fa-solid fa-bolt text-amber-400 mr-1"></i> Solo ou P2P Online</span>
     </div>
    </div>
 
    <div class="bg-[#0a1f1d]/85 backdrop-blur-xl rounded-3xl p-5 gold-border">
     <div class="flex items-center justify-between mb-1.5">
-     <h3 class="f text-sm text-amber-300 flex items-center gap-2"><i class="fa-solid fa-network-wired"></i><span>Status da Rede P2P</span></h3>
-     <span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Pronto (PeerJS)</span>
+     <h3 class="f text-sm text-amber-300 flex items-center gap-2"><i class="fa-solid fa-graduation-cap"></i><span>Dica de Veterano</span></h3>
+     <span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">UFABC</span>
     </div>
-    <p class="text-xs text-amber-100/70 leading-relaxed">
-     Crie uma sala online e envie o <strong class="text-emerald-300">Link Convite</strong> para seus amigos disputarem quem chega melhor aos 40 anos!
+    <p class="text-xs text-amber-100/75 leading-relaxed">
+     Comprar um <strong class="text-amber-300">PC Dev (Linux + RTX)</strong> no Shopping ABC faz suas horas de estudo na UFABC renderem <b>+50%</b> mais rápido!
     </p>
    </div>
   </div>
  </div>`;
 }
 
+/* ============ MODAL DE RELATÓRIO DA VIRADA DE ANO ============ */
+function rTurnReportModal(){
+ if(!turnReport)return'';
+ const r=turnReport;
+ return`<div class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onclick="turnReport=null;render()">
+  <div class="w-full max-w-md bg-[#0a1f1d] gold-border-strong rounded-3xl p-6 space-y-4 text-center shadow-2xl" onclick="event.stopPropagation()">
+   <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-500/20 border border-amber-400 flex items-center justify-center text-3xl">🗓️</div>
+   <div>
+    <div class="text-xs uppercase tracking-widest text-emerald-300 font-bold">Resumo da Virada de Ano</div>
+    <h3 class="f text-2xl text-amber-200">Você fez ${r.newAge} Anos!</h3>
+   </div>
+   <div class="space-y-2 text-xs text-left bg-black/45 p-3.5 rounded-2xl border border-white/10">
+    ${r.selic>0?`<div class="flex justify-between text-emerald-300"><span>📈 Rendimento Tesouro Selic:</span><b>+R$ ${r.selic}</b></div>`:''}
+    ${r.fapesp>0?`<div class="flex justify-between text-sky-300"><span>🔬 Bolsa Iniciação Científica (FAPESP):</span><b>+R$ ${r.fapesp}</b></div>`:''}
+    <div class="flex justify-between text-amber-200"><span>🏠 Aluguel da Moradia:</span><b>-R$ ${r.rent}</b></div>
+    ${r.spc>0?`<div class="flex justify-between text-rose-400 font-bold"><span>⚠️ Faltou saldo! Caiu no SPC:</span><b>+R$ ${r.spc} dívida</b></div>`:''}
+    ${r.hungry?`<div class="p-2 rounded-xl bg-rose-950/80 border border-rose-500 text-rose-200 font-semibold text-center">🚑 Você esqueceu de comer no turno passado e perdeu 15h na UPA!</div>`:`<div class="flex justify-between text-emerald-300"><span>🍽️ Alimentação em dia:</span><b>Saúde protegida ✓</b></div>`}
+   </div>
+   ${r.ev?`<div class="p-3.5 rounded-2xl bg-amber-500/15 border border-amber-400/50 text-left space-y-1">
+    <div class="text-[10px] font-bold uppercase tracking-wider text-amber-300">Acontecimento do Ano</div>
+    <div class="font-bold text-sm text-white">${r.ev.n}</div>
+    <div class="text-xs text-amber-100/85">${r.ev.d}</div>
+   </div>`:''}
+   <button onclick="turnReport=null;render()" class="bt w-full py-3 bg-gradient-to-r from-amber-500 to-yellow-600 text-black text-sm">Começar os ${r.newAge} Anos →</button>
+  </div>
+ </div>`;
+}
+
+/* ============ MODAL DE CADA PRÉDIO DO MAPA ============ */
 function rLocModal(p){
  if(!locModal)return'';
  let h='',title='';
  if(locModal=='work'){
   const jb=JOBS[p.job],nx=JOBS[p.job+1];
-  title='🏢 A Firma & Bicos';
+  title='🏢 Polo Tech & Firma';
   h=`<div class="space-y-3 text-xs">
-   <div class="p-3 rounded-xl bg-black/40 border border-white/10">
-    <div>Cargo Atual: <b class="text-amber-300 text-sm">${jb.n}</b> (R$ ${jb.w}/h)</div>
-    <div class="opacity-80 mt-0.5">Experiência acumulada: <b>${p.xp}h</b></div>
+   <div class="p-3 rounded-xl bg-black/40 border border-white/10 flex justify-between items-center">
+    <div><div>Cargo Atual: <b class="text-amber-300 text-sm">${jb.n}</b></div><div class="opacity-75">Salário: <b>R$ ${jb.w}/hora</b></div></div>
+    <div class="text-right"><div class="opacity-75">Experiência</div><b class="text-emerald-300 text-sm">${p.xp}h XP</b></div>
    </div>
    <div class="grid grid-cols-3 gap-2">
-    <button onclick="actWork(6)" class="bt bg-emerald-700">Meio Período<br><span class="text-[10px] font-normal">6h · +R$ ${jb.w*6}</span></button>
-    <button onclick="actWork(12)" class="bt bg-emerald-600">Turno Forte<br><span class="text-[10px] font-normal">12h · +R$ ${jb.w*12}</span></button>
-    <button onclick="actWork(12,true)" class="bt bg-rose-700">Hora Extra!<br><span class="text-[10px] font-normal">12h · +R$ ${Math.round(jb.w*12*1.35)} (+Estresse)</span></button>
+    <button onclick="actWork(6)" class="bt bg-emerald-700 hover:bg-emerald-600">Turno 6h<br><span class="text-[10px] font-normal">+R$ ${jb.w*6}</span></button>
+    <button onclick="actWork(12)" class="bt bg-emerald-600 hover:bg-emerald-500 text-black">Turno 12h<br><span class="text-[10px] font-normal">+R$ ${jb.w*12}</span></button>
+    <button onclick="actWork(12,true)" class="bt bg-rose-700 hover:bg-rose-600">Hora Extra 12h<br><span class="text-[10px] font-normal">+R$ ${Math.round(jb.w*12*1.35)}</span></button>
    </div>
-   ${nx?`<div class="p-3 rounded-xl bg-amber-500/10 border border-amber-400/40 flex justify-between items-center gap-2">
+   ${nx?`<div class="p-3 rounded-xl bg-amber-500/15 border border-amber-400/40 flex justify-between items-center gap-2">
     <div><div class="font-bold text-amber-300">Próximo Cargo: ${nx.n} (R$ ${nx.w}/h)</div>
-     <div class="text-[11px] opacity-85">Req: ${nx.edu?COURSES[nx.edu-1].n:'Sem curso'} · ${nx.xp}h XP${nx.suit?' · Roupa Social':''}</div>
+     <div class="text-[11px] opacity-85">Req: ${nx.edu?COURSES[nx.edu-1].n:'Sem curso'} · ${nx.xp}h XP${nx.suit?' · Roupa de Entrevista':''}</div>
     </div>
-    <button onclick="actPromote()" class="bt bg-amber-500 text-black">Pedir Promoção (4h)</button>
-   </div>`:'<div class="text-center text-emerald-300 font-bold">👑 Você já está no topo da Firma!</div>'}
+    <button onclick="actPromote()" class="bt bg-amber-500 text-black shrink-0">Promover (4h)</button>
+   </div>`:'<div class="text-center text-emerald-300 font-bold">👑 Você já é CTO / Diretor da Firma!</div>'}
   </div>`;
  }else if(locModal=='study'){
   const nx=COURSES[p.edu];
-  title='🎓 Faculdade & SENAI';
+  title='🎓 Campus UFABC';
   h=`<div class="space-y-3 text-xs">
-   <div class="p-3 rounded-xl bg-black/40">Formações Concluídas: <b>${p.edu}/5</b> ${p.it.includes('pc')?'<span class="text-emerald-300 ml-1">(💻 Bônus +50% ativo!)</span>':''}</div>
-   ${nx?`<div class="p-3 rounded-xl bg-sky-950/60 border border-sky-400/40 space-y-2">
-    <div class="font-bold text-sm text-sky-300">Estudando: ${nx.n}</div>
-    <div class="bar"><i class="bg-sky-400" style="width:${Math.min(100,p.eduP/nx.hrs*100)}%"></i></div>
-    <div class="flex justify-between"><span>Progresso: <b>${p.eduP}/${nx.hrs}h</b></span><span>Custo total: R$ ${nx.cost}</span></div>
+   <div class="p-3 rounded-xl bg-black/40 flex justify-between items-center">
+    <span>Etapas Concluídas: <b>${p.edu}/5</b></span>
+    ${p.edu>=3?'<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">🔬 Bolsa FAPESP Ativa (+R$180/t)</span>':''}
+   </div>
+   ${nx?`<div class="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-400/40 space-y-2">
+    <div class="flex justify-between items-center"><b class="text-sm text-emerald-300">${nx.n}</b><span class="text-amber-300 text-[11px]">${nx.d}</span></div>
+    <div class="bar"><i class="bg-emerald-400" style="width:${Math.min(100,p.eduP/nx.hrs*100)}%"></i></div>
+    <div class="flex justify-between"><span>Horas no Quadri: <b>${p.eduP}/${nx.hrs}h</b></span><span>Taxa/Material: R$ ${nx.cost}</span></div>
     <div class="grid grid-cols-2 gap-2 pt-1">
-     <button onclick="actStudy(6)" class="bt bg-sky-700">Aula Rápida (6h · R$ ${Math.round(nx.cost*(6/nx.hrs))})</button>
-     <button onclick="actStudy(12)" class="bt bg-sky-600">Intensivão (12h · R$ ${Math.round(nx.cost*(12/nx.hrs))})</button>
+     <button onclick="actStudy(6)" class="bt bg-emerald-700">Estudar 6h (R$ ${Math.round(nx.cost*(6/nx.hrs))})</button>
+     <button onclick="actStudy(12)" class="bt bg-emerald-500 text-black">Intensivão 12h (R$ ${Math.round(nx.cost*(12/nx.hrs))})</button>
     </div>
-   </div>`:'<div class="text-center text-amber-300 font-bold py-4">🎓 Você já tem todos os diplomas do jogo!</div>'}
+   </div>`:'<div class="text-center text-amber-300 font-bold py-4">🎓 Você já concluiu até o Mestrado na UFABC!</div>'}
   </div>`;
  }else if(locModal=='food'){
-  title='🛒 Mercadinho & Podrão';
-  h=`<div class="space-y-2 text-xs">
-   <div class="opacity-85 mb-1">Status no turno: ${p.fed?'<b class="text-emerald-300">✅ Já se alimentou!</b>':'<b class="text-rose-400">⚠️ Ainda não comeu nesta fase!</b>'}</div>
+  title='🍛 Bandejão do RU & Podrão';
+  h=`<div class="space-y-2.5 text-xs">
+   <div class="p-2.5 rounded-xl bg-black/40 flex justify-between items-center"><span>Alimentação neste turno:</span>${p.fed?'<b class="text-emerald-300">✅ Barriga cheia!</b>':'<b class="text-rose-400 animate-pulse">⚠️ Escolha 1 refeição!</b>'}</div>
    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-    <button onclick="actFood('miojo')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🍜 Miojo com Ovo (R$ 25 · 2h)</b><div class="text-[11px] opacity-75">Mata a fome · -4 Saúde</div></button>
-    <button onclick="actFood('pf')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🍛 PF do Boteco (R$ 70 · 3h)</b><div class="text-[11px] opacity-75">+5 Saúde · +4 Feliz · -4 Estresse</div></button>
-    <button onclick="actFood('feira')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🥦 Feira Completa (R$ 130 · 4h)</b><div class="text-[11px] opacity-75">Exige AirFryer · +12 Saúde · -10 Estresse</div></button>
-    <button onclick="actFood('churras')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🥩 Churrascão (R$ 220 · 6h)</b><div class="text-[11px] opacity-75">+8 Saúde · +16 Feliz · -18 Estresse</div></button>
+    <button onclick="actFood('miojo')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🍜 Miojo da Madrugada (R$ 25 · 2h)</b><div class="text-[11px] opacity-75">Mata a fome rápido · -4 Saúde</div></button>
+    <button onclick="actFood('ru')" class="p-3 rounded-xl bg-emerald-950/60 border border-emerald-400/40 text-left hover:border-amber-400"><b>🍛 Bandejão do RU da UFABC (R$ 40 · 3h)</b><div class="text-[11px] text-emerald-200">Bom e barato! +6 Saúde · +5 Lazer · -5 Estresse</div></button>
+    <button onclick="actFood('feira')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🥦 Marmita na AirFryer (R$ 130 · 4h)</b><div class="text-[11px] opacity-75">Exige AirFryer · +14 Saúde · -10 Estresse</div></button>
+    <button onclick="actFood('churras')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🥩 Churrascão da República (R$ 210 · 5h)</b><div class="text-[11px] opacity-75">+9 Saúde · +16 Lazer · -18 Estresse</div></button>
    </div>
   </div>`;
  }else if(locModal=='home'){
-  title='🏠 Imobiliária & Moradia';
+  title='🏠 Imobiliária do ABC';
   h=`<div class="space-y-2 text-xs">
    ${HOMES.map(hm=>{const cur=p.home==hm.id;return`<div class="p-3 rounded-xl border ${cur?'bg-amber-500/20 border-amber-400':'bg-black/40 border-white/10'} flex justify-between items-center gap-2">
     <div><div class="font-bold text-sm">${hm.n}</div><div class="opacity-80 text-[11px]">${hm.d}</div>
-     <div class="text-[11px] text-amber-300 mt-0.5">${hm.buy?`Compra Única: R$ ${hm.buy} (Aluguel R$ 0)`:`Aluguel: R$ ${hm.rent}/turno`} · +${hm.hap} Feliz/turno</div>
+     <div class="text-[11px] text-amber-300 mt-0.5">${hm.buy?`Compra Única: R$ ${hm.buy} (Zero Aluguel!)`:`Aluguel: R$ ${hm.rent}/turno`} · +${hm.hap} Lazer/t</div>
     </div>
-    ${cur?'<span class="px-2 py-1 rounded bg-amber-500 text-black font-bold">Morando</span>':`<button onclick="actHome(${hm.id})" class="bt bg-emerald-700">${hm.buy?'Comprar':'Mudar'}</button>`}
+    ${cur?'<span class="px-2.5 py-1 rounded-lg bg-amber-500 text-black font-bold">Atual</span>':`<button onclick="actHome(${hm.id})" class="bt bg-emerald-600 text-black">${hm.buy?'Comprar':'Mudar'}</button>`}
    </div>`}).join('')}
   </div>`;
  }else if(locModal=='shop'){
-  title='🛍️ Magazine & Veículos';
+  title='🛍️ Shopping ABC & Concessionária';
   h=`<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
    ${ITEMS.map(it=>{const has=p.it.includes(it.id);return`<div class="p-2.5 rounded-xl border ${has?'bg-emerald-950/60 border-emerald-400/50':'bg-black/40 border-white/10'} flex justify-between items-center gap-2">
     <div><div class="font-bold">${it.i} ${it.n}</div><div class="text-[11px] opacity-80">${it.d}</div><div class="text-amber-300 font-bold mt-0.5">R$ ${it.p}</div></div>
-    ${has?'<span class="text-emerald-300 font-bold">Comprado ✓</span>':`<button onclick="actBuyItem('${it.id}')" class="bt bg-amber-500 text-black">Comprar</button>`}
+    ${has?'<span class="text-emerald-300 font-bold shrink-0">Seu ✓</span>':`<button onclick="actBuyItem('${it.id}')" class="bt bg-amber-500 text-black shrink-0">Comprar</button>`}
    </div>`}).join('')}
   </div>`;
  }else if(locModal=='health'){
-  title='🏥 Academia & Postinho SUS';
+  title='🏥 SmartFit & Postinho / UPA';
   h=`<div class="space-y-2 text-xs">
-   <button onclick="actHealth('gym')" class="w-full p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400 flex justify-between items-center"><div><b>🏋️ Treino na Academia de Bairro (R$ 45 · 6h)</b><div class="opacity-80">+14 Saúde · -14 Estresse · +4 Feliz</div></div><span class="bt bg-emerald-700">Treinar</span></button>
-   <button onclick="actHealth('sus')" class="w-full p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400 flex justify-between items-center"><div><b>🏥 Check-up no Postinho SUS (Grátis · 10h)</b><div class="opacity-80">+18 Saúde · -6 Estresse (demora na fila, mas é de graça!)</div></div><span class="bt bg-sky-700">Ir ao SUS</span></button>
-   <button onclick="actHealth('spa')" class="w-full p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400 flex justify-between items-center"><div><b>🧘 Terapia & Massagem VIP (R$ 160 · 5h)</b><div class="opacity-80">+14 Saúde · -28 Estresse · +10 Feliz</div></div><span class="bt bg-amber-500 text-black">Relaxar</span></button>
+   <button onclick="actHealth('gym')" class="w-full p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400 flex justify-between items-center"><div><b>🏋️ Treino na SmartFit (R$ 45 · 5h)</b><div class="opacity-80">+14 Saúde · -15 Estresse · +5 Lazer</div></div><span class="bt bg-emerald-600 text-black">Treinar</span></button>
+   <button onclick="actHealth('sus')" class="w-full p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400 flex justify-between items-center"><div><b>🏥 Check-up no Postinho SUS (Grátis · 9h)</b><div class="opacity-80">+18 Saúde · -8 Estresse</div></div><span class="bt bg-sky-700">Ir ao SUS</span></button>
+   <button onclick="actHealth('spa')" class="w-full p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400 flex justify-between items-center"><div><b>🧘 Terapia & Massagem (R$ 150 · 4h)</b><div class="opacity-80">+14 Saúde · -30 Estresse · +12 Lazer</div></div><span class="bt bg-amber-500 text-black">Relaxar</span></button>
   </div>`;
  }else if(locModal=='bank'){
   title='🏦 Banco & Lotérica';
   h=`<div class="space-y-3 text-xs">
    <div class="grid grid-cols-3 gap-2 text-center p-2.5 rounded-xl bg-black/40">
-    <div><div class="opacity-70">Na Mão</div><div class="f text-base text-emerald-300">R$ ${p.cash}</div></div>
-    <div><div class="opacity-70">Poupança (+${p.orig=='faria'?16:12}%/t)</div><div class="f text-base text-sky-300">R$ ${p.bank}</div></div>
+    <div><div class="opacity-70">Carteira</div><div class="f text-base text-emerald-300">R$ ${p.cash}</div></div>
+    <div><div class="opacity-70">Selic (+${p.orig=='faria'?16:12}%/t)</div><div class="f text-base text-sky-300">R$ ${p.bank}</div></div>
     <div><div class="opacity-70">Dívida SPC</div><div class="f text-base text-rose-400">R$ ${p.debt}</div></div>
    </div>
    <div class="grid grid-cols-2 gap-2">
-    <button onclick="actBank('dep',200)" class="bt bg-emerald-700">Depositar R$ 200 (2h)</button>
-    <button onclick="actBank('dep','all')" class="bt bg-emerald-800">Depositar Tudo (2h)</button>
-    <button onclick="actBank('wit',200)" class="bt bg-sky-700">Resgatar R$ 200 (2h)</button>
-    <button onclick="actBank('wit','all')" class="bt bg-sky-800">Resgatar Tudo (2h)</button>
+    <button onclick="actBank('dep',200)" class="bt bg-emerald-700">Aplicar R$ 200 (2h)</button>
+    <button onclick="actBank('dep','all')" class="bt bg-emerald-600 text-black">Aplicar Tudo (2h)</button>
+    <button onclick="actBank('wit',200)" class="bt bg-sky-700">Sacar R$ 200 (2h)</button>
+    <button onclick="actBank('wit','all')" class="bt bg-sky-800">Sacar Tudo (2h)</button>
    </div>
    ${p.debt>0?`<button onclick="actBank('debt')" class="bt bg-rose-700 w-full">🧾 Quitar Dívida do SPC (2h)</button>`:''}
-   <button onclick="actBank('lotto')" class="bt bg-amber-500 text-black w-full">🍀 Fazer Fezinha na Mega da Virada (R$ 35 · 2h)</button>
+   <button onclick="actBank('lotto')" class="bt bg-amber-500 text-black w-full">🍀 Fezinha na Mega da Virada (R$ 35 · 2h)</button>
   </div>`;
  }else if(locModal=='fun'){
   const opps=G.pls.filter(x=>x.uid!=myUid);
-  title='🍻 Boteco, Praia & Perrengues';
+  title='🍻 Bar perto da UFABC & Descida pra Praia';
   h=`<div class="space-y-3 text-xs">
    <div class="grid grid-cols-2 gap-2">
-    <button onclick="actFun('bar')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🍻 Sinuca & Gelada (R$ 60 · 6h)</b><div class="text-[11px] opacity-80">+15 Feliz · -18 Estresse</div></button>
-    <button onclick="actFun('beach')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🏖️ Praia Grande (R$ 180 · 10h)</b><div class="text-[11px] opacity-80">+26 Feliz · -32 Estresse · +6 Saúde</div></button>
+    <button onclick="actFun('bar')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🍻 Sinuca & Litrão (R$ 55 · 5h)</b><div class="text-[11px] opacity-80">+16 Lazer · -20 Estresse</div></button>
+    <button onclick="actFun('beach')" class="p-3 rounded-xl bg-black/40 border border-white/15 text-left hover:border-amber-400"><b>🏖️ Descer pra Praia Grande (R$ 170 · 9h)</b><div class="text-[11px] opacity-80">+26 Lazer · -34 Estresse · +6 Saúde</div></button>
    </div>
    <div class="p-3 rounded-xl bg-rose-950/50 border border-rose-400/40 space-y-2">
     <div class="font-bold text-rose-300">😈 Mandar Perrengue para um Concorrente (3h):</div>
@@ -840,79 +1001,151 @@ function rLocModal(p){
     <div class="grid grid-cols-3 gap-1.5">
      <button onclick="actFun('som',$('trg').value)" class="bt bg-rose-800 text-[11px]">🔊 Som às 3h<br>(R$ 140 · -8h)</button>
      <button onclick="actFun('parente',$('trg').value)" class="bt bg-rose-800 text-[11px]">🤑 Parente<br>(R$ 180 · -R$150)</button>
-     <button onclick="actFun('obra',$('trg').value)" class="bt bg-rose-800 text-[11px]">🚧 Obra na Rua<br>(R$ 220 · -12h)</button>
+     <button onclick="actFun('obra',$('trg').value)" class="bt bg-rose-800 text-[11px]">🚧 Fretado<br>(R$ 220 · -12h)</button>
     </div>
    </div>
   </div>`;
  }
- return`<div class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-3" onclick="locModal=null;render()">
-  <div class="lousa max-w-lg w-full p-5 space-y-3" onclick="event.stopPropagation()">
-   <div class="flex justify-between items-center"><div class="f text-lg text-amber-300">${title}</div><button onclick="locModal=null;render()" class="px-2.5 py-1 rounded bg-rose-800 text-xs font-bold">Fechar ✕</button></div>
-   <div class="text-xs opacity-80 flex justify-between"><span>Horas restantes: <b class="text-amber-300">${p.h}h</b></span><span>Na mão: <b class="text-emerald-300">R$ ${p.cash}</b></span></div>
+ return`<div class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3" onclick="locModal=null;render()">
+  <div class="bg-[#0a1f1d] gold-border-strong rounded-3xl max-w-lg w-full p-5 space-y-3 shadow-2xl" onclick="event.stopPropagation()">
+   <div class="flex justify-between items-center border-b border-amber-500/25 pb-2.5">
+    <div class="f text-lg text-amber-300">${title}</div>
+    <button onclick="locModal=null;render()" class="w-8 h-8 rounded-xl bg-rose-900/80 text-xs font-bold">✕</button>
+   </div>
+   <div class="text-xs flex justify-between bg-black/35 px-3 py-2 rounded-xl">
+    <span>⏰ Horas restantes: <b class="text-amber-300">${p.h}h</b></span>
+    <span>💰 Carteira: <b class="text-emerald-300">R$ ${p.cash}</b></span>
+   </div>
    ${h}
   </div>
  </div>`;
 }
 
+/* ============ TELA DO TABULEIRO VISUAL ============ */
 function rPlay(){
- const p=meP(),sc=scores(p),jb=JOBS[p.job],hm=HOMES[p.home];
- const locs=[
-  ['work','🏢','A Firma & Bicos',`${jb.n} (R$${jb.w}/h)`],
-  ['study','🎓','Faculdade & SENAI',p.edu>=5?'Formado em tudo!':COURSES[p.edu].n],
-  ['food','🛒','Mercadinho & PF',p.fed?'✅ Alimentado':'⚠️ Coma neste turno!'],
-  ['home','🏠','Imobiliária',`${hm.n} (R$${hm.rent}/t)`],
-  ['shop','🛍️','Magazine & Bens',`${p.it.length}/6 itens comprados`],
-  ['health','🏥','Academia & SUS',`Saúde ${p.hlth}% · Estresse ${p.str}%`],
-  ['bank','🏦','Banco & Lotérica',`Poupança R$ ${p.bank}`],
-  ['fun','🍻','Boteco & Praia','Lazer e mandar Perrengues']
- ];
- return`<div class="max-w-4xl mx-auto w-full space-y-3 my-auto">
-  <div class="lousa p-3.5 space-y-2.5">
-   <div class="flex justify-between items-center flex-wrap gap-2">
-    <div class="flex items-center gap-2"><span class="text-2xl">${AVS[p.av|0]||'😎'}</span><div><span class="f text-xl text-amber-300">🎂 ${G.age} Anos</span> <span class="text-xs opacity-75">(Turno ${G.turn}/${G.maxT} · Rumo aos 40)</span></div></div>
-    <span class="px-3 py-1 rounded-xl bg-amber-500/20 border border-amber-400/40 text-xs sm:text-sm font-bold text-amber-300">⏰ ${p.h}h / ${p.maxH}h disponíveis</span>
+ const p=meP(),sc=scores(p),jb=JOBS[p.job],hm=HOMES[p.home],myPos=MAP_LOCS[p.loc]||MAP_LOCS.home;
+ const nxJ=JOBS[p.job+1],canProm=nxJ&&p.edu>=nxJ.edu&&p.xp>=nxJ.xp&&(!nxJ.suit||p.it.includes('suit'));
+
+ return`<div class="max-w-5xl mx-auto w-full space-y-2.5 my-auto">
+
+  <!-- HUD SUPERIOR ENXUTO E VISUAL -->
+  <div class="bg-[#0a1f1d]/95 gold-border rounded-2xl p-2.5 sm:p-3 flex flex-col gap-2">
+   <div class="flex items-center justify-between flex-wrap gap-2">
+    <!-- Idade e Relógio -->
+    <div class="flex items-center gap-2.5">
+     <div class="px-3 py-1.5 rounded-xl bg-amber-500 text-black font-black text-xs sm:text-sm flex items-center gap-1.5 shadow">
+      <i class="fa-solid fa-cake-candles"></i><span>${G.age} ANOS</span><span class="opacity-75 text-[11px]">(${G.turn}/${G.maxT})</span>
+     </div>
+     <div class="px-3 py-1.5 rounded-xl bg-black/50 border border-amber-400/50 text-amber-300 font-bold text-xs sm:text-sm flex items-center gap-1.5">
+      <i class="fa-regular fa-clock text-amber-400"></i><span>${p.h}h</span><span class="text-[11px] opacity-65">/ ${p.maxH}h</span>
+     </div>
+    </div>
+
+    <!-- Status Rápidos com Ícones -->
+    <div class="flex items-center gap-2 flex-wrap text-xs">
+     <span class="px-2.5 py-1 rounded-xl bg-emerald-950/80 border border-emerald-400/40 text-emerald-300 font-bold"><i class="fa-solid fa-wallet mr-1"></i>R$ ${p.cash}</span>
+     ${p.bank>0?`<span class="px-2.5 py-1 rounded-xl bg-sky-950/80 border border-sky-400/40 text-sky-300 font-bold"><i class="fa-solid fa-piggy-bank mr-1"></i>R$ ${p.bank}</span>`:''}
+     ${p.debt>0?`<span class="px-2.5 py-1 rounded-xl bg-rose-950 border border-rose-500 text-rose-300 font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>SPC -R$ ${p.debt}</span>`:''}
+     <span class="px-2.5 py-1 rounded-xl border font-bold ${p.fed?'bg-emerald-950/60 border-emerald-400/40 text-emerald-300':'bg-rose-950/90 border-rose-500 text-rose-300 animate-pulse'}">
+      <i class="fa-solid fa-utensils mr-1"></i>${p.fed?'Alimentado':'Com Fome!'}
+     </span>
+     <span class="px-2.5 py-1 rounded-xl bg-black/50 border ${p.str>=75?'border-rose-500 text-rose-400 animate-pulse':'border-white/15 text-amber-200'} font-bold">
+      <i class="fa-solid fa-Bolt-lightning mr-1"></i>Estresse ${p.str}%
+     </span>
+    </div>
    </div>
-   <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs bg-black/35 p-2.5 rounded-xl">
-    <div>💰 Carteira: <b class="text-emerald-300">R$ ${p.cash}</b>${p.debt?` <span class="text-rose-400">(SPC -R$${p.debt})</span>`:''}</div>
-    <div>❤️ Saúde: <b>${p.hlth}%</b> · 😎 Feliz: <b>${p.hap}%</b></div>
-    <div>🔥 Estresse: <b class="${p.str>=80?'text-rose-400':'text-amber-300'}">${p.str}%</b></div>
-    <div>🍽️ Comida: <b class="${p.fed?'text-emerald-300':'text-rose-400'}">${p.fed?'Alimentado ✓':'Com fome!'}</b></div>
-   </div>
-   <div class="grid grid-cols-4 gap-2 text-[11px] text-center">
-    <div class="bg-black/30 p-2 rounded-xl">💰 Patrimônio <b>${sc.w}</b><div class="bar mt-1"><i class="bg-emerald-400" style="width:${sc.w}%"></i></div></div>
-    <div class="bg-black/30 p-2 rounded-xl">🎓 Carreira <b>${sc.c}</b><div class="bar mt-1"><i class="bg-sky-400" style="width:${sc.c}%"></i></div></div>
-    <div class="bg-black/30 p-2 rounded-xl">❤️ Saúde <b>${sc.h}</b><div class="bar mt-1"><i class="bg-rose-400" style="width:${sc.h}%"></i></div></div>
-    <div class="bg-black/30 p-2 rounded-xl">😎 Lazer <b>${sc.l}</b><div class="bar mt-1"><i class="bg-amber-400" style="width:${sc.l}%"></i></div></div>
+
+   <!-- 4 Medidores de Vitória com Ícones Claros -->
+   <div class="grid grid-cols-4 gap-2 text-[11px]">
+    <div class="bg-black/40 px-2.5 py-1.5 rounded-xl border border-white/5">
+     <div class="flex justify-between font-bold text-emerald-300"><span><i class="fa-solid fa-sack-dollar mr-1"></i>Patrimônio</span><span>${sc.w}</span></div>
+     <div class="bar mt-1"><i class="bg-emerald-400" style="width:${sc.w}%"></i></div>
+    </div>
+    <div class="bg-black/40 px-2.5 py-1.5 rounded-xl border border-white/5">
+     <div class="flex justify-between font-bold text-sky-300"><span><i class="fa-solid fa-user-graduate mr-1"></i>Carreira</span><span>${sc.c}</span></div>
+     <div class="bar mt-1"><i class="bg-sky-400" style="width:${sc.c}%"></i></div>
+    </div>
+    <div class="bg-black/40 px-2.5 py-1.5 rounded-xl border border-white/5">
+     <div class="flex justify-between font-bold text-rose-300"><span><i class="fa-solid fa-heart-pulse mr-1"></i>Saúde</span><span>${sc.h}</span></div>
+     <div class="bar mt-1"><i class="bg-rose-400" style="width:${sc.h}%"></i></div>
+    </div>
+    <div class="bg-black/40 px-2.5 py-1.5 rounded-xl border border-white/5">
+     <div class="flex justify-between font-bold text-amber-300"><span><i class="fa-solid fa-face-laugh-beam mr-1"></i>Lazer</span><span>${sc.l}</span></div>
+     <div class="bar mt-1"><i class="bg-amber-400" style="width:${sc.l}%"></i></div>
+    </div>
    </div>
   </div>
 
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-   ${locs.map(([k,ic,nm,sub])=>`<div onclick="locModal='${k}';render()" class="card-loc flex flex-col justify-between">
-    <div class="flex items-center gap-2"><span class="text-2xl">${ic}</span><span class="font-bold text-xs sm:text-sm leading-tight text-amber-100">${nm}</span></div>
-    <div class="text-[11px] opacity-80 mt-2 truncate">${sub}</div>
-   </div>`).join('')}
+  <!-- FAIXA DE DICA INTELIGENTE -->
+  <div class="px-3.5 py-2 rounded-xl bg-amber-500/15 border border-amber-400/40 text-xs text-amber-100 flex items-center justify-between gap-2">
+   <span>${getSmartHint(p)}</span>
+   <span class="text-[11px] text-amber-300 font-bold shrink-0">Sua Média: ${sc.tot} pts</span>
   </div>
 
-  <div class="flex gap-2 items-center">
-   <button onclick="endMyTurn()" ${p.done?'disabled':''} class="bt flex-1 py-3.5 text-sm shadow-lg" style="background:linear-gradient(#f5b83d,#b7791f);color:#2a1a02">
-    ${p.done?'⏳ Aguardando os outros fecharem o ano…':`Fechar os ${G.age} Anos (Pagar Aluguel R$ ${hm.rent}) →`}
-   </button>
+  <!-- TABULEIRO VISUAL DA CIDADE COM RUAS E PRÉDIOS -->
+  <div id="bmap" class="board-map">
+   <!-- Estradas em SVG ligando os prédios -->
+   <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <path d="M20,21 L50,17 L80,21 L84,52 L80,82 L50,84 L20,82 L16,52 Z" fill="none" stroke="#ffffff18" stroke-width="3.2"/>
+    <path d="M20,21 L50,50 L80,82 M80,21 L50,50 L20,82 M50,17 L50,84 M16,52 L84,52" fill="none" stroke="#fbbf2433" stroke-width="1" stroke-dasharray="2 2"/>
+    <circle cx="50" cy="50" r="11" fill="#061513" stroke="#fbbf2455" stroke-width="1.2"/>
+   </svg>
+
+   <!-- Praça Central no Meio do Tabuleiro -->
+   <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
+    <div class="text-xs font-bold text-amber-300/90">🌳 Praça do Relógio</div>
+    <div class="text-[10px] text-emerald-300/80">${jb.n}</div>
+    <div class="text-[10px] opacity-65">${p.it.map(k=>ITEMS.find(x=>x.id==k)?.i).join(' ')||'Sem itens extras'}</div>
+   </div>
+
+   <!-- Os 8 Prédios Clicáveis -->
+   ${Object.entries(MAP_LOCS).map(([key,b])=>{
+    const isHere=p.loc==key;
+    let alertHtml='';
+    if(key=='food'&&!p.fed)alertHtml='<span class="bldg-alert">FOME!</span>';
+    else if(key=='work'&&canProm)alertHtml='<span class="bldg-alert" style="background:#10b981">PROMOÇÃO!</span>';
+    else if(key=='health'&&p.str>=75)alertHtml='<span class="bldg-alert">ESTRESSE!</span>';
+    return`<div onclick="goToBuilding('${key}')" class="bldg ${b.col} ${isHere?'active-loc':''}" style="left:${b.x}%;top:${b.y}%">
+     ${alertHtml}
+     <div class="flex items-center gap-2">
+      <span class="text-2xl">${b.ic}</span>
+      <div class="min-w-0">
+       <div class="font-bold text-xs text-amber-100 truncate">${b.n}</div>
+       <div class="text-[10px] text-amber-200/70 truncate">${b.sub}</div>
+      </div>
+     </div>
+    </div>`;
+   }).join('')}
+
+   <!-- Bonecos dos Adversários / Bots no Mapa -->
+   ${G.pls.filter(x=>x.uid!=myUid).map((op,idx)=>{
+    const pos=MAP_LOCS[op.loc]||MAP_LOCS.home;
+    const offset=(idx-1)*4;
+    return`<div class="pawn pawn-bot" style="left:${pos.x+offset}%;top:${pos.y+5}%" title="${esc(op.name)}">${AVS[op.av|0]||'🤖'}</div>`;
+   }).join('')}
+
+   <!-- Seu Boneco no Mapa -->
+   <div id="pawn-me" class="pawn pawn-me" style="left:${myPos.x}%;top:${myPos.y}%">${AVS[p.av|0]||'😎'}</div>
   </div>
 
-  <div class="lousa p-3.5 space-y-2 text-xs">
-   <div class="f text-xs text-amber-300">PLACAR AO VIVO DA CIDADE & CRÔNICAS</div>
-   <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-    ${G.pls.map(x=>{const s=scores(x);return`<div class="p-2.5 rounded-xl bg-black/40 border ${x.uid==myUid?'border-amber-400/60':'border-white/10'}">
-     <div class="font-bold truncate">${AVS[x.av|0]||'😎'} ${esc(x.name)} ${x.done?'✅':''}</div>
-     <div class="text-[10px] opacity-75">${JOBS[x.job].n}</div>
-     <div class="text-amber-300 font-bold mt-0.5">Média: ${s.tot} pts</div>
+  <!-- RODAPÉ: BOTÃO DE FECHAR ANO + PLACAR COMPACTO DOS RIVAIS -->
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 items-center">
+   <div class="md:col-span-7 flex gap-2">
+    ${G.pls.map(x=>{const s=scores(x);return`<div class="flex-1 px-2.5 py-2 rounded-xl bg-[#0a1f1d]/90 border ${x.uid==myUid?'border-amber-400':'border-white/10'} text-xs flex items-center justify-between">
+     <div class="truncate"><span class="mr-1">${AVS[x.av|0]||'😎'}</span><b class="truncate">${esc(x.name.split(' ')[0])}</b></div>
+     <span class="text-amber-300 font-bold ml-1">${s.tot}⭐</span>
     </div>`}).join('')}
    </div>
-   <div class="text-[11px] opacity-80 bg-black/30 p-2.5 rounded-xl max-h-20 overflow-y-auto space-y-1">
-    ${G.log.slice(0,5).map(l=>`<div>${esc(l)}</div>`).join('')}
+   <div class="md:col-span-5">
+    <button onclick="endMyTurn()" ${p.done?'disabled':''} class="bt w-full py-3.5 text-sm shadow-xl flex items-center justify-center gap-2" style="background:linear-gradient(#f5b83d,#b7791f);color:#2a1a02">
+     <i class="fa-solid fa-calendar-check"></i>
+     <span>${p.done?'Aguardando os outros…':`Fechar os ${G.age} Anos (Aluguel R$ ${hm.rent}) →`}</span>
+    </button>
    </div>
   </div>
+
   ${rLocModal(p)}
+  ${rTurnReportModal()}
  </div>`;
 }
 
@@ -920,7 +1153,7 @@ function rEnd(){
  const rk=G.pls.slice().sort((a,b)=>scores(b).tot-scores(a).tot);
  const win=rk[0];
  return`<div class="max-w-lg mx-auto w-full bg-[#0a1f1d]/95 gold-border-strong rounded-3xl p-6 space-y-4 text-center my-auto">
-  <div class="f text-4xl sm:text-5xl text-amber-300">🎂 Chegaram aos 40 Anos!</div>
+  <div class="f text-4xl sm:text-5xl text-amber-300">🎂 Quarentou!</div>
   <div class="text-sm">🏆 <b>${esc(win.name)}</b> chegou melhor aos 40 anos com <b>${scores(win).tot} pontos de média</b>!</div>
   <div class="space-y-2 text-left">
    ${rk.map((p,i)=>{const s=scores(p);return`<div class="p-3 rounded-2xl bg-black/40 border ${i==0?'border-amber-400':'border-white/10'} flex justify-between items-center">
