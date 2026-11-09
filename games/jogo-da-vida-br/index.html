@@ -59,6 +59,14 @@ body{margin:0;background:radial-gradient(circle at 50% 20%,rgba(15,118,110,.38) 
  display:flex;align-items:center;justify-content:center;font-size:15px;opacity:.9
 }
 
+@keyframes drift{from{transform:translateX(-15vw)}to{transform:translateX(110vw)}}
+@keyframes sail{0%,100%{transform:translateX(0)}50%{transform:translateX(34px)}}
+.cld{position:absolute;opacity:.16;font-size:34px;animation:drift 70s linear infinite;pointer-events:none;z-index:2}
+.mlb{position:absolute;pointer-events:none;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#fff;opacity:.38;font-weight:700}
+.board-map{height:clamp(460px,66vh,600px)!important}
+.pawn-me{width:48px!important;height:48px!important;overflow:hidden;padding:0}
+.pawn-bot{width:34px!important;height:34px!important;padding:0;opacity:1!important;position:absolute}
+.av{display:inline-block;vertical-align:middle;border-radius:50%;overflow:hidden;line-height:0;flex:none}
 /* Efeitos Flutuantes no Mapa */
 .fx-pop{
  position:absolute;transform:translate(-50%,-50%);pointer-events:none;z-index:40;
@@ -225,12 +233,63 @@ const MAP_LOCS={
  bank: {k:'bank', ic:'🏦',n:'Banco & Lotérica',sub:'Selic +12% & Mega',x:80,y:21,col:'border-amber-400/60'},
  food: {k:'food', ic:'🍛',n:'Bandejão RU & PF',sub:'Matar a Fome',x:16,y:52,col:'border-orange-400/60'},
  shop: {k:'shop', ic:'🛍️',n:'Shopping ABC',sub:'PC, AirFryer & Moto',x:84,y:52,col:'border-purple-400/60'},
- home: {k:'home', ic:'🏠',n:'Sua Moradia',sub:'República → Casa',x:20,y:82,col:'border-teal-400/60'},
- health:{k:'health',ic:'🏥',n:'SmartFit & UPA',sub:'Saúde & Desestressar',x:50,y:84,col:'border-rose-400/60'},
- fun:  {k:'fun',  ic:'🍻',n:'Bar & Praia',sub:'Lazer & Perrengues',x:80,y:82,col:'border-yellow-400/60'}
+ home: {k:'home', ic:'🏠',n:'Sua Moradia',sub:'República → Casa',x:16,y:80,col:'border-teal-400/60'},
+ health:{k:'health',ic:'🏥',n:'SmartFit & UPA',sub:'Saúde & Desestressar',x:84,y:80,col:'border-rose-400/60'},
+ fun:  {k:'fun',  ic:'🍻',n:'Bar & Praia',sub:'Lazer & Perrengues',x:50,y:82,col:'border-yellow-400/60'}
 };
 
-const AVS=['😎','🤓','🤠','👩‍💻','🧑‍🔧','👩‍🎓','🧔','👵'];
+const AVS=['😎'];
+const PCOL=['#fbbf24','#38bdf8','#f472b6','#a3e635','#c084fc','#fb923c'];
+const SKN=['#f5d0b0','#e8b88a','#c98f63','#a86a43','#7a4a2c','#fbe0c8'],HRC=['#1f1209','#4a2a12','#8a5a2b','#d4a017','#b91c1c','#9ca3af','#111827'],SHC=['#2563eb','#dc2626','#16a34a','#9333ea','#f59e0b','#0d9488','#db2777','#475569'],BGC=['#164e63','#365314','#7c2d12','#4c1d95','#831843','#1e3a8a'];
+const PRE=[
+{sk:'#f1cfb0',hr:'#3a281c',hs:5,bg:'#7c4a1d',sh:'#4b5563',br:2.2,bd:1,sm:1},
+{sk:'#f3cdaa',hr:'#17110d',hs:6,bg:'#3b6a7a',sh:'#0f766e',br:2,eye:'#7ea6bd',ch:1,sm:2},
+{sk:'#f0c9a6',hr:'#7a4e2d',hs:10,bg:'#6b4a2b',sh:'#d8cfb8',jk:'#5a3a1d',cap:'#18233f',br:1.6,sm:0},
+{sk:'#d9a77a',hr:'#3a2416',hs:7,bg:'#1c3b3a',sh:'#111827',br:2,bd:3,ear:1,sm:3},
+{sk:'#cf9d74',hr:'#2a1b12',hs:8,bg:'#1d2b45',sh:'#1e2a4a',br:2,bd:2,ear:2,gl:1,sm:0},
+{sk:'#f1cdb0',hr:'#2e2118',hs:9,bg:'#9ca3af',sh:'#d9381e',br:2.5,sm:0}];
+function avSvg(seed,sz,pi){let t;
+ if(pi!=null&&pi>=0&&pi<PRE.length)t=PRE[pi];else{let x=(Math.abs(seed|0)+1)*2654435761>>>0;const rn=n=>{x=(x*1664525+1013904223)>>>0;return(x>>>16)%n};
+  t={sk:SKN[rn(6)],hr:HRC[rn(7)],sh:SHC[rn(8)],bg:BGC[rn(6)],hs:rn(5),br:1.6,sm:rn(2)};const a=rn(4);if(a==1)t.gs=1;if(a==2)t.bd=1+rn(3);if(a==3)t.cap=t.sh}
+ const h=t.hr,C=(cx,cy,r)=>`<circle cx="${cx}" cy="${cy}" r="${r}"/>`;
+ const hair=[`<path d="M19 28Q19 11 32 11Q45 11 45 28Q40 19 32 19Q24 19 19 28Z"/>`,`<path d="M18 36Q15 10 32 10Q49 10 46 36L42 36Q42 18 32 18Q22 18 22 36Z"/>`,'',C(22,19,6)+C(32,15,7)+C(42,19,6),`<path d="M19 28Q19 12 32 12Q45 12 45 28Q40 20 32 20Q24 20 19 28Z"/>`+C(32,8,5),
+ `<path d="M18 29Q14 12 28 8Q40 4 47 14Q50 22 46 29Q44 20 36 18Q26 17 22 22Q20 25 18 29Z"/><path d="M24 14Q34 1 46 12Q38 9 24 14Z"/>`,
+ C(22,20,6)+C(29,14,6.5)+C(37,13,6.5)+C(44,19,6)+C(19,28,4)+C(46,28,3.5)+`<path d="M21 25Q32 16 44 25Q40 21 32 21Q26 21 21 25Z"/>`,
+ [[19,26],[18,19],[23,13],[30,10],[38,10],[44,14],[47,20],[46,27]].map(a=>C(a[0],a[1],5.5)).join('')+`<ellipse cx="32" cy="19" rx="13" ry="8"/>`,
+ [[21,22],[26,17],[32,15],[38,17],[43,22],[19,28],[45,28]].map(a=>C(a[0],a[1],4.6)).join('')+`<ellipse cx="32" cy="21" rx="12" ry="7"/>`,
+ `<path d="M19 28Q19 14 32 14Q45 14 45 28Q40 21 32 21Q24 21 19 28Z"/><path d="M30 15L32 6L35 15Z"/>`,
+ `<path d="M17 26Q13 38 20 44Q18 34 21 28Z"/><path d="M47 26Q51 38 44 44Q46 34 43 28Z"/><path d="M20 25Q32 21 44 25Q40 29 32 27Q26 29 20 25Z"/>`][t.hs];
+ const bd=[ '',`<path d="M20 35Q22 47 32 48Q42 47 44 35Q42 43 32 44Q22 43 20 35Z" opacity=".35"/>`,`<path d="M19 33Q20 50 32 51Q44 50 45 33Q43 42 38 42Q32 40 26 42Q21 42 19 33Z"/>`,`<path d="M24 38Q28 35 32 38Q36 35 40 38Q36 40 32 39Q28 40 24 38Z"/><path d="M28 45Q32 52 36 45Q32 47 28 45Z"/>`][t.bd|0];
+ const mo=[`<path d="M28 41H36" stroke="#7a2e2e" stroke-width="1.8" fill="none" stroke-linecap="round"/>`,`<path d="M28 41.5Q33 42 37 39.5" stroke="#7a2e2e" stroke-width="1.8" fill="none" stroke-linecap="round"/>`,`<ellipse cx="32" cy="41" rx="3.2" ry="2.2" fill="#c97b7b"/>`,`<path d="M25 38.5Q32 49 39 38.5Q32 41 25 38.5Z" fill="#fff" stroke="#7a2e2e" stroke-width="1"/>`][t.sm|0];
+ const g=t.gl?-1.3:0,ey=t.eye||'#3a2414';
+ const eyes=[27,37].map(x=>`<ellipse cx="${x}" cy="31" rx="2.9" ry="2.1" fill="#fff"/><circle cx="${x+g}" cy="31" r="1.7" fill="${ey}"/>`).join('')+`<path d="M22 26.5Q26 24 30.5 26.5M33.5 26.5Q38 24 42 26.5" stroke="${h}" stroke-width="${t.br}" fill="none" stroke-linecap="round"/>`;
+ const cap=t.cap?`<path d="M17 25Q32 3 47 25Z" fill="${t.cap}"/><rect x="15" y="22" width="34" height="4" rx="2" fill="${t.cap}" stroke="#0004" stroke-width=".6"/><g fill="none" stroke="#fff" stroke-width=".8"><circle cx="32" cy="15" r="3"/><path d="M30.6 14.6v.2M33.4 14.6v.2M30.4 16.2Q32 17.6 33.6 16.2"/></g>`:'';
+ const gs=t.gs?`<g fill="none" stroke="#111" stroke-width="1.4"><circle cx="27" cy="31" r="4.6"/><circle cx="37" cy="31" r="4.6"/><path d="M31.6 31h.8"/></g>`:'';
+ const er=t.ear==1?`<circle cx="18.6" cy="37" r="2.2" fill="none" stroke="#e5b93c" stroke-width="1"/>`:t.ear==2?`<circle cx="19" cy="38.5" r="1.4" fill="#d1d5db"/>`:'';
+ const jk=t.jk?`<path d="M25 47L32 56L39 47" fill="none" stroke="${t.jk}" stroke-width="3.2"/>`:'';
+ const ch=t.ch?`<path d="M24 50Q32 59 40 50" stroke="#d1d5db" stroke-width="1" fill="none"/>`:'';
+ return`<svg viewBox="0 0 64 64" width="${sz}" height="${sz}"><rect width="64" height="64" fill="${t.bg}"/><path d="M6 64Q32 42 58 64Z" fill="${t.sh}"/>${jk}<rect x="28" y="40" width="8" height="9" fill="${t.sk}"/><ellipse cx="19" cy="34" rx="2.6" ry="4" fill="${t.sk}"/><ellipse cx="45" cy="34" rx="2.6" ry="4" fill="${t.sk}"/><ellipse cx="32" cy="30" rx="13" ry="15" fill="${t.sk}"/><g fill="${h}">${bd}${hair}</g>${cap}${eyes}${mo}${gs}${er}${ch}</svg>`}
+function avHtml(p,sz=32){const i=p&&p.ph?`<img src="${p.ph}" width="${sz}" height="${sz}" style="object-fit:cover" alt="">`:avSvg(p?(p.av|0)+1:1,sz,p&&(p.av|0)>=0&&(p.av|0)<6?(p.av|0):null);return`<span class="av" style="width:${sz}px;height:${sz}px">${i}</span>`}
+function pickPhoto(inp){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=72;const m=Math.min(im.width,im.height);c.getContext('2d').drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,72,72);M.ph=c.toDataURL('image/jpeg',.7);M.av=-1;saveM();render();toast('📸 Sua foto virou avatar! Só quem estiver na sala vê.')};im.src=r.result};r.readAsDataURL(f)}
+const MAPBG=`<svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none"><defs><pattern id="blk" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-28)"><path d="M0 0H5M0 0V5" stroke="#ffffff12" stroke-width=".4"/></pattern></defs>
+<path d="M9,13C22,5 38,10 52,7C66,5 80,9 90,16C96,26 93,38 96,50C98,62 92,72 94,84C88,94 70,93 58,96C44,98 30,94 18,92C8,86 6,72 7,60C9,46 4,32 9,13Z" fill="#0f3b33" stroke="#34d39977" stroke-width=".7"/>
+<path d="M9,13C22,5 38,10 52,7C66,5 80,9 90,16C96,26 93,38 96,50C98,62 92,72 94,84C88,94 70,93 58,96C44,98 30,94 18,92C8,86 6,72 7,60C9,46 4,32 9,13Z" fill="url(#blk)"/>
+<g fill="#166534" opacity=".55"><ellipse cx="62" cy="34" rx="7" ry="4"/><ellipse cx="68" cy="68" rx="9" ry="5"/><ellipse cx="30" cy="62" rx="6" ry="4"/></g>
+<path d="M70,99L77,86L84,99ZM80,99L88,84L96,99Z" fill="#14532d"/>
+<path d="M29,81C33,74 46,75 55,77C65,75 73,80 70,89C66,96 52,98 42,97C32,95 25,88 29,81Z" fill="#0e4f7a" stroke="#38bdf8aa" stroke-width=".6"/>
+<path d="M28,0C34,14 44,24 50,36C56,46 66,52 74,62C80,70 84,76 88,84" fill="none" stroke="#38bdf8" stroke-width="1.3" opacity=".6"/>
+<path id="rail" d="M33,0C37,14 47,24 53,36C59,46 69,52 77,62C83,70 87,76 91,84" fill="none" stroke="#e5e7eb" stroke-width=".7" stroke-dasharray="1 1.3" opacity=".6"/>
+<circle cx="53" cy="36" r="1.1" fill="#fff"/><circle cx="77" cy="62" r="1.1" fill="#fff"/>
+<path id="ring" d="M20,22L50,16L80,22L86,50L84,80L50,84L16,80L14,50Z" fill="none" stroke="#ffffff1c" stroke-width="3"/>
+<path d="M20,22L50,50L84,80M80,22L50,50L16,80M50,16L50,84M14,50L86,50" fill="none" stroke="#fbbf2433" stroke-width=".9" stroke-dasharray="2 2"/>
+<ellipse cx="50" cy="50" rx="12" ry="9" fill="#061513" stroke="#fbbf2455" stroke-width=".8"/>
+<g fill="#fde68a"><circle r=".9"><animateMotion dur="16s" repeatCount="indefinite"><mpath href="#ring"/></animateMotion></circle><circle r=".9" fill="#f87171"><animateMotion dur="22s" begin="-8s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#ring"/></animateMotion></circle></g>
+<rect width="3.4" height="1.1" rx=".5" fill="#fbbf24"><animateMotion dur="20s" repeatCount="indefinite" rotate="auto"><mpath href="#rail"/></animateMotion></rect></svg>
+<span class="cld" style="top:6%;animation-delay:-5s">☁️</span><span class="cld" style="top:30%;animation-delay:-40s;font-size:26px">☁️</span><span class="cld" style="top:66%;animation-delay:-22s">☁️</span>
+<span class="mlb" style="left:2%;top:1%">São Paulo</span><span class="mlb" style="left:.5%;top:34%">S. Caetano</span><span class="mlb" style="right:1.5%;top:34%">Mauá</span><span class="mlb" style="left:1%;top:64%">Diadema</span><span class="mlb" style="left:2%;bottom:.5%">S. Bernardo</span><span class="mlb" style="right:1.5%;top:66%">Rib. Pires</span>
+<span class="mlb" style="left:42%;bottom:.5%;color:#7dd3fc">🌊 Represa Billings</span><span class="mlb" style="right:2%;bottom:.5%;color:#86efac">🕰️ Paranapiacaba</span><span class="mlb" style="left:54%;top:35%;font-size:8px">🚉 Sto. André</span><span class="mlb" style="left:78%;top:61%;font-size:8px">🚉 Mauá</span><span class="mlb" style="left:61%;top:30%;color:#86efac;font-size:8px">🌳 P. Celso Daniel</span>
+<span class="mlb" style="left:36%;top:92%;font-size:16px;opacity:.7;animation:sail 6s ease-in-out infinite">⛵</span>`;
+
 
 const ORIGINS=[
 {id:'padrao',i:'🎒',n:'Ingressante do Enem',d:'Equilibrado: começa com R$ 350 na carteira e 60h por semana.',req:'Inicial',ok:()=>true},
@@ -306,7 +365,9 @@ function unlockTr(id){if(!M.tr.includes(id)){const t=TROPHIES.find(x=>x.id==id);
 const BOT_NMS=[
  {n:'Enzo (Faria Limer)',av:0,o:'faria'},
  {n:'Valentina (Bolsista)',av:5,o:'bolsista'},
- {n:'Cleitinho (Fretado)',av:4,o:'correria'}
+ {n:'Cleitinho (Fretado)',av:4,o:'correria'},
+ {n:'Dona Cida (Aposentada)',av:8,o:'herdeiro'},
+ {n:'Tiago (Freelancer)',av:9,o:'padrao'}
 ];
 let myUid='u'+Math.random().toString(36).slice(2,8),myName='Veterano',tab='play',locModal=null,turnReport=null;
 let G=null,peer=null,conns={},hconn=null,isHost=true,offline=true,roomCode='';
@@ -315,7 +376,7 @@ function getNm(){const el=$('nm');if(el&&el.value.trim())myName=el.value.trim().
 
 function mkPlayer(uid,name,orig='padrao',av=0,bot=0){
  return{
-  uid,name,orig,av,bot,loc:'home',
+  uid,name,orig,av,bot,loc:'home',ph:(uid==myUid&&av==-1)?(M.ph||''):'',
   cash:350,bank:orig=='herdeiro'?800:0,debt:0,
   job:0,xp:0,edu:orig=='bolsista'?1:0,eduP:0,
   hlth:85,hap:78,str:15,
@@ -391,7 +452,7 @@ function startSolo(nBots=2){
  const pls=[mkPlayer(myUid,myName,M.orig,M.av,0)];
  for(let i=0;i<nBots;i++){
   const b=BOT_NMS[i];
-  pls.push(mkPlayer('bot'+i,b.n,b.o,b.av,1));
+  pls.push(mkPlayer('bot'+i,b.n,b.o,20+Math.floor(Math.random()*900),1));
  }
  G={turn:1,maxT:12,age:18,ph:'play',ev:null,pls,log:['🎉 Ingressou aos 18 anos! Clique nos prédios do mapa para mover seu personagem.']};
  prepTurn(true);
@@ -411,8 +472,8 @@ function hostOnline(){
  peer.on('connection',c=>{
   c.on('data',d=>{
    if(!G)return;
-   if(d.t=='join'&&G.ph=='lobby'&&G.pls.length<4){
-    if(!G.pls.some(x=>x.uid==d.uid))G.pls.push(mkPlayer(d.uid,String(d.name||'Amigo').slice(0,14),d.orig||'padrao',d.av|0,0));
+   if(d.t=='join'&&G.ph=='lobby'&&G.pls.length<6){
+    if(!G.pls.some(x=>x.uid==d.uid)){const np=mkPlayer(d.uid,String(d.name||'Amigo').slice(0,14),d.orig||'padrao',d.av|0,0);if(typeof d.ph=='string'&&d.ph.startsWith('data:image/jpeg')&&d.ph.length<14000)np.ph=d.ph;G.pls.push(np)}
     c.uid=d.uid;conns[d.uid]=c;bcast();
    }else if(d.t=='syncP'){
     const idx=G.pls.findIndex(x=>x.uid==d.p.uid);
@@ -430,7 +491,7 @@ function joinOnline(c0){
  peer=new Peer('vidabr-'+c+'-'+myUid,PC());
  peer.on('open',()=>{
   hconn=peer.connect('vidabr-'+c,{reliable:true});
-  hconn.on('open',()=>hconn.send({t:'join',uid:myUid,name:myName,orig:M.orig,av:M.av}));
+  hconn.on('open',()=>hconn.send({t:'join',uid:myUid,name:myName,orig:M.orig,av:M.av,ph:M.av==-1?(M.ph||''):''}));
   hconn.on('data',d=>{if(d.t=='st'){G=d.G;render()}});
  });
  peer.on('error',()=>toast('Sala não encontrada'));
@@ -736,8 +797,8 @@ function rMenu(){
     <button onclick="copyCode()" class="px-4 py-2 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-200 text-xs font-bold"><i class="fa-regular fa-copy mr-1"></i>Copiar Código</button>
    </div>
    <div class="space-y-1.5 text-left pt-2">
-    <div class="text-xs opacity-70">Jogadores na cidade (${G.pls.length}/4):</div>
-    ${G.pls.map(p=>`<div class="px-3.5 py-2 rounded-xl bg-black/40 flex justify-between items-center text-sm"><span>${AVS[p.av|0]||'😎'} <b>${esc(p.name)}</b></span><span class="text-xs text-emerald-300">${ORIGINS.find(o=>o.id==p.orig)?.n||''}</span></div>`).join('')}
+    <div class="text-xs opacity-70">Jogadores na cidade (${G.pls.length}/6):</div>
+    ${G.pls.map(p=>`<div class="px-3.5 py-2 rounded-xl bg-black/40 flex justify-between items-center text-sm"><span>${avHtml(p,26)} <b>${esc(p.name)}</b></span><span class="text-xs text-emerald-300">${ORIGINS.find(o=>o.id==p.orig)?.n||''}</span></div>`).join('')}
    </div>
    ${isHost?`<button onclick="G.ph='play';prepTurn(true);bcast()" class="bt w-full py-3.5 bg-gradient-to-r from-amber-500 to-yellow-600 text-black text-base shadow-lg">Começar Corrida aos 40! →</button>`:`<div class="text-xs opacity-75 animate-pulse">Aguardando o anfitrião iniciar a partida…</div>`}
   </div>`;
@@ -756,12 +817,15 @@ function rMenu(){
       <button onclick="tab='origins';render()" class="text-xs text-amber-300 underline">Trocar Origem →</button>
      </div>
      <div class="flex gap-2.5 items-center">
-      <div class="text-3xl bg-black/50 w-12 h-12 rounded-2xl flex items-center justify-center border border-amber-400/40">${AVS[M.av|0]}</div>
+      <div class="text-3xl bg-black/50 w-12 h-12 rounded-2xl flex items-center justify-center border border-amber-400/40">${avHtml({av:M.av,ph:M.av==-1?M.ph:''},42)}</div>
       <input id="nm" value="${esc(myName)}" maxlength="14" placeholder="Seu apelido" class="flex-1 px-3.5 py-2.5 rounded-xl bg-black/60 border border-amber-500/40 text-sm outline-none focus:border-amber-400">
      </div>
-     <div class="grid grid-cols-8 gap-1.5 pt-1">
-      ${AVS.map((ic,idx)=>`<button onclick="M.av=${idx};saveM();render()" class="py-1.5 rounded-xl text-lg border ${M.av==idx?'bg-amber-500/25 border-amber-400':'bg-black/40 border-white/10 opacity-70'}">${ic}</button>`).join('')}
-     </div>
+     <div class="grid grid-cols-7 gap-1.5 pt-1">
+       ${[...Array(12).keys()].map(i=>`<button onclick="M.av=${i};saveM();render()" class="p-1 rounded-xl border flex justify-center ${M.av==i?'bg-amber-500/25 border-amber-400':'bg-black/40 border-white/10 opacity-80'}">${avHtml({av:i},34)}</button>`).join('')}
+       ${M.ph?`<button onclick="M.av=-1;saveM();render()" title="Minha foto" class="p-1 rounded-xl border flex justify-center ${M.av==-1?'bg-amber-500/25 border-amber-400':'bg-black/40 border-white/10'}">${avHtml({ph:M.ph},34)}</button>`:''}
+       <label title="Usar minha foto" class="p-1 rounded-xl border border-emerald-400/50 bg-emerald-900/30 flex flex-col items-center justify-center text-[10px] cursor-pointer"><i class="fa-solid fa-camera text-emerald-300"></i>Foto<input type="file" accept="image/*" capture="user" class="hidden" onchange="pickPhoto(this)"></label>
+       <button onclick="M.av=13+Math.floor(Math.random()*900);saveM();render()" title="Avatar aleatório" class="p-1 rounded-xl border border-sky-400/50 bg-sky-900/30 text-lg">🎲</button>
+      </div>
      <div class="p-2.5 rounded-xl bg-black/45 border border-white/10 flex items-center gap-2.5 text-xs">
       <span class="text-2xl">${curO.i}</span>
       <div><b class="text-amber-200">${curO.n}</b><div class="opacity-75 text-[11px]">${curO.d}</div></div>
@@ -770,7 +834,8 @@ function rMenu(){
 
     <div class="space-y-2 pt-1 border-t border-amber-500/20">
      <label class="block text-xs font-bold uppercase tracking-wider text-amber-300">Jogar no Tabuleiro (Contra Bots)</label>
-     <div class="grid grid-cols-3 gap-2">
+     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <button onclick="startSolo(5)" class="bt bg-rose-700 hover:bg-rose-600 text-xs sm:text-sm"><i class="fa-solid fa-users mr-1"></i>Solo (5 Bots · 6 jogadores)</button>
       <button onclick="startSolo(1)" class="bt bg-emerald-700 hover:bg-emerald-600 text-xs sm:text-sm"><i class="fa-solid fa-robot mr-1"></i>Solo (1 Bot)</button>
       <button onclick="startSolo(2)" class="bt bg-gradient-to-r from-amber-500 to-yellow-600 text-black text-xs sm:text-sm"><i class="fa-solid fa-bolt mr-1"></i>Solo (2 Bots)</button>
       <button onclick="startSolo(3)" class="bt bg-teal-700 hover:bg-teal-600 text-xs sm:text-sm"><i class="fa-solid fa-fire mr-1"></i>Solo (3 Bots)</button>
@@ -1085,11 +1150,7 @@ function rPlay(){
   <!-- TABULEIRO VISUAL DA CIDADE COM RUAS E PRÉDIOS -->
   <div id="bmap" class="board-map">
    <!-- Estradas em SVG ligando os prédios -->
-   <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
-    <path d="M20,21 L50,17 L80,21 L84,52 L80,82 L50,84 L20,82 L16,52 Z" fill="none" stroke="#ffffff18" stroke-width="3.2"/>
-    <path d="M20,21 L50,50 L80,82 M80,21 L50,50 L20,82 M50,17 L50,84 M16,52 L84,52" fill="none" stroke="#fbbf2433" stroke-width="1" stroke-dasharray="2 2"/>
-    <circle cx="50" cy="50" r="11" fill="#061513" stroke="#fbbf2455" stroke-width="1.2"/>
-   </svg>
+   ${MAPBG}
 
    <!-- Praça Central no Meio do Tabuleiro -->
    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
@@ -1118,21 +1179,19 @@ function rPlay(){
    }).join('')}
 
    <!-- Bonecos dos Adversários / Bots no Mapa -->
-   ${G.pls.filter(x=>x.uid!=myUid).map((op,idx)=>{
-    const pos=MAP_LOCS[op.loc]||MAP_LOCS.home;
-    const offset=(idx-1)*4;
-    return`<div class="pawn pawn-bot" style="left:${pos.x+offset}%;top:${pos.y+5}%" title="${esc(op.name)}">${AVS[op.av|0]||'🤖'}</div>`;
-   }).join('')}
+   ${G.pls.filter(x=>x.uid!=myUid).map((op,idx)=>{const pos=MAP_LOCS[op.loc]||MAP_LOCS.home,dx=[-7,7,-11,11,0][idx]||0,dy=[7,7,10,10,12][idx]||7,ci=G.pls.indexOf(op);
+     return`<div class="pawn pawn-bot" style="left:${pos.x+dx}%;top:${pos.y+dy}%;border-color:${PCOL[ci%6]}" title="${esc(op.name)}">${avHtml(op,30)}<span class="absolute left-1/2 -translate-x-1/2 text-[8px] bg-black/75 px-1 rounded whitespace-nowrap" style="top:100%">${esc(op.name.split(' ')[0])}</span></div>`;
+    }).join('')}
 
-   <!-- Seu Boneco no Mapa -->
-   <div id="pawn-me" class="pawn pawn-me" style="left:${myPos.x}%;top:${myPos.y}%">${AVS[p.av|0]||'😎'}</div>
+    <div id="pawn-me" class="pawn pawn-me" style="left:${myPos.x}%;top:${myPos.y}%">${avHtml(p,42)}</div>
+   
   </div>
 
   <!-- RODAPÉ: BOTÃO DE FECHAR ANO + PLACAR COMPACTO DOS RIVAIS -->
   <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 items-center">
    <div class="md:col-span-7 flex gap-2">
     ${G.pls.map(x=>{const s=scores(x);return`<div class="flex-1 px-2.5 py-2 rounded-xl bg-[#0a1f1d]/90 border ${x.uid==myUid?'border-amber-400':'border-white/10'} text-xs flex items-center justify-between">
-     <div class="truncate"><span class="mr-1">${AVS[x.av|0]||'😎'}</span><b class="truncate">${esc(x.name.split(' ')[0])}</b></div>
+     <div class="truncate"><span class="mr-1">${avHtml(x,22)}</span><b class="truncate">${esc(x.name.split(' ')[0])}</b></div>
      <span class="text-amber-300 font-bold ml-1">${s.tot}⭐</span>
     </div>`}).join('')}
    </div>
@@ -1158,7 +1217,7 @@ function rEnd(){
   <div class="space-y-2 text-left">
    ${rk.map((p,i)=>{const s=scores(p);return`<div class="p-3 rounded-2xl bg-black/40 border ${i==0?'border-amber-400':'border-white/10'} flex justify-between items-center">
     <div>
-     <div class="font-bold text-sm">${['🥇','🥈','🥉','4º'][i]} ${AVS[p.av|0]||'😎'} ${esc(p.name)} — <span class="text-amber-300">${s.tot} pts</span></div>
+     <div class="font-bold text-sm">${['🥇','🥈','🥉','4º','5º','6º'][i]} ${avHtml(p,28)} ${esc(p.name)} — <span class="text-amber-300">${s.tot} pts</span></div>
      <div class="text-xs opacity-80">${JOBS[p.job].n} · Patrimônio R$ ${netWorth(p)} · ${HOMES[p.home].n}</div>
      <div class="text-[11px] opacity-75 mt-0.5">💰 ${s.w} · 🎓 ${s.c} · ❤️ ${s.h} · 😎 ${s.l}</div>
     </div>
