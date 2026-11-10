@@ -13,7 +13,7 @@ Uma sala de jogos feita para jogar com os amigos direto no navegador. Sem instal
 | :--- | :--- | :--- | :--- |
 | 👑 [**Intrigas da Corte**](games/intrigas-da-corte/) | Blefe e influência. Engane, desafie e sobreviva na corte. | 2 a 6 | Online, bots, câmera e voz |
 | 🃏 [**Truco**](games/truco/) | Duplas, manilha pela vira, sinais secretos e modo caos. | 2x2 ou 2x2x2 (até 6) | Online, bots, voz, modo caos |
-| 💼 [**Jogo da Vida BR**](games/jogo-da-vida/) | Empregos, estudos e boletos. Quem chega melhor aos 40? | Solo ou até 4 | Online, bots, carreira, troféus |
+| 💼 [**Jogo da Vida BR**](games/jogo-da-vida-br/) | Empregos, estudos e boletos pelo mapa do ABC. Quem chega melhor aos 40? | Solo ou até 6 | Online, bots, carreira, troféus |
 | 🍻 [**Fechou a Conta**](games/fechou-a-conta/) | Monte mãos de pôquer, junte amuletos e pague as contas do boteco. | Solo ou até 6 | Co-op ou disputa, chefões, relíquias, troféus |
 
 A página inicial (`index.html`) é o hub com a lista de todos os jogos.
@@ -29,7 +29,9 @@ A página inicial (`index.html`) é o hub com a lista de todos os jogos.
 
 Quando faltar gente, dá para completar a mesa com **bots**.
 
-> 💡 **Dica:** as salas online usam conexão P2P (PeerJS / WebRTC), então todo mundo precisa manter a aba aberta durante a partida. Se o anfitrião fechar, a sala acaba.
+> 💡 **Dica:** as salas online usam conexão P2P (PeerJS / WebRTC) com servidores de retransmissão (TURN) para funcionar também em 4G. Todo mundo precisa manter a aba aberta durante a partida; se alguém cair, o jogo tenta reconectar sozinho. Se o anfitrião fechar, a sala acaba.
+
+> 📱 Todos os jogos foram ajustados para celular: menus com janelas e seções recolhíveis, e mapa/mesa adaptados para telas pequenas.
 
 ---
 
@@ -78,7 +80,7 @@ Uma corrida até os 40 anos, com empregos, cursos e boletos. Vence quem chega me
 - Gerencie **trabalho, estudo, comida, saúde, felicidade e estresse**
 - Suba de cargo (precisa de curso, horas de experiência e até roupa social)
 - **Mural de conquistas** da vida (troféus)
-- Jogue **solo** ou **online com até 4 jogadores**, com bots
+- Jogue **solo** ou **online com até 6 jogadores**, com bots
 
 ### 🍻 Fechou a Conta
 Jogo de cartas em que você monta **mãos de pôquer** para pagar as contas do boteco ao longo de **12 rodadas**.
@@ -111,7 +113,7 @@ central-jogos/
 └── games/
     ├── intrigas-da-corte/  # Blefe e influência
     ├── truco/              # Truco 2x2 e 2x2x2
-    ├── jogo-da-vida/       # Jogo da Vida BR
+    ├── jogo-da-vida-br/    # Jogo da Vida BR
     └── fechou-a-conta/     # Pôquer de boteco
 ```
 

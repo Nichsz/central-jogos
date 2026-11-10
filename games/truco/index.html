@@ -69,6 +69,20 @@ button{cursor:pointer}
 @keyframes sgc{0%{opacity:0}14%{opacity:.85}76%{opacity:.85}100%{opacity:0}}
 .tst.mini{padding:3px 10px;font-size:11px;border-width:1px;background:#180e07cc;animation:tf 1.7s forwards}
 </style>
+<style id="mobile-fix">
+html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;min-height:100dvh;overscroll-behavior-y:none;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);padding-bottom:env(safe-area-inset-bottom)}
+button,[onclick],select,label,summary{touch-action:manipulation}
+@media (max-width:640px){input,select,textarea{font-size:16px!important}button{min-height:38px}}
+details.fold>summary{list-style:none;cursor:pointer}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold[open]>summary .chev{transform:rotate(180deg)}
+.chev{transition:transform .2s}
+.sheet{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.78);display:flex;align-items:flex-end;justify-content:center;padding:0}
+@media (min-width:640px){.sheet{align-items:center;padding:16px}}
+.sheet>.sheet-in{width:100%;max-width:560px;max-height:86vh;max-height:86dvh;overflow-y:auto;border-radius:22px 22px 0 0;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+@media (min-width:640px){.sheet>.sheet-in{border-radius:22px}}
+</style>
 </head>
 <body class="min-h-screen lg:h-screen lg:overflow-hidden flex flex-col justify-between">
 
@@ -121,7 +135,7 @@ button{cursor:pointer}
 
 <!-- LOBBY TELA CHEIA (12 COLUNAS IGUAL AO INTRIGAS DA CORTE) -->
 <main id="lob" class="flex-1 flex flex-col items-center justify-center p-3 sm:p-6 overflow-y-auto">
- <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch my-auto">
+ <div class="w-full max-w-xl my-auto">
 
   <!-- Coluna Esquerda (7 cols): Personagem, Customização e Entrada -->
   <div class="lg:col-span-7 bg-[#1c1008]/90 backdrop-blur-xl rounded-3xl p-5 sm:p-7 gold-border flex flex-col justify-between relative overflow-hidden">
@@ -130,49 +144,44 @@ button{cursor:pointer}
    <!-- Visão Inicial do Menu -->
    <div id="lm" class="space-y-4">
     <div>
-     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-medium mb-2">
-      <i class="fa-solid fa-playing-cards"></i><span>4 ou 6 Jogadores • Duplas Online ou Bots</span>
-     </div>
-     <h2 class="f text-2xl sm:text-4xl text-amber-100 leading-tight">Puxe uma Cadeira no Boteco</h2>
-     <p class="text-xs sm:text-sm text-amber-100/70 mt-1">
-      Manilha pela vira, sinais furtivos para o parceiro (com risco dos rivais flagrarem!), voz ao vivo e o imprevisível Modo Caos.
-     </p>
+     <h2 class="f text-2xl sm:text-3xl text-amber-100 leading-tight">Puxe uma Cadeira no Boteco</h2>
     </div>
 
     <!-- Perfil e Apelido -->
     <div class="flex gap-3 items-center bg-black/40 p-3 rounded-2xl border border-amber-500/25">
-     <div id="pav" class="w-16 h-16 flex-none"></div>
+     <div onclick="openAv()" title="Trocar figura" class="relative w-16 h-16 flex-none cursor-pointer"><div id="pav" class="w-16 h-16"></div><span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-amber-500 text-black text-[10px] flex items-center justify-center"><i class="fa-solid fa-pen"></i></span></div>
      <div class="flex-1 min-w-0 space-y-1">
-      <label class="block text-[10px] font-bold uppercase tracking-wider text-amber-300/90">Seu Apelido & Título na Mesa</label>
+      <label class="block text-[10px] font-bold uppercase tracking-wider text-amber-300/90">Seu Apelido</label>
       <input id="nm" maxlength="14" placeholder="Seu nome no bar" class="w-full px-3 py-1.5 rounded-xl bg-black/60 border border-amber-500/40 text-sm text-amber-50 outline-none focus:border-amber-400">
-      <div class="flex items-center gap-2">
-       <span id="ptt" class="f text-xs text-amber-300 truncate"></span>
-       <select id="tts" onchange="pickTt(this.value)" class="flex-1 px-2 py-1 rounded-lg bg-black/60 border border-amber-500/30 text-xs text-amber-100"></select>
-      </div>
+      <span id="ptt" class="f text-xs text-amber-300 truncate block"></span>
      </div>
     </div>
 
-    <!-- Grade de 14 Personagens -->
-    <div>
-     <div class="flex items-center justify-between mb-1.5">
-      <label class="text-xs font-semibold uppercase tracking-wider text-amber-300/90">Escolha sua Figura do Boteco</label>
-      <span class="text-[11px] text-amber-200/60">Libere mais subindo de nível</span>
+    <!-- Personalizar (recolhido) -->
+    <details class="fold bg-black/30 rounded-2xl border border-amber-500/20">
+     <summary class="flex items-center justify-between px-3.5 py-3 text-xs font-bold uppercase tracking-wider text-amber-300/90"><span><i class="fa-solid fa-sliders mr-2"></i>Personalizar mesa e cartas</span><i class="fa-solid fa-chevron-down chev text-[10px]"></i></summary>
+     <div class="grid grid-cols-2 gap-2 text-[11px] px-3 pb-3">
+      <label class="text-amber-200/80 col-span-2">Título<select id="tts" onchange="pickTt(this.value)" class="w-full mt-1 px-2 py-1.5 rounded-xl bg-black/60 border border-amber-500/30 text-amber-100"></select></label>
+      <label class="text-amber-200/80">Verso das Cartas<select id="scb" onchange="pickC('cb',this.value)" class="w-full mt-1 px-2 py-1.5 rounded-xl bg-black/60 border border-amber-500/30 text-amber-100"></select></label>
+      <label class="text-amber-200/80">Estilo da Mesa<select id="smz" onchange="pickC('mz',this.value)" class="w-full mt-1 px-2 py-1.5 rounded-xl bg-black/60 border border-amber-500/30 text-amber-100"></select></label>
+      <label class="text-amber-200/80 col-span-2">Grito de Truco<select id="ssn" onchange="pickC('sn',this.value)" class="w-full mt-1 px-2 py-1.5 rounded-xl bg-black/60 border border-amber-500/30 text-amber-100"></select></label>
      </div>
-     <div id="avg" class="grid grid-cols-7 gap-1.5 justify-items-center bg-black/30 p-2.5 rounded-2xl border border-amber-500/20"></div>
-    </div>
+    </details>
 
-    <!-- Customização da Mesa, Verso e Grito -->
-    <div class="grid grid-cols-3 gap-2 text-[11px]">
-     <label class="text-amber-200/80">Verso das Cartas<select id="scb" onchange="pickC('cb',this.value)" class="w-full mt-1 px-2 py-1.5 rounded-xl bg-black/60 border border-amber-500/30 text-amber-100"></select></label>
-     <label class="text-amber-200/80">Estilo da Mesa<select id="smz" onchange="pickC('mz',this.value)" class="w-full mt-1 px-2 py-1.5 rounded-xl bg-black/60 border border-amber-500/30 text-amber-100"></select></label>
-     <label class="text-amber-200/80">Grito de Truco<select id="ssn" onchange="pickC('sn',this.value)" class="w-full mt-1 px-2 py-1.5 rounded-xl bg-black/60 border border-amber-500/30 text-amber-100"></select></label>
-    </div>
+    <!-- Reputação (recolhida) -->
+    <details class="fold bg-black/30 rounded-2xl border border-amber-500/20">
+     <summary class="flex items-center justify-between px-3.5 py-3 text-xs font-bold uppercase tracking-wider text-amber-300/90"><span><i class="fa-solid fa-star mr-2"></i>Sua reputação no bar</span><i class="fa-solid fa-chevron-down chev text-[10px]"></i></summary>
+     <div class="px-3 pb-3 space-y-2">
+      <div id="xpb" class="text-xs space-y-1.5 bg-black/40 p-3 rounded-2xl border border-amber-500/20"></div>
+      <button onclick="$('rulesModal').classList.remove('hidden')" class="text-xs text-amber-300 underline">Ver guia completo</button>
+     </div>
+    </details>
 
     <!-- Modo e Botões de Ação -->
     <div class="space-y-2.5 pt-2 border-t border-amber-500/20">
      <div class="grid grid-cols-2 gap-2 bg-black/40 p-1 rounded-xl border border-amber-500/30 text-xs">
-      <button id="m2" onclick="setMd(2)" class="py-2 rounded-lg font-bold bg-amber-500 text-black">🍻 Mesa 2×2 (4 Jogadores)</button>
-      <button id="m3" onclick="setMd(3)" class="py-2 rounded-lg font-bold opacity-70">🔥 Mesa 2×2×2 (6 Jogadores)</button>
+      <button id="m2" onclick="setMd(2)" class="py-2 rounded-lg font-bold bg-amber-500 text-black">🍻 2×2 (4 jogadores)</button>
+      <button id="m3" onclick="setMd(3)" class="py-2 rounded-lg font-bold opacity-70">🔥 2×2×2 (6 jogadores)</button>
      </div>
      <button id="bBack" class="hidden w-full py-2.5 rounded-xl bg-sky-800 hover:bg-sky-700 font-bold text-sm"></button>
      <button id="bRes" class="hidden w-full py-2.5 rounded-xl bg-sky-800 hover:bg-sky-700 font-bold text-sm"></button>
@@ -185,8 +194,8 @@ button{cursor:pointer}
       </button>
      </div>
      <div class="flex items-center gap-2">
-      <input id="rc" maxlength="5" placeholder="CÓDIGO DA SALA (EX: BAR99)" class="flex-1 px-4 py-3 rounded-xl bg-black/60 border border-amber-500/40 text-amber-200 font-mono uppercase tracking-widest text-sm outline-none focus:border-amber-400">
-      <button id="bJoin" class="px-5 py-3 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/45 border border-emerald-400/50 text-emerald-200 font-bold transition flex items-center gap-2 text-sm">
+      <input id="rc" maxlength="5" placeholder="CÓDIGO" class="flex-1 min-w-0 px-4 py-3 rounded-xl bg-black/60 border border-amber-500/40 text-amber-200 font-mono uppercase tracking-widest text-sm outline-none focus:border-amber-400">
+      <button id="bJoin" class="flex-none px-5 py-3 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/45 border border-emerald-400/50 text-emerald-200 font-bold transition flex items-center gap-2 text-sm">
        <span>Sentar</span><i class="fa-solid fa-arrow-right"></i>
       </button>
      </div>
@@ -215,59 +224,25 @@ button{cursor:pointer}
     <div id="sl"></div>
     <label class="flex items-center gap-3 rounded-xl bg-fuchsia-950/50 border border-fuchsia-400/30 p-3 text-xs sm:text-sm cursor-pointer">
      <input type="checkbox" id="chaos" class="w-5 h-5" onchange="send({t:'opt',v:this.checked})">
-     <span><b>🌀 Modo Caos</b><br><span class="opacity-75 text-xs">Sorteia regras malucas na mão: manilha velha, truco dobrado, ordem invertida, às cegas...</span></span>
+     <span><b>🌀 Modo Caos</b><br><span class="opacity-75 text-xs">Regras malucas sorteadas a cada mão</span></span>
     </label>
-    <p class="text-xs opacity-70 text-center">Parceiros sentam sempre de frente. Lugares vazios viram bots automaticamente.</p>
     <button id="bStart" class="hidden w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-black font-bold text-base shadow-lg">
      <i class="fa-solid fa-play mr-1"></i>Embaralhar e Começar Partida
     </button>
    </div>
   </div>
 
-  <!-- Coluna Direita (5 cols): Resumo de Regras/XP + Status P2P -->
-  <div class="lg:col-span-5 flex flex-col gap-5">
-   <div class="bg-[#1c1008]/85 backdrop-blur-xl rounded-3xl p-5 gold-border flex-1 flex flex-col justify-between space-y-3">
-    <div class="space-y-3">
-     <div class="flex items-center justify-between">
-      <h3 class="f text-base text-amber-300 flex items-center gap-2"><i class="fa-solid fa-star"></i><span>Sua Reputação no Bar</span></h3>
-      <button onclick="$('rulesModal').classList.remove('hidden')" class="text-xs text-amber-300 underline">Ver guia completo</button>
-     </div>
-     <div id="xpb" class="text-xs space-y-1.5 bg-black/40 p-3 rounded-2xl border border-amber-500/20"></div>
-     <div class="space-y-2 pt-1">
-      <div class="text-xs font-bold uppercase tracking-wider text-amber-300/90">Destaques da Mesa</div>
-      <div class="p-2.5 rounded-xl bg-black/40 border border-amber-500/20 flex items-center gap-3 text-xs">
-       <span class="text-2xl">😉</span>
-       <div><b class="text-amber-200">Sinais Furtivos de Parceiro</b><p class="opacity-75 text-[11px]">Passe sinais de Zap, Manilha ou 3 para sua dupla — mas cuidado para os adversários não pescarem!</p></div>
-      </div>
-      <div class="p-2.5 rounded-xl bg-black/40 border border-amber-500/20 flex items-center gap-3 text-xs">
-       <span class="text-2xl">⚡</span>
-       <div><b class="text-amber-200">Manilha pela Vira (ou Fixa no Caos)</b><p class="opacity-75 text-[11px]">Ordem dos naipes da manilha: <b>♣ Paus (Zap) &gt; ♥ Copas &gt; ♠ Espadas &gt; ♦ Ouros</b>.</p></div>
-      </div>
-      <div class="p-2.5 rounded-xl bg-black/40 border border-amber-500/20 flex items-center gap-3 text-xs">
-       <span class="text-2xl">🔥</span>
-       <div><b class="text-amber-200">Modo 2×2 e 2×2×2 (6 Jogadores)</b><p class="opacity-75 text-[11px]">Jogue o duelo tradicional de 2 duplas ou coloque 3 duplas na mesma mesa!</p></div>
-      </div>
-     </div>
-    </div>
-    <div class="pt-3 border-t border-amber-500/20 flex items-center justify-between text-xs text-amber-200/70">
-     <span><i class="fa-solid fa-microphone text-emerald-400 mr-1"></i> Voz P2P na Mesa</span>
-     <span><i class="fa-solid fa-bolt text-amber-400 mr-1"></i> 60 FPS & Zero Login</span>
-    </div>
-   </div>
-
-   <div class="bg-[#1c1008]/85 backdrop-blur-xl rounded-3xl p-5 gold-border">
-    <div class="flex items-center justify-between mb-2">
-     <h3 class="f text-sm text-amber-300 flex items-center gap-2"><i class="fa-solid fa-network-wired"></i><span>Status da Rede P2P</span></h3>
-     <span id="netBadge" class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Pronto (PeerJS P2P)</span>
-    </div>
-    <p class="text-xs text-amber-100/70 leading-relaxed">
-     Crie uma sala e clique em <strong class="text-emerald-300">Link Convite</strong> no topo para mandar no WhatsApp ou Discord. Seus amigos entram direto na mesa em qualquer Wi-Fi!
-    </p>
-   </div>
-  </div>
-
+  <span id="netBadge" class="hidden"></span>
  </div>
 </main>
+
+<div id="avSheet" class="sheet" style="display:none" onclick="closeAv()">
+ <div class="sheet-in bg-[#1c1008] border border-amber-500/40" onclick="event.stopPropagation()">
+  <div class="flex items-center justify-between mb-3"><b class="f text-amber-300">Escolha sua figura do boteco</b><button onclick="closeAv()" class="px-3 py-1.5 rounded-lg bg-black/45 text-sm">Fechar</button></div>
+  <div class="text-[11px] text-amber-200/60 mb-2">Libere mais subindo de nível</div>
+  <div id="avg" class="grid grid-cols-5 sm:grid-cols-7 gap-2 justify-items-center"></div>
+ </div>
+</div>
 
 <!-- MESA DE JOGO -->
 <div id="game" class="hidden flex-1 min-h-0 flex flex-col">
@@ -627,7 +602,9 @@ function profUpd(){xpUpd();const L=lvOf(xp);
 const prof=()=>({name:$('nm').value.trim(),av:myAv,tt:myTt,cb:myCb,mz:myMz,sn:mySn});
 function pickC(k,v){v=+v;if(k=='cb')myCb=v;else if(k=='mz')myMz=v;else{mySn=v;shout(v)}profUpd();saveProf()}
 function saveProf(){try{localStorage.setItem('truco_prof',JSON.stringify(prof()))}catch(e){}}
-function pickAv(i){if(UL[i]>lvOf(xp)){toast('Libera no nível '+LV[UL[i]]);return}myAv=i;profUpd();saveProf()}
+function openAv(){profUpd();$('avSheet').style.display='flex'}
+function closeAv(){$('avSheet').style.display='none'}
+function pickAv(i){if(UL[i]>lvOf(xp)){toast('Libera no nível '+LV[UL[i]]);return}myAv=i;profUpd();saveProf();closeAv()}
 function pickTt(v){myTt=+v;profUpd();saveProf()}
 function leave(){left=1;if(joinPoller){clearInterval(joinPoller);joinPoller=null}try{sessionStorage.removeItem('truco_sess');localStorage.removeItem('truco_sess');localStorage.removeItem('truco_host')}catch(e){}location.href=location.pathname}
 function hostGame(online,res){getName();isHost=true;offline=!online;
@@ -642,7 +619,8 @@ function hostPeer(n=0){
  if(peer)try{peer.destroy()}catch(x){}
  peer=new Peer('truco-'+code,PC());
  peer.on('open',id=>{const meSeat=G.seats.find(p=>p&&p.uid==myUid);if(meSeat)meSeat.pid=id;$('netBadge').textContent='Sala P2P Ativa ('+code+')';bcast()});
- peer.on('error',e=>{if(e.type=='unavailable-id'&&n<8){try{peer.destroy()}catch(x){}setTimeout(()=>hostPeer(n+1),2500)}else toast('Erro de rede: '+e.type)});
+ peer.on('disconnected',()=>{setTimeout(()=>{try{peer&&!peer.destroyed&&peer.reconnect()}catch(x){}},1500)});
+ peer.on('error',e=>{if(e.type=='unavailable-id'&&n<8){try{peer.destroy()}catch(x){}setTimeout(()=>hostPeer(n+1),2500)}else if(['network','socket-error','server-error','socket-closed'].includes(e.type)){setTimeout(()=>{try{peer&&!peer.destroyed&&peer.reconnect()}catch(x){}},2500)}else toast('Erro de rede: '+e.type)});
  peer.on('call',onCall);
  peer.on('connection',c=>{
   const handleJoin=d=>{
@@ -938,7 +916,7 @@ function stop(){G.run=false;clearInterval(G.timer);if(G.ctx)G.m.gain.setTargetAt
 function icon(){const i=document.getElementById('musIcon');if(i)i.className=on?'fa-solid fa-music':'fa-solid fa-music text-rose-400 opacity-60'}
 window.toggleMus=()=>{on=!on;try{localStorage.setItem(KEY,on?'1':'0')}catch(e){}icon();if(on)start();else stop();try{(window.toast||(()=>{}))(on?'🎶 Música ligada':'Música desligada')}catch(e){}};
 ['pointerdown','keydown'].forEach(ev=>addEventListener(ev,()=>{if(on&&!G.run)start()},{passive:true}));
-document.addEventListener('visibilitychange',()=>{const c=G.ctx;if(!c)return;if(document.hidden)c.suspend().catch(()=>{});else c.resume().catch(()=>{})});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&peer&&!offline){if(isHost){if(peer.disconnected&&!peer.destroyed)try{peer.reconnect()}catch(x){}}else if(!left&&(!hconn||!hconn.open)&&jt<=12)retry()}const c=G.ctx;if(!c)return;if(document.hidden)c.suspend().catch(()=>{});else c.resume().catch(()=>{})});
 icon();
 })();
 </script>
