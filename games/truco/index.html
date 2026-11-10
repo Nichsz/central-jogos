@@ -103,7 +103,8 @@ button{cursor:pointer}
 
  <div class="flex items-center gap-1.5 sm:gap-2">
   <button id="mic" onclick="mic()" title="Ligar/Desligar Microfone" class="hidden px-2.5 py-2 rounded-xl bg-[#2a180c] hover:bg-[#3b2211] border border-amber-500/30 text-amber-100 transition items-center gap-1.5 text-xs sm:text-sm"></button>
-  <button onclick="toggleSfx()" title="Efeitos Sonoros" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-[#2a180c] hover:bg-[#3b2211] border border-amber-500/30 text-amber-200 transition text-xs sm:text-sm">
+  <button onclick="toggleMus()" title="Música de fundo" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-[#2a180c] hover:bg-[#3b2211] border border-amber-500/30 text-amber-200 transition text-xs sm:text-sm"><i id="musIcon" class="fa-solid fa-music"></i></button>
+<button onclick="toggleSfx()" title="Efeitos Sonoros" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-[#2a180c] hover:bg-[#3b2211] border border-amber-500/30 text-amber-200 transition text-xs sm:text-sm">
    <i id="sfxIcon" class="fa-solid fa-volume-high"></i>
   </button>
   <button onclick="openInviteModal()" class="px-2.5 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-200 transition flex items-center gap-1.5 text-xs sm:text-sm font-medium">
@@ -847,6 +848,73 @@ try{const ss=JSON.parse(localStorage.getItem('truco_sess')||'null');if(ss&&Date.
  const hs=JSON.parse(localStorage.getItem('truco_host')||'null');if(hs&&Date.now()-hs.t<216e5){$('bRes').textContent='↩ Retomar minha sala '+hs.code;$('bRes').classList.remove('hidden');$('bRes').onclick=()=>hostGame(true,hs)}}catch(e){}
 const q=new URLSearchParams(location.search).get('room');if(q){$('rc').value=q.toUpperCase();toast('Convite detectado para a sala '+q.toUpperCase()+'! Clique em Sentar.')}
 updMic();
+</script>
+<script>
+/* ===== Trilha sonora própria do jogo (gerada em tempo real, sem arquivos de áudio) ===== */
+(()=>{
+const KEY='truco_mus',STY='truco';
+let on=true;try{on=localStorage.getItem(KEY)!=='0'}catch(e){}
+const G={ctx:null,run:false,step:0,next:0,timer:null};
+const mf=n=>440*Math.pow(2,(n-69)/12),pk=a=>a[Math.floor(Math.random()*a.length)];
+function init(){
+ if(!G.ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;
+  const c=new C(),m=c.createGain();m.gain.value=0;const cp=c.createDynamicsCompressor();m.connect(cp);cp.connect(c.destination);
+  const n=Math.floor(c.sampleRate*1.8),ir=c.createBuffer(2,n,c.sampleRate);for(let k=0;k<2;k++){const d=ir.getChannelData(k);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.5)}
+  const cv=c.createConvolver();cv.buffer=ir;const rg=c.createGain();rg.gain.value=.3;cv.connect(rg);rg.connect(m);
+  const nb=c.createBuffer(1,c.sampleRate*2,c.sampleRate),d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  Object.assign(G,{ctx:c,m,cv,nb})}
+ if(G.ctx.state=='suspended')G.ctx.resume().catch(()=>{});return G.ctx}
+function T(f,d,t,o={}){const c=G.ctx,{ty='sine',v=.1,a=.008,lp=0,rv=.3,f2=0}=o,s=c.currentTime+t,os=c.createOscillator(),g=c.createGain();
+ os.type=ty;os.frequency.setValueAtTime(f,s);if(f2)os.frequency.exponentialRampToValueAtTime(f2,s+d);
+ g.gain.setValueAtTime(.0001,s);g.gain.linearRampToValueAtTime(v,s+Math.min(a,d*.4));g.gain.exponentialRampToValueAtTime(.0001,s+d);
+ let n=os;if(lp){const b=c.createBiquadFilter();b.type='lowpass';b.frequency.value=lp;os.connect(b);n=b}
+ n.connect(g);g.connect(G.m);if(rv){const r=c.createGain();r.gain.value=rv;g.connect(r);r.connect(G.cv)}os.start(s);os.stop(s+d+.05)}
+function N(d,t,o={}){const c=G.ctx,{f=3000,q=.8,v=.05,ty='bandpass',f2=0}=o,s=c.currentTime+t,b=c.createBufferSource();b.buffer=G.nb;
+ const fl=c.createBiquadFilter();fl.type=ty;fl.Q.value=q;fl.frequency.setValueAtTime(f,s);if(f2)fl.frequency.exponentialRampToValueAtTime(f2,s+d);
+ const g=c.createGain();g.gain.setValueAtTime(.0001,s);g.gain.linearRampToValueAtTime(v,s+Math.min(.008,d*.4));g.gain.exponentialRampToValueAtTime(.0001,s+d);
+ b.connect(fl);fl.connect(g);g.connect(G.m);b.start(s,Math.random());b.stop(s+d+.05)}
+const ST={
+/* TRUCO: samba de boteco (C – A7 – Dm – G7), surdo, pandeiro e cavaquinho */
+truco:{bpm:98,ch:[{r:48,f:55,k:[60,64,67,72],m:[72,74,76,79,81]},{r:45,f:52,k:[57,61,64,67],m:[69,71,73,76,81]},{r:50,f:45,k:[62,65,69,72],m:[74,76,77,81]},{r:43,f:50,k:[59,62,65,67],m:[67,71,74,79]},
+ {r:48,f:55,k:[60,64,67,72],m:[72,74,76,79,81]},{r:45,f:52,k:[57,61,64,67],m:[69,71,73,76,81]},{r:50,f:45,k:[62,65,69,72],m:[74,76,77,81]},{r:43,f:50,k:[59,62,65,67],m:[67,71,74,79]}],
+ fn(s,t,h){
+  if(s==0||s==8)T(mf(h.r),.4,t,{v:.2,lp:420,rv:.1});if(s==6||s==14)T(mf(h.f),.25,t,{v:.15,lp:420,rv:.1});
+  if(s==4||s==12)T(95,.2,t,{v:.14,f2:55,rv:0});
+  N(.04,t,{f:7000,q:.4,v:s%4==0?.03:.016,ty:'highpass'});
+  if(s%4==2)N(.07,t,{f:4500,q:1.2,v:.04});if(s==10)N(.08,t,{f:900,q:1.2,v:.05});
+  if([3,6,10,11,14].includes(s))h.k.forEach((n,i)=>T(mf(n),.3,t+i*.012,{ty:'triangle',v:.04,lp:3200,rv:.25}));
+  if([0,3,8,11].includes(s)&&Math.random()<.28)T(mf(pk(h.m)),.55,t,{ty:'triangle',v:.055,lp:2800,rv:.5})}},
+/* JOGO DA VIDA: lo-fi para estudar (Dm9 – G7 – Cmaj9 – Am7) */
+vida:{bpm:76,ch:[{r:38,k:[53,57,60,64]},{r:43,k:[55,59,62,65]},{r:36,k:[55,59,62,64]},{r:45,k:[55,60,64,67]}],
+ fn(s,t,h){const sw=(s%2)*.03;t+=sw;
+  if(s==0){h.k.forEach((n,i)=>T(mf(n),2.4,t+i*.02,{ty:'triangle',v:.04,lp:1500,a:.03,rv:.5}));T(mf(h.r),1.3,t,{v:.2,lp:300,rv:.1})}
+  if(s==10){h.k.slice(1).forEach((n,i)=>T(mf(n),.9,t+i*.02,{ty:'triangle',v:.028,lp:1500,rv:.5}));T(mf(h.r),.6,t,{v:.14,lp:300,rv:.1})}
+  if(s==0||s==9)T(120,.22,t,{v:.2,f2:45,rv:0});
+  if(s==4||s==12){N(.16,t,{f:1800,q:.7,v:.07});T(190,.1,t,{v:.035,rv:.1})}
+  if(s%2==0)N(.03,t,{f:8000,ty:'highpass',v:s%4==2?.03:.017});
+  if(Math.random()<.3)N(.01,t,{f:5000+Math.random()*3000,q:.3,v:.018,ty:'highpass'});
+  if([0,6,10,14].includes(s)&&Math.random()<.24)T(mf(pk([72,74,76,79,81])),.9,t,{v:.045,lp:2200,rv:.7})}},
+/* INTRIGAS DA CORTE: alaúde, bordão grave e tambor de salão (Dm – Bb – C – A) */
+intrigas:{bpm:84,ch:[{r:38,k:[50,57,62,65,69]},{r:34,k:[46,53,58,62,65]},{r:36,k:[48,55,60,64,67]},{r:33,k:[45,52,57,61,64]}],
+ fn(s,t,h){
+  if(s==0)T(mf(h.r),2.8,t,{ty:'sawtooth',v:.07,lp:380,a:.25,rv:.2});
+  if(s%2==0){const A=[0,1,2,1,3,2,1,2],n=h.k[A[(s/2)%8]]+12;T(mf(n),.6,t,{ty:'triangle',v:s==0?.075:.055,lp:2600,rv:.35})}
+  if(s==0){T(95,.3,t,{v:.2,f2:60,rv:.1});N(.12,t,{f:600,q:.8,v:.045})}
+  if(s==8)T(120,.2,t,{v:.12,f2:70,rv:.1});
+  if(s==6||s==14)N(.05,t,{f:6000,q:1,v:.025});
+  if((s==0||s==8)&&Math.random()<.35)T(mf(pk([74,77,79,81,82,84])),1,t,{v:.05,rv:.6,a:.05})}}
+};
+const S=ST[STY];
+function tick(){const c=G.ctx;if(!c||!G.run)return;const sd=60/S.bpm/4;if(G.next<c.currentTime-.1)G.next=c.currentTime+.1;
+ while(G.next<c.currentTime+.45){const s=G.step%16,b=Math.floor(G.step/16)%S.ch.length;try{S.fn(s,G.next-c.currentTime,S.ch[b])}catch(e){}G.step++;G.next+=sd}}
+function start(){if(G.run||!on||!init())return;const c=G.ctx;G.run=true;G.m.gain.cancelScheduledValues(c.currentTime);G.m.gain.setTargetAtTime(.45,c.currentTime,.8);G.step=0;G.next=c.currentTime+.25;clearInterval(G.timer);G.timer=setInterval(tick,120)}
+function stop(){G.run=false;clearInterval(G.timer);if(G.ctx)G.m.gain.setTargetAtTime(0,G.ctx.currentTime,.15)}
+function icon(){const i=document.getElementById('musIcon');if(i)i.className=on?'fa-solid fa-music':'fa-solid fa-music text-rose-400 opacity-60'}
+window.toggleMus=()=>{on=!on;try{localStorage.setItem(KEY,on?'1':'0')}catch(e){}icon();if(on)start();else stop();try{(window.toast||(()=>{}))(on?'🎶 Música ligada':'Música desligada')}catch(e){}};
+['pointerdown','keydown'].forEach(ev=>addEventListener(ev,()=>{if(on&&!G.run)start()},{passive:true}));
+document.addEventListener('visibilitychange',()=>{const c=G.ctx;if(!c)return;if(document.hidden)c.suspend().catch(()=>{});else c.resume().catch(()=>{})});
+icon();
+})();
 </script>
 </body>
 </html>
