@@ -593,17 +593,30 @@ function botTick(){
  if(canTruco(s)&&pwr(p.hand)>5.4&&Math.random()<.3)callTruco(s);else playCard(s,botCard(s));
  bcast()}
 
-/* ============ REDE ============ */
+//* ============ REDE ============ */
+let joinPoller=null;
 function view(u){const s=G.seats.findIndex(p=>p&&p.uid==u);
  return{...G,me:s,sigT:null,bs:null,seats:G.seats.map((p,i)=>p&&{uid:p.uid,name:p.name,bot:p.bot,pid:p.pid,av:p.av,tt:p.tt,cb:p.cb,sn:p.sn,lv:p.lv,away:p.away,n:p.hand?p.hand.length:0,
   h:p.hand&&(i==s||(G.p11!=null&&G.p11==s%G.nt&&i%G.nt==s%G.nt))?p.hand:null}),
   ev:G.ev.filter(e=>!e.only||e.only.includes(s))}}
 function bcast(){
- if(!offline)for(const u in conns){const c=conns[u];if(c.open)c.send({t:'st',v:view(u)})}
+ if(!offline)for(const u in conns){const c=conns[u];if(c&&c.open){try{c.send({t:'st',v:view(u)})}catch(e){}}}
  if(isHost&&!offline&&G.phase!='lobby')try{localStorage.setItem('truco_host',JSON.stringify({code,G,t:Date.now()}))}catch(e){}
  render(view(myUid));clearTimeout(bt);bt=setTimeout(botTick,1100)}
 function send(a){if(isHost)act(myUid,a);else if(hconn&&hconn.open)hconn.send({...a,uid:myUid})}
-const PC=()=>({config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}});
+const PC=()=>({
+ debug:1,
+ config:{
+  iceServers:[
+   {urls:'stun:stun.l.google.com:19302'},
+   {urls:'stun:stun1.l.google.com:19302'},
+   {urls:'stun:stun2.l.google.com:19302'},
+   {urls:'turn:openrelay.metered.ca:80',username:'openrelayproject',credential:'openrelayproject'},
+   {urls:'turn:openrelay.metered.ca:443',username:'openrelayproject',credential:'openrelayproject'},
+   {urls:'turn:openrelay.metered.ca:443?transport=tcp',username:'openrelayproject',credential:'openrelayproject'}
+  ]
+ }
+});
 function getName(){name=($('nm').value.trim()||AV[myAv][0]).slice(0,14);try{localStorage.setItem('truco_prof',JSON.stringify(prof()))}catch(e){}return name}
 function profUpd(){xpUpd();const L=lvOf(xp);
  $('avg').innerHTML=AV.map((a,i)=>`<button onclick="pickAv(${i})" class="relative rounded-full p-0.5 ring-amber-300 ${i==myAv?'ring-2':''} ${UL[i]>L?'opacity-40 grayscale':''}" title="${a[0]}${UL[i]>L?' (nível '+LV[UL[i]]+')':''}">${avt(i,44)}${UL[i]>L?'<span class="absolute inset-0 flex items-center justify-center text-base">🔒</span>':''}</button>`).join('');
@@ -616,35 +629,48 @@ function pickC(k,v){v=+v;if(k=='cb')myCb=v;else if(k=='mz')myMz=v;else{mySn=v;sh
 function saveProf(){try{localStorage.setItem('truco_prof',JSON.stringify(prof()))}catch(e){}}
 function pickAv(i){if(UL[i]>lvOf(xp)){toast('Libera no nível '+LV[UL[i]]);return}myAv=i;profUpd();saveProf()}
 function pickTt(v){myTt=+v;profUpd();saveProf()}
-function leave(){left=1;try{localStorage.removeItem('truco_sess');localStorage.removeItem('truco_host')}catch(e){}location.href=location.pathname}
+function leave(){left=1;if(joinPoller){clearInterval(joinPoller);joinPoller=null}try{sessionStorage.removeItem('truco_sess');localStorage.removeItem('truco_sess');localStorage.removeItem('truco_host')}catch(e){}location.href=location.pathname}
 function hostGame(online,res){getName();isHost=true;offline=!online;
  if(res){G=res.G;if(!G.nt){G.nt=2;G.n=4;G.out=[0,0]}code=res.code;myUid=G.hostUid;G.seats.forEach(p=>{if(p&&!p.bot&&p.uid!=myUid){p.bot=1;p.away=1}});
   if(G.phase=='play'){if(G.table.length>=actSeats()){G.busy=1;setTimeout(trick,500)}else if(G.busy)deal()}}
  else{G=newG(selNt);G.seats[0]={uid:myUid,name,av:myAv,tt:myTt,cb:myCb,sn:mySn,lv:lvOf(xp)}}
  if(!online){startMatch();bcast();return}
  if(!res)code=Array.from({length:5},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[rnd(32)]).join('');
+ bcast();
  hostPeer()}
-function hostPeer(n=0){peer=new Peer('truco-'+code,PC());
- peer.on('open',id=>{G.seats.find(p=>p&&p.uid==myUid).pid=id;$('netBadge').textContent='Sala P2P Ativa ('+code+')';bcast();if(!ls)mic()});
+function hostPeer(n=0){
+ if(peer)try{peer.destroy()}catch(x){}
+ peer=new Peer('truco-'+code,PC());
+ peer.on('open',id=>{const meSeat=G.seats.find(p=>p&&p.uid==myUid);if(meSeat)meSeat.pid=id;$('netBadge').textContent='Sala P2P Ativa ('+code+')';bcast()});
  peer.on('error',e=>{if(e.type=='unavailable-id'&&n<8){try{peer.destroy()}catch(x){}setTimeout(()=>hostPeer(n+1),2500)}else toast('Erro de rede: '+e.type)});
  peer.on('call',onCall);
  peer.on('connection',c=>{
+  const handleJoin=d=>{
+   let s=G.seats.findIndex(p=>p&&p.uid==d.uid);
+   if(s<0){s=G.seats.findIndex(p=>!p);if(s<0||G.phase!='lobby'){c.close();return}G.seats[s]=mkSeat(d)}
+   else if(d.uid==G.hostUid){c.close();return}
+   else{G.seats[s].bot=0;G.seats[s].away=0;G.seats[s].lv=Math.max(0,Math.min(3,d.lv|0))}
+   G.seats[s].pid=d.pid;c.uid=d.uid;conns[d.uid]=c;
+   if(c.open)bcast();
+  };
+  c.on('open',()=>{if(c.uid&&conns[c.uid]===c)bcast()});
   c.on('data',d=>{
-   if(d.t=='join'){let s=G.seats.findIndex(p=>p&&p.uid==d.uid);
-    if(s<0){s=G.seats.findIndex(p=>!p);if(s<0||G.phase!='lobby'){c.close();return}G.seats[s]=mkSeat(d)}
-    else if(d.uid==G.hostUid){c.close();return}
-    else{G.seats[s].bot=0;G.seats[s].away=0;G.seats[s].lv=Math.max(0,Math.min(3,d.lv|0))}
-    G.seats[s].pid=d.pid;c.uid=d.uid;conns[d.uid]=c;bcast()}
+   if(!d)return;
+   if(d.t=='join')handleJoin(d);
    else if(c.uid&&conns[c.uid]===c)act(c.uid,d)});
   c.on('close',()=>{const u=c.uid;if(!u||conns[u]!==c)return;const s=G.seats.findIndex(p=>p&&p.uid==u);delete conns[u];
    if(s>=0){if(G.phase=='lobby')G.seats[s]=null;else{G.seats[s].bot=1;G.seats[s].away=1}}bcast()})})}
-function joinGame(c0){getName();isHost=false;code=c0.toUpperCase();out={};
- try{const ss=JSON.parse(localStorage.getItem('truco_sess')||'null');if(ss&&ss.code==code)myUid=ss.uid;localStorage.setItem('truco_sess',JSON.stringify({code,uid:myUid,t:Date.now()}))}catch(e){}
+function joinGame(c0){getName();isHost=false;offline=false;code=c0.toUpperCase();out={};
+ try{const ss=JSON.parse(sessionStorage.getItem('truco_sess')||'null');if(ss&&ss.code==code)myUid=ss.uid;sessionStorage.setItem('truco_sess',JSON.stringify({code,uid:myUid,t:Date.now()}))}catch(e){}
+ if(joinPoller){clearInterval(joinPoller);joinPoller=null}
  if(peer)try{peer.destroy()}catch(e){}
+ toast('Conectando à sala '+code+'…');
  peer=new Peer('truco-'+code+'-'+myUid,PC());
  peer.on('open',id=>{hconn=peer.connect('truco-'+code,{reliable:true});
-  hconn.on('open',()=>{jt=0;$('netBadge').textContent='Conectado ('+code+')';hconn.send({t:'join',uid:myUid,name,av:myAv,tt:myTt,cb:myCb,sn:mySn,lv:lvOf(xp),pid:id});if(!ls)mic()});
-  hconn.on('data',d=>{if(d.t=='st'){rj=1;render(d.v)}});
+  const sendJoin=()=>{if(hconn&&hconn.open)hconn.send({t:'join',uid:myUid,name,av:myAv,tt:myTt,cb:myCb,sn:mySn,lv:lvOf(xp),pid:id})};
+  hconn.on('open',()=>{jt=0;$('netBadge').textContent='Conectado ('+code+')';sendJoin();
+   joinPoller=setInterval(()=>{if(rj){clearInterval(joinPoller);joinPoller=null}else sendJoin()},1200)});
+  hconn.on('data',d=>{if(d&&d.t=='st'){rj=1;if(joinPoller){clearInterval(joinPoller);joinPoller=null}render(d.v)}});
   hconn.on('close',retry)});
  peer.on('error',e=>{if(e.type=='peer-unavailable'&&!rj){toast('Sala não encontrada. Confira o código.');return}
   if(['unavailable-id','peer-unavailable','network','disconnected','socket-error'].includes(e.type))retry();else toast('Erro: '+e.type)});
