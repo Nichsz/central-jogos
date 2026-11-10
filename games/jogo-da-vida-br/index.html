@@ -124,7 +124,8 @@ button{cursor:pointer}
  </div>
 
  <div class="flex items-center gap-1.5 sm:gap-2">
-  <button onclick="toggleSfx()" title="Efeitos Sonoros" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-[#0f2926] hover:bg-[#163a36] border border-amber-500/30 text-amber-200 transition text-xs sm:text-sm">
+  <button onclick="toggleMus()" title="Música de fundo" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-[#0f2926] hover:bg-[#163a36] border border-amber-500/30 text-amber-200 transition text-xs sm:text-sm"><i id="musIcon" class="fa-solid fa-music"></i></button>
+<button onclick="toggleSfx()" title="Efeitos Sonoros" class="p-2 sm:px-3 sm:py-2 rounded-xl bg-[#0f2926] hover:bg-[#163a36] border border-amber-500/30 text-amber-200 transition text-xs sm:text-sm">
    <i id="sfxIcon" class="fa-solid fa-volume-high"></i>
   </button>
   <button onclick="openTut(0)" class="px-2.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/35 border border-amber-400/50 text-amber-200 transition flex items-center gap-1.5 text-xs sm:text-sm font-bold">
@@ -243,21 +244,21 @@ const PCOL=['#fbbf24','#38bdf8','#f472b6','#a3e635','#c084fc','#fb923c'];
 const SKN=['#f5d0b0','#e8b88a','#c98f63','#a86a43','#7a4a2c','#fbe0c8'],HRC=['#1f1209','#4a2a12','#8a5a2b','#d4a017','#b91c1c','#9ca3af','#111827'],SHC=['#2563eb','#dc2626','#16a34a','#9333ea','#f59e0b','#0d9488','#db2777','#475569'],BGC=['#164e63','#365314','#7c2d12','#4c1d95','#831843','#1e3a8a'];
 const PRE=[
 {sk:'#f1cfb0',hr:'#3a281c',hs:5,bg:'#7c4a1d',sh:'#4b5563',br:2.2,bd:1,sm:1},
-{sk:'#f3cdaa',hr:'#17110d',hs:6,bg:'#3b6a7a',sh:'#0f766e',br:2,eye:'#7ea6bd',ch:1,sm:2},
+{sk:'#f3cdaa',hr:'#17110d',hs:6,bg:'#3b6a7a',sh:'#d97706',br:2,eye:'#7ea6bd',ch:1,sm:2},
 {sk:'#f0c9a6',hr:'#7a4e2d',hs:10,bg:'#6b4a2b',sh:'#d8cfb8',jk:'#5a3a1d',cap:'#18233f',br:1.6,sm:0},
-{sk:'#d9a77a',hr:'#3a2416',hs:7,bg:'#1c3b3a',sh:'#111827',br:2,bd:3,ear:1,sm:3},
-{sk:'#cf9d74',hr:'#2a1b12',hs:8,bg:'#1d2b45',sh:'#1e2a4a',br:2,bd:2,ear:2,gl:1,sm:0},
-{sk:'#f1cdb0',hr:'#2e2118',hs:9,bg:'#9ca3af',sh:'#d9381e',br:2.5,sm:0}];
+{sk:'#d9a77a',hr:'#3a2416',hs:7,bg:'#8a5a14',sh:'#111827',br:2,bd:3,ear:1,sm:3},
+{sk:'#cf9d74',hr:'#2a1b12',hs:8,bg:'#8fa3ad',sh:'#1e2a4a',br:2,bd:2,ear:2,gl:1,sm:0},
+{sk:'#f1cdb0',hr:'#2e2118',hs:9,bg:'#e5e7eb',sh:'#d9381e',br:2.4,sm:0,fw:14.2,mol:1}];
 function avSvg(seed,sz,pi){let t;
  if(pi!=null&&pi>=0&&pi<PRE.length)t=PRE[pi];else{let x=(Math.abs(seed|0)+1)*2654435761>>>0;const rn=n=>{x=(x*1664525+1013904223)>>>0;return(x>>>16)%n};
   t={sk:SKN[rn(6)],hr:HRC[rn(7)],sh:SHC[rn(8)],bg:BGC[rn(6)],hs:rn(5),br:1.6,sm:rn(2)};const a=rn(4);if(a==1)t.gs=1;if(a==2)t.bd=1+rn(3);if(a==3)t.cap=t.sh}
  const h=t.hr,C=(cx,cy,r)=>`<circle cx="${cx}" cy="${cy}" r="${r}"/>`;
  const hair=[`<path d="M19 28Q19 11 32 11Q45 11 45 28Q40 19 32 19Q24 19 19 28Z"/>`,`<path d="M18 36Q15 10 32 10Q49 10 46 36L42 36Q42 18 32 18Q22 18 22 36Z"/>`,'',C(22,19,6)+C(32,15,7)+C(42,19,6),`<path d="M19 28Q19 12 32 12Q45 12 45 28Q40 20 32 20Q24 20 19 28Z"/>`+C(32,8,5),
  `<path d="M18 29Q14 12 28 8Q40 4 47 14Q50 22 46 29Q44 20 36 18Q26 17 22 22Q20 25 18 29Z"/><path d="M24 14Q34 1 46 12Q38 9 24 14Z"/>`,
- C(22,20,6)+C(29,14,6.5)+C(37,13,6.5)+C(44,19,6)+C(19,28,4)+C(46,28,3.5)+`<path d="M21 25Q32 16 44 25Q40 21 32 21Q26 21 21 25Z"/>`,
+ `<path d="M18 31Q13 13 26 8Q32 4 38 8Q50 10 47 24Q48 28 46 31Q44 21 37 19Q30 22 25 18Q21 21 20 27Z"/><path d="M24 12Q31 6 37 11Q31 9 24 12Z"/>`,
  [[19,26],[18,19],[23,13],[30,10],[38,10],[44,14],[47,20],[46,27]].map(a=>C(a[0],a[1],5.5)).join('')+`<ellipse cx="32" cy="19" rx="13" ry="8"/>`,
  [[21,22],[26,17],[32,15],[38,17],[43,22],[19,28],[45,28]].map(a=>C(a[0],a[1],4.6)).join('')+`<ellipse cx="32" cy="21" rx="12" ry="7"/>`,
- `<path d="M19 28Q19 14 32 14Q45 14 45 28Q40 21 32 21Q24 21 19 28Z"/><path d="M30 15L32 6L35 15Z"/>`,
+ `<path d="M18 29Q16 13 32 12.5Q48 13 46 29Q43 21 32 21.5Q21 21 18 29Z"/><path d="M33 13.5Q35 8.5 38 10.5Q36.5 12 36.5 14.5Z"/>`,
  `<path d="M17 26Q13 38 20 44Q18 34 21 28Z"/><path d="M47 26Q51 38 44 44Q46 34 43 28Z"/><path d="M20 25Q32 21 44 25Q40 29 32 27Q26 29 20 25Z"/>`][t.hs];
  const bd=[ '',`<path d="M20 35Q22 47 32 48Q42 47 44 35Q42 43 32 44Q22 43 20 35Z" opacity=".35"/>`,`<path d="M19 33Q20 50 32 51Q44 50 45 33Q43 42 38 42Q32 40 26 42Q21 42 19 33Z"/>`,`<path d="M24 38Q28 35 32 38Q36 35 40 38Q36 40 32 39Q28 40 24 38Z"/><path d="M28 45Q32 52 36 45Q32 47 28 45Z"/>`][t.bd|0];
  const mo=[`<path d="M28 41H36" stroke="#7a2e2e" stroke-width="1.8" fill="none" stroke-linecap="round"/>`,`<path d="M28 41.5Q33 42 37 39.5" stroke="#7a2e2e" stroke-width="1.8" fill="none" stroke-linecap="round"/>`,`<ellipse cx="32" cy="41" rx="3.2" ry="2.2" fill="#c97b7b"/>`,`<path d="M25 38.5Q32 49 39 38.5Q32 41 25 38.5Z" fill="#fff" stroke="#7a2e2e" stroke-width="1"/>`][t.sm|0];
@@ -268,7 +269,7 @@ function avSvg(seed,sz,pi){let t;
  const er=t.ear==1?`<circle cx="18.6" cy="37" r="2.2" fill="none" stroke="#e5b93c" stroke-width="1"/>`:t.ear==2?`<circle cx="19" cy="38.5" r="1.4" fill="#d1d5db"/>`:'';
  const jk=t.jk?`<path d="M25 47L32 56L39 47" fill="none" stroke="${t.jk}" stroke-width="3.2"/>`:'';
  const ch=t.ch?`<path d="M24 50Q32 59 40 50" stroke="#d1d5db" stroke-width="1" fill="none"/>`:'';
- return`<svg viewBox="0 0 64 64" width="${sz}" height="${sz}"><rect width="64" height="64" fill="${t.bg}"/><path d="M6 64Q32 42 58 64Z" fill="${t.sh}"/>${jk}<rect x="28" y="40" width="8" height="9" fill="${t.sk}"/><ellipse cx="19" cy="34" rx="2.6" ry="4" fill="${t.sk}"/><ellipse cx="45" cy="34" rx="2.6" ry="4" fill="${t.sk}"/><ellipse cx="32" cy="30" rx="13" ry="15" fill="${t.sk}"/><g fill="${h}">${bd}${hair}</g>${cap}${eyes}${mo}${gs}${er}${ch}</svg>`}
+ return`<svg viewBox="0 0 64 64" width="${sz}" height="${sz}"><rect width="64" height="64" fill="${t.bg}"/><path d="M6 64Q32 42 58 64Z" fill="${t.sh}"/>${jk}<rect x="28" y="40" width="8" height="9" fill="${t.sk}"/><ellipse cx="${32-(t.fw||13)}" cy="34" rx="2.6" ry="4" fill="${t.sk}"/><ellipse cx="${32+(t.fw||13)}" cy="34" rx="2.6" ry="4" fill="${t.sk}"/><ellipse cx="32" cy="30" rx="${t.fw||13}" ry="15" fill="${t.sk}"/>${t.mol?`<g fill="#7a4a30"><circle cx="23.5" cy="35.5" r=".8"/><circle cx="41" cy="37.5" r=".8"/><circle cx="37.5" cy="25" r=".7"/></g>`:''}<g fill="${h}">${bd}${hair}</g>${cap}${eyes}${mo}${gs}${er}${ch}</svg>`}
 function avHtml(p,sz=32){const i=p&&p.ph?`<img src="${p.ph}" width="${sz}" height="${sz}" style="object-fit:cover" alt="">`:avSvg(p?(p.av|0)+1:1,sz,p&&(p.av|0)>=0&&(p.av|0)<6?(p.av|0):null);return`<span class="av" style="width:${sz}px;height:${sz}px">${i}</span>`}
 function pickPhoto(inp){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=72;const m=Math.min(im.width,im.height);c.getContext('2d').drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,72,72);M.ph=c.toDataURL('image/jpeg',.7);M.av=-1;saveM();render();toast('📸 Sua foto virou avatar! Só quem estiver na sala vê.')};im.src=r.result};r.readAsDataURL(f)}
 const MAPBG=`<svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none"><defs><pattern id="blk" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-28)"><path d="M0 0H5M0 0V5" stroke="#ffffff12" stroke-width=".4"/></pattern></defs>
@@ -1239,6 +1240,73 @@ function render(){
 const urlRoom=new URLSearchParams(location.search).get('room');
 render();
 if(urlRoom){setTimeout(()=>{if($('rc'))$('rc').value=urlRoom.toUpperCase();toast('Convite detectado para a sala '+urlRoom.toUpperCase()+'! Clique em Entrar.')},100)}
+</script>
+<script>
+/* ===== Trilha sonora própria do jogo (gerada em tempo real, sem arquivos de áudio) ===== */
+(()=>{
+const KEY='vida_mus',STY='vida';
+let on=true;try{on=localStorage.getItem(KEY)!=='0'}catch(e){}
+const G={ctx:null,run:false,step:0,next:0,timer:null};
+const mf=n=>440*Math.pow(2,(n-69)/12),pk=a=>a[Math.floor(Math.random()*a.length)];
+function init(){
+ if(!G.ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;
+  const c=new C(),m=c.createGain();m.gain.value=0;const cp=c.createDynamicsCompressor();m.connect(cp);cp.connect(c.destination);
+  const n=Math.floor(c.sampleRate*1.8),ir=c.createBuffer(2,n,c.sampleRate);for(let k=0;k<2;k++){const d=ir.getChannelData(k);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.5)}
+  const cv=c.createConvolver();cv.buffer=ir;const rg=c.createGain();rg.gain.value=.3;cv.connect(rg);rg.connect(m);
+  const nb=c.createBuffer(1,c.sampleRate*2,c.sampleRate),d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  Object.assign(G,{ctx:c,m,cv,nb})}
+ if(G.ctx.state=='suspended')G.ctx.resume().catch(()=>{});return G.ctx}
+function T(f,d,t,o={}){const c=G.ctx,{ty='sine',v=.1,a=.008,lp=0,rv=.3,f2=0}=o,s=c.currentTime+t,os=c.createOscillator(),g=c.createGain();
+ os.type=ty;os.frequency.setValueAtTime(f,s);if(f2)os.frequency.exponentialRampToValueAtTime(f2,s+d);
+ g.gain.setValueAtTime(.0001,s);g.gain.linearRampToValueAtTime(v,s+Math.min(a,d*.4));g.gain.exponentialRampToValueAtTime(.0001,s+d);
+ let n=os;if(lp){const b=c.createBiquadFilter();b.type='lowpass';b.frequency.value=lp;os.connect(b);n=b}
+ n.connect(g);g.connect(G.m);if(rv){const r=c.createGain();r.gain.value=rv;g.connect(r);r.connect(G.cv)}os.start(s);os.stop(s+d+.05)}
+function N(d,t,o={}){const c=G.ctx,{f=3000,q=.8,v=.05,ty='bandpass',f2=0}=o,s=c.currentTime+t,b=c.createBufferSource();b.buffer=G.nb;
+ const fl=c.createBiquadFilter();fl.type=ty;fl.Q.value=q;fl.frequency.setValueAtTime(f,s);if(f2)fl.frequency.exponentialRampToValueAtTime(f2,s+d);
+ const g=c.createGain();g.gain.setValueAtTime(.0001,s);g.gain.linearRampToValueAtTime(v,s+Math.min(.008,d*.4));g.gain.exponentialRampToValueAtTime(.0001,s+d);
+ b.connect(fl);fl.connect(g);g.connect(G.m);b.start(s,Math.random());b.stop(s+d+.05)}
+const ST={
+/* TRUCO: samba de boteco (C – A7 – Dm – G7), surdo, pandeiro e cavaquinho */
+truco:{bpm:98,ch:[{r:48,f:55,k:[60,64,67,72],m:[72,74,76,79,81]},{r:45,f:52,k:[57,61,64,67],m:[69,71,73,76,81]},{r:50,f:45,k:[62,65,69,72],m:[74,76,77,81]},{r:43,f:50,k:[59,62,65,67],m:[67,71,74,79]},
+ {r:48,f:55,k:[60,64,67,72],m:[72,74,76,79,81]},{r:45,f:52,k:[57,61,64,67],m:[69,71,73,76,81]},{r:50,f:45,k:[62,65,69,72],m:[74,76,77,81]},{r:43,f:50,k:[59,62,65,67],m:[67,71,74,79]}],
+ fn(s,t,h){
+  if(s==0||s==8)T(mf(h.r),.4,t,{v:.2,lp:420,rv:.1});if(s==6||s==14)T(mf(h.f),.25,t,{v:.15,lp:420,rv:.1});
+  if(s==4||s==12)T(95,.2,t,{v:.14,f2:55,rv:0});
+  N(.04,t,{f:7000,q:.4,v:s%4==0?.03:.016,ty:'highpass'});
+  if(s%4==2)N(.07,t,{f:4500,q:1.2,v:.04});if(s==10)N(.08,t,{f:900,q:1.2,v:.05});
+  if([3,6,10,11,14].includes(s))h.k.forEach((n,i)=>T(mf(n),.3,t+i*.012,{ty:'triangle',v:.04,lp:3200,rv:.25}));
+  if([0,3,8,11].includes(s)&&Math.random()<.28)T(mf(pk(h.m)),.55,t,{ty:'triangle',v:.055,lp:2800,rv:.5})}},
+/* JOGO DA VIDA: lo-fi para estudar (Dm9 – G7 – Cmaj9 – Am7) */
+vida:{bpm:76,ch:[{r:38,k:[53,57,60,64]},{r:43,k:[55,59,62,65]},{r:36,k:[55,59,62,64]},{r:45,k:[55,60,64,67]}],
+ fn(s,t,h){const sw=(s%2)*.03;t+=sw;
+  if(s==0){h.k.forEach((n,i)=>T(mf(n),2.4,t+i*.02,{ty:'triangle',v:.04,lp:1500,a:.03,rv:.5}));T(mf(h.r),1.3,t,{v:.2,lp:300,rv:.1})}
+  if(s==10){h.k.slice(1).forEach((n,i)=>T(mf(n),.9,t+i*.02,{ty:'triangle',v:.028,lp:1500,rv:.5}));T(mf(h.r),.6,t,{v:.14,lp:300,rv:.1})}
+  if(s==0||s==9)T(120,.22,t,{v:.2,f2:45,rv:0});
+  if(s==4||s==12){N(.16,t,{f:1800,q:.7,v:.07});T(190,.1,t,{v:.035,rv:.1})}
+  if(s%2==0)N(.03,t,{f:8000,ty:'highpass',v:s%4==2?.03:.017});
+  if(Math.random()<.3)N(.01,t,{f:5000+Math.random()*3000,q:.3,v:.018,ty:'highpass'});
+  if([0,6,10,14].includes(s)&&Math.random()<.24)T(mf(pk([72,74,76,79,81])),.9,t,{v:.045,lp:2200,rv:.7})}},
+/* INTRIGAS DA CORTE: alaúde, bordão grave e tambor de salão (Dm – Bb – C – A) */
+intrigas:{bpm:84,ch:[{r:38,k:[50,57,62,65,69]},{r:34,k:[46,53,58,62,65]},{r:36,k:[48,55,60,64,67]},{r:33,k:[45,52,57,61,64]}],
+ fn(s,t,h){
+  if(s==0)T(mf(h.r),2.8,t,{ty:'sawtooth',v:.07,lp:380,a:.25,rv:.2});
+  if(s%2==0){const A=[0,1,2,1,3,2,1,2],n=h.k[A[(s/2)%8]]+12;T(mf(n),.6,t,{ty:'triangle',v:s==0?.075:.055,lp:2600,rv:.35})}
+  if(s==0){T(95,.3,t,{v:.2,f2:60,rv:.1});N(.12,t,{f:600,q:.8,v:.045})}
+  if(s==8)T(120,.2,t,{v:.12,f2:70,rv:.1});
+  if(s==6||s==14)N(.05,t,{f:6000,q:1,v:.025});
+  if((s==0||s==8)&&Math.random()<.35)T(mf(pk([74,77,79,81,82,84])),1,t,{v:.05,rv:.6,a:.05})}}
+};
+const S=ST[STY];
+function tick(){const c=G.ctx;if(!c||!G.run)return;const sd=60/S.bpm/4;if(G.next<c.currentTime-.1)G.next=c.currentTime+.1;
+ while(G.next<c.currentTime+.45){const s=G.step%16,b=Math.floor(G.step/16)%S.ch.length;try{S.fn(s,G.next-c.currentTime,S.ch[b])}catch(e){}G.step++;G.next+=sd}}
+function start(){if(G.run||!on||!init())return;const c=G.ctx;G.run=true;G.m.gain.cancelScheduledValues(c.currentTime);G.m.gain.setTargetAtTime(.45,c.currentTime,.8);G.step=0;G.next=c.currentTime+.25;clearInterval(G.timer);G.timer=setInterval(tick,120)}
+function stop(){G.run=false;clearInterval(G.timer);if(G.ctx)G.m.gain.setTargetAtTime(0,G.ctx.currentTime,.15)}
+function icon(){const i=document.getElementById('musIcon');if(i)i.className=on?'fa-solid fa-music':'fa-solid fa-music text-rose-400 opacity-60'}
+window.toggleMus=()=>{on=!on;try{localStorage.setItem(KEY,on?'1':'0')}catch(e){}icon();if(on)start();else stop();try{(window.toast||(()=>{}))(on?'🎶 Música ligada':'Música desligada')}catch(e){}};
+['pointerdown','keydown'].forEach(ev=>addEventListener(ev,()=>{if(on&&!G.run)start()},{passive:true}));
+document.addEventListener('visibilitychange',()=>{const c=G.ctx;if(!c)return;if(document.hidden)c.suspend().catch(()=>{});else c.resume().catch(()=>{})});
+icon();
+})();
 </script>
 </body>
 </html>
