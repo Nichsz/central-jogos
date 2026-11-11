@@ -31,6 +31,8 @@ Quando faltar gente, dá para completar a mesa com **bots**.
 
 > 💡 **Dica:** as salas online usam conexão P2P (PeerJS / WebRTC) com servidores de retransmissão (TURN) para funcionar também em 4G. Todo mundo precisa manter a aba aberta durante a partida; se alguém cair, o jogo tenta reconectar sozinho. Se o anfitrião fechar, a sala acaba.
 
+> 🔗 O **link de convite** (botão 🔗 dentro da sala) abre o jogo já com o código preenchido; é só escolher o nome e entrar. O anfitrião precisa manter a tela ligada (o jogo pede para o celular não apagar a tela).
+
 > 📱 Todos os jogos foram ajustados para celular: menus com janelas e seções recolhíveis, e mapa/mesa adaptados para telas pequenas.
 
 ---

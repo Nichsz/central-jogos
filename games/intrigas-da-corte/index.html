@@ -148,6 +148,12 @@
     .mirror-video { transform: scaleX(-1); }
   </style>
 <style id="mobile-fix">
+@media (max-width:640px){
+ header{flex-wrap:wrap;row-gap:4px;padding-top:6px;padding-bottom:6px}
+ header button{min-height:34px;padding-left:8px;padding-right:8px}
+ header>div:last-child{gap:4px}
+ header>div:last-child{flex-wrap:wrap;justify-content:flex-end;max-width:100%}
+}
 html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
 body{min-height:100vh;min-height:100dvh;overscroll-behavior-y:none;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);padding-bottom:env(safe-area-inset-bottom)}
 button,[onclick],select,label,summary{touch-action:manipulation}
@@ -161,6 +167,21 @@ details.fold[open]>summary .chev{transform:rotate(180deg)}
 .sheet>.sheet-in{width:100%;max-width:560px;max-height:86vh;max-height:86dvh;overflow-y:auto;border-radius:22px 22px 0 0;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
 @media (min-width:640px){.sheet>.sheet-in{border-radius:22px}}
 </style>
+<script>
+function inviteUrl(code,extra){var b=(location.origin&&location.origin!=='null')?location.origin+location.pathname:location.href.split(/[?#]/)[0];return b+'?room='+encodeURIComponent(code)+(extra||'')}
+async function copyText(t){
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);return true}}catch(e){}
+ try{var a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.cssText='position:fixed;top:0;left:0;opacity:0;font-size:16px';document.body.appendChild(a);a.focus();a.select();a.setSelectionRange(0,t.length);var ok=document.execCommand('copy');a.remove();if(ok)return true}catch(e){}
+ return false}
+async function shareOrCopy(t){
+ if(await copyText(t))return 'copied';
+ if(navigator.share){try{await navigator.share({text:t,url:t});return 'shared'}catch(e){}}
+ window.prompt('Copie o link abaixo:',t);return 'prompt'}
+var _wl=null;
+async function keepAwake(){try{if('wakeLock' in navigator&&!_wl){_wl=await navigator.wakeLock.request('screen');_wl.addEventListener('release',function(){_wl=null})}}catch(e){}}
+document.addEventListener('click',keepAwake,{once:true});
+document.addEventListener('visibilitychange',function(){if(!document.hidden)keepAwake()});
+</script>
 </head>
 <body class="min-h-screen lg:h-screen lg:overflow-hidden flex flex-col justify-between selection:bg-amber-500 selection:text-black">
 
@@ -1413,22 +1434,14 @@ details.fold[open]>summary .chev{transform:rotate(180deg)}
       if (autoHighlightRoom) showToast(`Convite detectado para a sala ${autoHighlightRoom}! Escolha seu nome e clique em Entrar.`, 'success');
     }
 
-    function copyFullInviteLink() {
+    async function copyFullInviteLink() {
       if (!currentRoomCode) return;
-      const baseUrl = window.location.origin + window.location.pathname;
-      const inviteUrl = `${baseUrl}?room=${encodeURIComponent(currentRoomCode)}&key=${encodeURIComponent(ACCESS_PIN)}`;
-      copyTextToClipboard(inviteUrl);
-      showToast(`Link de convite da sala ${currentRoomCode} copiado! Mande no Discord/WhatsApp.`, 'success');
+      const inviteUrlStr = inviteUrl(currentRoomCode, '&key=' + encodeURIComponent(ACCESS_PIN));
+      const r = await shareOrCopy(inviteUrlStr);
+      if (r !== 'prompt') showToast(r === 'shared' ? 'Convite da sala ' + currentRoomCode + ' compartilhado!' : `Link de convite da sala ${currentRoomCode} copiado! Mande no Discord/WhatsApp.`, 'success');
     }
 
-    function copyTextToClipboard(text) {
-      const tempInput = document.createElement('input');
-      tempInput.value = text;
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      document.execCommand('copy');
-      tempInput.remove();
-    }
+    function copyTextToClipboard(text) { copyText(text); }
 
     /*************************************************************************
      * 5. SINCRONIZAÇÃO DE DADOS
@@ -2977,7 +2990,7 @@ details.fold[open]>summary .chev{transform:rotate(180deg)}
               if (c.revealed) {
                 const r = ROLES[c.role];
                 return `
-                  <div class="flex-1 rounded-xl p-1.5 bg-gradient-to-br ${r.colorClass} border border-rose-500/70 opacity-75 flex items-center gap-1.5 relative overflow-hidden">
+                  <div class="flex-1 min-w-0 rounded-xl p-1.5 bg-gradient-to-br ${r.colorClass} border border-rose-500/70 opacity-75 flex items-center gap-1.5 relative overflow-hidden">
                     <div class="w-6 h-6 shrink-0">${r.svg}</div>
                     <div class="min-w-0">
                       <div class="text-[10px] font-bold text-rose-200 truncate line-through">${r.name}</div>
@@ -2986,9 +2999,9 @@ details.fold[open]>summary .chev{transform:rotate(180deg)}
                   </div>`;
               }
               return `
-                <div class="flex-1 rounded-xl p-1.5 card-back-pattern border border-amber-400/50 flex items-center justify-center gap-1.5 shadow-inner min-h-[38px]">
+                <div class="flex-1 min-w-0 rounded-xl p-1.5 card-back-pattern border border-amber-400/50 flex items-center justify-center gap-1.5 shadow-inner min-h-[38px]">
                   <i class="fa-solid fa-mask text-amber-400/80 text-xs"></i>
-                  <span class="text-[10px] font-semibold text-amber-200/90">Influência</span>
+                  <span class="hidden sm:inline text-[10px] font-semibold text-amber-200/90">Influência</span>
                 </div>`;
             }).join('')
           : `<div class="col-span-2 text-[11px] text-amber-200/50 italic py-1.5 text-center w-full">Aguardando distribuição de cartas...</div>`;
@@ -3000,7 +3013,7 @@ details.fold[open]>summary .chev{transform:rotate(180deg)}
 
             <div class="flex items-center gap-2.5">
               <div id="video-frame-${escapeHtml(player.uid)}"
-                class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden bg-gradient-to-br ${avatarObj.bg} border-2 border-amber-400/60 shrink-0 flex items-center justify-center shadow-lg ${legendClass(avatarObj)}">
+                class="relative w-12 h-12 sm:w-16 sm:h-16 rounded-2xl overflow-hidden bg-gradient-to-br ${avatarObj.bg} border-2 border-amber-400/60 shrink-0 flex items-center justify-center shadow-lg ${legendClass(avatarObj)}">
                 <div class="w-full h-full">${avatarObj.svg}</div>
                 <video id="seat-video-${escapeHtml(player.uid)}" autoplay playsinline ${isMe ? 'muted' : ''}
                   class="hidden absolute inset-0 w-full h-full object-cover z-10 ${isMe ? 'mirror-video' : ''}"></video>
@@ -3019,7 +3032,7 @@ details.fold[open]>summary .chev{transform:rotate(180deg)}
                 </div>
                 ${seatRankHtml(player, isMe)}
                 <div class="text-[10px] text-amber-300/70 truncate">${escapeHtml(avatarObj.roleTitle || 'Nobre da Corte')}</div>
-                <div class="flex items-center gap-2 mt-1">
+                <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1">
                   <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-400/35 text-amber-300 text-[11px] font-bold">
                     <i class="fa-solid fa-coins text-amber-400 text-[10px]"></i><span>${player.coins}</span>
                   </div>

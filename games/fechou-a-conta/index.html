@@ -181,6 +181,12 @@ body.inround{overflow:hidden}
 @media(prefers-reduced-motion:reduce){.lamp,.lamp .cone,.dust,.neon{animation:none}}
 </style>
 <style id="mobile-fix">
+@media (max-width:640px){
+ header{flex-wrap:wrap;row-gap:4px;padding-top:6px;padding-bottom:6px}
+ header button{min-height:34px;padding-left:8px;padding-right:8px}
+ header>div:last-child{gap:4px}
+ header>div:last-child{flex-wrap:wrap;justify-content:flex-end;max-width:100%}
+}
 html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
 body{min-height:100vh;min-height:100dvh;overscroll-behavior-y:none;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);padding-bottom:env(safe-area-inset-bottom)}
 button,[onclick],select,label,summary{touch-action:manipulation}
@@ -194,6 +200,21 @@ details.fold[open]>summary .chev{transform:rotate(180deg)}
 .sheet>.sheet-in{width:100%;max-width:560px;max-height:86vh;max-height:86dvh;overflow-y:auto;border-radius:22px 22px 0 0;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
 @media (min-width:640px){.sheet>.sheet-in{border-radius:22px}}
 </style>
+<script>
+function inviteUrl(code,extra){var b=(location.origin&&location.origin!=='null')?location.origin+location.pathname:location.href.split(/[?#]/)[0];return b+'?room='+encodeURIComponent(code)+(extra||'')}
+async function copyText(t){
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);return true}}catch(e){}
+ try{var a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.cssText='position:fixed;top:0;left:0;opacity:0;font-size:16px';document.body.appendChild(a);a.focus();a.select();a.setSelectionRange(0,t.length);var ok=document.execCommand('copy');a.remove();if(ok)return true}catch(e){}
+ return false}
+async function shareOrCopy(t){
+ if(await copyText(t))return 'copied';
+ if(navigator.share){try{await navigator.share({text:t,url:t});return 'shared'}catch(e){}}
+ window.prompt('Copie o link abaixo:',t);return 'prompt'}
+var _wl=null;
+async function keepAwake(){try{if('wakeLock' in navigator&&!_wl){_wl=await navigator.wakeLock.request('screen');_wl.addEventListener('release',function(){_wl=null})}}catch(e){}}
+document.addEventListener('click',keepAwake,{once:true});
+document.addEventListener('visibilitychange',function(){if(!document.hidden)keepAwake()});
+</script>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 <div id="bg" aria-hidden="true"></div>
@@ -560,12 +581,13 @@ addEventListener('resize',fitHdr);
 
 const JI=['🍺','🤵','📒','🥓','🎱','🔥','🌶️','🥤','🥃','☕','👩‍🍳','🧀','💳','🍻','🍢','🥜','🪑','📱'];
 function toast(t){const d=document.createElement('div');d.className='tst';d.textContent=t;$('tc').appendChild(d);setTimeout(()=>d.remove(),2600)}
+async function copyLink(){if(!mp||!mp.code)return;const r=await shareOrCopy(inviteUrl(mp.code));if(r!='prompt')toast(r=='shared'?'Convite compartilhado!':'Link de convite copiado!')}
 function copySeed(){if(!seed)return;navigator.clipboard&&navigator.clipboard.writeText(seed);toast('Semente '+seed+' copiada!')}
 const T=n=>Math.round(220*Math.pow(1.5,n-1)/10)*10;
 
 /* ============ MULTIPLAYER PEERJS ============ */
 let myUid='u'+Math.random().toString(36).slice(2,8),myName='Freguês',peer=null,conns={},hconn=null,mp=null;
-let onlineOpen=false,optOpen=false,gotSt=false,jtV=0,retryTm=null,joinPollV=null;
+let pendingRoom='',onlineOpen=false,optOpen=false,gotSt=false,jtV=0,retryTm=null,joinPollV=null;
 try{const _s=sessionStorage.getItem('fechou_uid');if(_s)myUid=_s;else sessionStorage.setItem('fechou_uid',myUid)}catch(e){}
 const PC=()=>({debug:1,config:{iceServers:[
    {urls:'stun:stun.l.google.com:19302'},
@@ -837,7 +859,7 @@ function rMenu(){
  if(mp&&mp.ph=='lobby'){
   return`<div class="max-w-lg mx-auto w-full bg-[#11221d]/95 gold-border-strong rounded-3xl p-6 space-y-4 text-center">
    <div class="flex justify-between items-center text-xs"><button onclick="leaveMP()" class="px-3 py-1.5 rounded-lg bg-black/40">← Voltar ao Lobby</button><span class="text-emerald-300 font-bold">Sala P2P Ativa</span></div>
-   <div><div class="text-xs opacity-70">Código da Sala</div><div class="f text-4xl text-amber-300 tracking-[.25em]">${mp.code}</div></div>
+   <div class="flex items-center gap-3"><div><div class="text-xs opacity-70">Código da Sala</div><div class="f text-4xl text-amber-300 tracking-[.25em]">${mp.code}</div></div>${mp.host?`<button onclick="copyLink()" class="px-3 py-2 rounded-xl bg-emerald-500/20 border border-emerald-400/50 text-emerald-200 text-xs font-bold">🔗 Link</button>`:''}</div>
    ${mp.host?`<div class="grid grid-cols-2 gap-2 text-xs">
     <button onclick="mp.mode='vs';bcastMP()" class="py-2.5 rounded-xl font-bold ${mp.mode=='vs'?'bg-amber-500 text-black':'bg-black/40'}">⚔️ Disputa (Versus)</button>
     <button onclick="mp.mode='coop';bcastMP()" class="py-2.5 rounded-xl font-bold ${mp.mode=='coop'?'bg-amber-500 text-black':'bg-black/40'}">🍻 Rachando a Conta (Co-op)</button>
@@ -887,7 +909,7 @@ function rMenu(){
      ${onlineOpen?`<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
       <button onclick="hostRoom()" class="py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-black font-bold text-sm flex items-center justify-center gap-2"><i class="fa-solid fa-plus-circle"></i><span>Criar Sala</span></button>
       <div class="flex gap-1.5">
-       <input id="rc" maxlength="5" placeholder="CÓDIGO" class="w-full min-w-0 px-3 py-2.5 rounded-xl bg-black/60 border border-amber-500/40 uppercase outline-none tracking-widest text-sm font-mono text-center">
+       <input id="rc" value="${esc(pendingRoom)}" maxlength="5" placeholder="CÓDIGO" class="w-full min-w-0 px-3 py-2.5 rounded-xl bg-black/60 border border-amber-500/40 uppercase outline-none tracking-widest text-sm font-mono text-center">
        <button onclick="joinRoom($('rc').value)" class="px-4 py-2.5 rounded-xl bg-sky-700 hover:bg-sky-600 font-bold text-sm">Entrar</button>
       </div></div>`:''}
     </div>
@@ -1078,6 +1100,7 @@ function render(){
  if(g&&g.ph=='round')pv();
  if(mp)updMpBar();
 }
+{const ur=new URLSearchParams(location.search).get('room');if(ur){pendingRoom=ur.trim().toUpperCase().slice(0,5);onlineOpen=true;setTimeout(()=>toast('Convite para a sala '+pendingRoom+'! Escolha seu apelido e toque em Entrar.'),400)}}
 buildBg();icons();render();addEventListener('load',fitHdr);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitHdr);
 </script>
 </body>

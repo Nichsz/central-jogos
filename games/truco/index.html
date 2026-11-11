@@ -70,6 +70,22 @@ button{cursor:pointer}
 .tst.mini{padding:3px 10px;font-size:11px;border-width:1px;background:#180e07cc;animation:tf 1.7s forwards}
 </style>
 <style id="mobile-fix">
+@media (max-width:640px){
+ header{flex-wrap:wrap;row-gap:4px;padding-top:6px;padding-bottom:6px}
+ header button{min-height:34px;padding-left:8px;padding-right:8px}
+ header>div:last-child{gap:4px}
+ header>div:last-child{flex-wrap:wrap;justify-content:flex-end;max-width:100%}
+}
+@media (max-width:640px){
+ .bcl{transform:scale(.7)}
+ .stg>div[id^="st"]{padding:3px 6px;max-width:44vw}
+ .stg>div[id^="st"] .text-\[10px\]{display:none}
+ .stg>div[id^="st"] .text-xs{font-size:11px;max-width:22vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .stg>div[id^="st"] .card.sm{transform:scale(.8);margin:-2px -3px}
+ #sigs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding-bottom:2px}
+ #sigs>*{flex:none}
+ #hand{gap:8px}
+}
 html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
 body{min-height:100vh;min-height:100dvh;overscroll-behavior-y:none;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);padding-bottom:env(safe-area-inset-bottom)}
 button,[onclick],select,label,summary{touch-action:manipulation}
@@ -83,6 +99,21 @@ details.fold[open]>summary .chev{transform:rotate(180deg)}
 .sheet>.sheet-in{width:100%;max-width:560px;max-height:86vh;max-height:86dvh;overflow-y:auto;border-radius:22px 22px 0 0;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
 @media (min-width:640px){.sheet>.sheet-in{border-radius:22px}}
 </style>
+<script>
+function inviteUrl(code,extra){var b=(location.origin&&location.origin!=='null')?location.origin+location.pathname:location.href.split(/[?#]/)[0];return b+'?room='+encodeURIComponent(code)+(extra||'')}
+async function copyText(t){
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);return true}}catch(e){}
+ try{var a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.cssText='position:fixed;top:0;left:0;opacity:0;font-size:16px';document.body.appendChild(a);a.focus();a.select();a.setSelectionRange(0,t.length);var ok=document.execCommand('copy');a.remove();if(ok)return true}catch(e){}
+ return false}
+async function shareOrCopy(t){
+ if(await copyText(t))return 'copied';
+ if(navigator.share){try{await navigator.share({text:t,url:t});return 'shared'}catch(e){}}
+ window.prompt('Copie o link abaixo:',t);return 'prompt'}
+var _wl=null;
+async function keepAwake(){try{if('wakeLock' in navigator&&!_wl){_wl=await navigator.wakeLock.request('screen');_wl.addEventListener('release',function(){_wl=null})}}catch(e){}}
+document.addEventListener('click',keepAwake,{once:true});
+document.addEventListener('visibilitychange',function(){if(!document.hidden)keepAwake()});
+</script>
 </head>
 <body class="min-h-screen lg:h-screen lg:overflow-hidden flex flex-col justify-between">
 
@@ -390,8 +421,8 @@ const cardPlay=()=>{const j=.9+Math.random()*.2;paper(.17,1,0,1800*j,3800*j);pap
 const cardDeal=(n=3)=>{for(let i=0;i<n;i++){const j=.9+Math.random()*.2;paper(.11,.8,.1+i*.13,2000*j,4000*j)}};
 function toggleSfx(){sfxOn=!sfxOn;$('sfxIcon').className=sfxOn?'fa-solid fa-volume-high':'fa-solid fa-volume-xmark text-rose-400';toast(sfxOn?'Efeitos sonoros ativados':'Áudio silenciado')}
 function openInviteModal(){$('inviteModal').classList.remove('hidden')}
-function copyCode(){if(!code)return;navigator.clipboard&&navigator.clipboard.writeText(code);toast('Código '+code+' copiado!')}
-function copyLink(){const u=location.href.split('?')[0]+(code?'?room='+code:'');navigator.clipboard&&navigator.clipboard.writeText(u);toast('Link de convite copiado!')}
+function copyCode(){if(!code)return;copyText(code).then(ok=>toast(ok?'Código '+code+' copiado!':'Código da sala: '+code))}
+async function copyLink(){if(!code)return toast('Crie uma sala primeiro');const r=await shareOrCopy(inviteUrl(code));if(r!='prompt')toast(r=='shared'?'Convite compartilhado!':'Link de convite copiado!')}
 
 function shout(k){[
  ()=>bp(140,.35,'sawtooth'),()=>{bp(70,.25,'square');setTimeout(()=>bp(55,.3,'square'),120)},
@@ -716,7 +747,7 @@ function render(v){
  const boxCls=['bg-emerald-900/50 border-emerald-400/40','bg-rose-900/40 border-rose-400/40','bg-sky-900/45 border-sky-400/40'];
  const txtCls=['text-emerald-300','text-rose-300','text-sky-300'];
  if(L){$('lm').classList.add('hidden');$('lr').classList.remove('hidden');$('rl').textContent=offline?'BOTS':code;
-  $('lk').value=location.href.split('?')[0]+'?room='+code;
+  $('lk').value=inviteUrl(code);
   $('rmSw').classList.toggle('hidden',!isHost);
   $('rm2').className='py-1.5 rounded-lg font-bold '+(nt==2?'bg-amber-500 text-black':'opacity-70');
   $('rm3').className='py-1.5 rounded-lg font-bold '+(nt==3?'bg-amber-500 text-black':'opacity-70');
@@ -741,7 +772,7 @@ function render(v){
  for(let r=0;r<N;r++){const i=(me+r)%N,p=v.seats[i],tm=i%nt,t=tm==mt,folded=v.out&&v.out[tm];
   h+=`<div id="st${r}" class="absolute text-center rounded-xl px-2.5 py-1 bg-black/70 border border-amber-500/25 ${v.turn==i&&v.phase=='play'&&!folded?'turn':''} ${folded?'opacity-45':''}" style="${pos[r]}"><div class="flex items-center gap-1.5"><span class="w-8 h-8 flex-none">${avt(p.av,32,p.lv|0)}</span><span class="text-left leading-tight"><span class="block text-xs font-semibold ${nt==3?txtCls[tm]:t?'text-emerald-300':'text-rose-300'}">${i==me?'Você':esc(p.name)}${p.away?' 💤':p.bot?' 🤖':''}${t&&i!=me?' (parceiro)':''}${folded?' 🏃':''}</span><span class="block text-[10px] opacity-70">${ttName(p)} <span class="text-amber-300">${'★'.repeat((p.lv|0)+1)}</span></span></span></div>${r&&p.h?`<div class="flex gap-0.5 justify-center mt-1">${p.h.map(c=>cd(c,'sm')).join('')}</div>`:r?`<div class="flex gap-0.5 justify-center mt-1">${('<div class="card back sm" style="'+cbs(p.cb)+'"></div>').repeat(p.n)}</div>`:''}</div>`}
  const old=prevT;prevT=v.table.length;
- h+='<div class="absolute left-1/2 top-1/2" style="width:0;height:0">';
+ h+='<div class="bcl absolute left-1/2 top-1/2" style="width:0;height:0">';
  {const cb=cbs(v.seats[me].cb);for(let i=0;i<4;i++)h+=`<div class="card back dk" style="position:absolute;left:${-44-i*1.2}px;top:${-28-i*1.2}px;z-index:1;${cb}"></div>`;h+=cd(v.vira,'dk vira','position:absolute;left:2px;top:-31px;z-index:2;transform:rotate(-4deg)')}
  const tb4=[[0,70],[-96,0],[0,-70],[96,0]],dx4=[0,-160,0,160],dy4=[140,0,-140,0];
  const tb6=[[0,72],[-96,40],[-96,-40],[0,-72],[96,-40],[96,40]],dx6=[0,-150,-150,0,150,150],dy6=[140,80,-80,-140,-80,80];
