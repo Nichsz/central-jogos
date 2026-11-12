@@ -172,6 +172,7 @@ vida:`<svg class="cv" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
 <text x="150" y="364" text-anchor="middle" font-size="13" fill="#5eead4" letter-spacing="1.5">RUMO AOS 40 ANOS</text>
 </svg>`,
 
+aventura:`<svg class="cv" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="avg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#27465a"/><stop offset="1" stop-color="#3c9a3a"/></linearGradient></defs><rect width="300" height="400" fill="url(#avg1)"/><path d="M-10 330 Q150 250 310 320 L310 400 L-10 400Z" fill="#d8c68e"/><g font-size="58" text-anchor="middle"><text x="70" y="300">🌳</text><text x="235" y="290">🏠</text><text x="150" y="360">🐕</text><text x="215" y="372">🐦</text></g><text x="150" y="110" text-anchor="middle" font-family="Trebuchet MS,sans-serif" font-size="34" font-weight="800" fill="#f2b84b">Aventura</text><text x="150" y="150" text-anchor="middle" font-family="Trebuchet MS,sans-serif" font-size="34" font-weight="800" fill="#f2b84b">no ABC</text></svg>`,
 conta:`<svg class="cv" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
 <defs>
  <radialGradient id="bgConta" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#15803d"/><stop offset="70%" stop-color="#064e3b"/><stop offset="100%" stop-color="#022c22"/></radialGradient>
@@ -220,7 +221,8 @@ const games=[
 {t:'Intrigas da Corte',d:'Blefe e influência. Engane, desafie e sobreviva na corte.',href:'games/intrigas-da-corte/',c:covers.coup,tg:['2 a 6 jogadores','Online','Bots','Voz e vídeo']},
 {t:'Boteco do Truco',d:'Duplas 2x2 ou 2x2x2, manilha pela vira, sinais secretos e modo caos.',href:'games/truco/',c:covers.truco,tg:['2x2 e 2x2x2','Online','Bots','Voz','Modo caos']},
 {t:'Jogo da Vida BR',d:'Empregos, estudos, AirFryer e boletos. Quem chega melhor aos 40?',href:'games/jogo-da-vida-br/',c:covers.vida,tg:['Solo ou Online','Bots','Carreira','Boletos']},
-{t:'Fechou a Conta',d:'Monte mãos de pôquer, junte amuletos, vença chefões e pague o boteco.',href:'games/fechou-a-conta/',c:covers.conta,tg:['Solo ou Online','Chefões','Pacotes','Troféus']}];
+{t:'Fechou a Conta',d:'Monte mãos de pôquer, junte amuletos, vença chefões e pague o boteco.',href:'games/fechou-a-conta/',c:covers.conta,tg:['Solo ou Online','Chefões','Pacotes','Troféus']},
+{t:'Aventura no ABC',d:'Modo história solo: percorra 4 cidades do ABC, capture criaturas, vença os líderes e vire Mestre do ABC.',href:'games/aventura-abc/',c:covers.aventura,tg:['Solo','História','4 cidades','Tipos e itens','Salva sozinho']}];
 
 document.getElementById('m').innerHTML=games.map(g=>`<a class="g" href="${g.href}">${g.c}<div class="in"><div><h2>${g.t}</h2><p>${g.d}</p></div><div class="tg">${g.tg.map(x=>`<span>${x}</span>`).join('')}</div></div></a>`).join('');
 </script>

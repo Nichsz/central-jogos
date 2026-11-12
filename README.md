@@ -15,6 +15,7 @@ Uma sala de jogos feita para jogar com os amigos direto no navegador. Sem instal
 | 🃏 [**Truco**](games/truco/) | Duplas, manilha pela vira, sinais secretos e modo caos. | 2x2 ou 2x2x2 (até 6) | Online, bots, voz, modo caos |
 | 💼 [**Jogo da Vida BR**](games/jogo-da-vida-br/) | Empregos, estudos e boletos pelo mapa do ABC. Quem chega melhor aos 40? | Solo ou até 6 | Online, bots, carreira, troféus |
 | 🍻 [**Fechou a Conta**](games/fechou-a-conta/) | Monte mãos de pôquer, junte amuletos e pague as contas do boteco. | Solo ou até 6 | Co-op ou disputa, chefões, relíquias, troféus |
+| 🌆 [**Aventura no ABC**](games/aventura-abc/) | Modo história solo: percorra Santo André, São Caetano, São Bernardo e Mauá, capture criaturas e vença 4 líderes. | Solo | Mundo explorável, tipos (Água/Brasa/Mato/Rua), itens e mercadinho, save automático |
 
 A página inicial (`index.html`) é o hub com a lista de todos os jogos.
 
@@ -116,6 +117,7 @@ central-jogos/
     ├── intrigas-da-corte/  # Blefe e influência
     ├── truco/              # Truco 2x2 e 2x2x2
     ├── jogo-da-vida-br/    # Jogo da Vida BR
+    ├── aventura-abc/       # Aventura no ABC (modo história solo)
     └── fechou-a-conta/     # Pôquer de boteco
 ```
 

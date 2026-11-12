@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Aventura no ABC</title>
+<style>
+:root{--bg:#0e1a1f;--card:#14262d;--line:#2b4a54;--gold:#f2b84b;--ink:#eaf2ee}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Trebuchet MS",system-ui,sans-serif;overscroll-behavior:none}
+body{min-height:100vh;min-height:100dvh;display:flex;justify-content:center;touch-action:manipulation;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#w{width:100%;max-width:480px;padding:8px;display:flex;flex-direction:column;gap:8px}
+#hud{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px}
+#hud b{color:var(--gold)}
+#team{display:flex;gap:6px;flex-wrap:wrap;font-size:12px}
+.pill{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px 7px;display:flex;align-items:center;gap:3px}
+#v{position:relative}
+canvas{image-rendering:pixelated}
+#c{width:100%;display:block;border-radius:14px;border:2px solid var(--line);background:#000}
+#box{position:absolute;left:8px;right:8px;bottom:8px;background:#0a1216f2;border:2px solid var(--gold);border-radius:12px;padding:12px;font-size:16px;line-height:1.35;display:none}
+#box small{display:block;text-align:right;opacity:.6;margin-top:4px}
+#pad{display:flex;justify-content:space-between;align-items:center;padding:6px 4px 10px}
+.dp{display:grid;grid-template-columns:repeat(3,60px);grid-template-rows:repeat(3,60px);gap:4px}
+button{font:inherit;color:inherit;border:1px solid var(--line);background:var(--card);border-radius:14px;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+button:active{background:#1e3a44}
+.dp button{font-size:22px}
+#bA{width:84px;height:84px;border-radius:50%;background:var(--gold);color:#241a05;font-weight:800;font-size:28px;border:0}
+.ov{position:fixed;inset:0;z-index:20;background:linear-gradient(#27465a,#16303a 55%,#0e1a1f);display:none;flex-direction:column;align-items:center;padding:12px;overflow-y:auto}
+.ov>div{width:100%;max-width:480px}
+.fc{display:flex;align-items:center;gap:12px;background:#0a1216aa;border:1px solid var(--line);border-radius:14px;padding:8px 10px;margin-bottom:10px}
+.fc canvas{width:80px;height:80px;flex:none}
+.fc .nm{flex:1}
+.chip{font-size:11px;padding:1px 7px;border-radius:8px;color:#08120c;font-weight:700;margin-left:4px}
+.bar{height:10px;background:#0a1216;border-radius:6px;overflow:hidden;margin-top:4px;border:1px solid var(--line)}
+.bar i{display:block;height:100%;transition:width .35s}
+#log{min-height:64px;background:#0a1216cc;border:2px solid var(--gold);border-radius:12px;padding:10px;margin:6px 0 10px;font-size:15px}
+.mv{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mv button{padding:12px 6px;font-size:15px;font-weight:700}
+.mv button:disabled{opacity:.4}
+.ch{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.ch button{display:flex;align-items:center;gap:12px;padding:10px;text-align:left;font-size:15px}
+.ch canvas{width:56px;height:56px;flex:none}
+#ml button{font-size:12px;padding:4px 10px;border-radius:8px}
+</style>
+</head>
+<body>
+<div id="w">
+ <div id="hud"><span id="area"></span><span id="ml"><button onclick="resetGame()">Reiniciar</button></span></div>
+ <div id="team"></div>
+ <div id="v"><canvas id="c"></canvas><div id="box"></div></div>
+ <div id="pad">
+  <div class="dp">
+   <span></span><button data-d="0,-1">▲</button><span></span>
+   <button data-d="-1,0">◀</button><span></span><button data-d="1,0">▶</button>
+   <span></span><button data-d="0,1">▼</button><span></span>
+  </div>
+  <button id="bA">A</button>
+ </div>
+</div>
+
+<div class="ov" id="st"><div><h2 style="margin:6px 0">Escolha seu parceiro</h2><div class="ch" id="stl"></div></div></div>
+<div class="ov" id="sh"><div><h2 style="margin:6px 0">Mercadinho do Zé</h2><div id="shm" style="margin-bottom:6px"></div><div class="ch" id="shl"></div><button style="margin-top:12px;padding:12px;width:100%" onclick="$('sh').style.display='none'">Sair</button></div></div>
+<div class="ov" id="bt"><div><div class="fc" id="foe"></div><div class="fc" id="me"></div><div id="log"></div><div class="mv" id="mv"></div></div></div>
+
+<script>
+const $=i=>document.getElementById(i),sleep=ms=>new Promise(r=>setTimeout(r,ms)),rnd=n=>Math.floor(Math.random()*n);
+const dk=(h,f)=>'#'+[1,3,5].map(i=>Math.round(parseInt(h.substr(i,2),16)*f).toString(16).padStart(2,'0')).join('');
+
+/* ===== Tipos ===== */
+const TY={mato:['Mato','#6fcf5a'],agua:['Água','#58b0ee'],brasa:['Brasa','#f08a4b'],rua:['Rua','#aab0b8']};
+const EF={mato:{agua:2,brasa:.5},agua:{brasa:2,mato:.5},brasa:{mato:2,agua:.5}};
+const mult=(a,d)=>(EF[a]&&EF[a][d])||1;
+const eff=m=>m>1?' É super eficaz!':m<1?' Não é muito eficaz…':'';
+
+/* ===== Criaturas ===== */
+const SP={
+ caramelo:{n:'Caramelo',t:'brasa',k:'dog',c:['#d9a066','#f3dcb8','#a8703c'],hp:28,at:7,sp:'Latido Épico'},
+ capi:{n:'Capivarinha',t:'agua',k:'capi',c:['#a9743f','#cfa56d','#7a5028'],hp:32,at:6,sp:'Mergulho Zen'},
+ sagui:{n:'Sagui',t:'mato',k:'sag',c:['#7a6a55','#f0e4c8','#4f4233'],hp:24,at:7,sp:'Pulo de Galho'},
+ gato:{n:'Gato de Viela',t:'rua',k:'cat',c:['#8a8f99','#d9dce2','#5d626b'],hp:24,at:8,sp:'Arranhão Noturno'},
+ pombao:{n:'Pombão',t:'rua',k:'pomb',c:['#8fa1b8','#d7deea','#5f6e84'],hp:20,at:6,sp:'Bicada Urbana'},
+ ratao:{n:'Ratão',t:'rua',k:'rat',c:['#9a8f8a','#e6d6cf','#6b605b'],hp:19,at:7,sp:'Mordida Suja'},
+ sapo:{n:'Sapo Cururu',t:'agua',k:'sapo',c:['#5fa65a','#d8e6a8','#3b7a3a'],hp:22,at:6,sp:'Língua Ágil'},
+ mosq:{n:'Mosquito do Brejo',t:'mato',k:'mosq',c:['#5a6f4a','#b7c98a','#3a4a2f'],hp:15,at:8,sp:'Picada Dupla'},
+ tatu:{n:'Tatu-Bola',t:'mato',k:'tatu',c:['#a08aa8','#e8dbe6','#6e5c76'],hp:26,at:5,sp:'Rolada'},
+ calango:{n:'Calango',t:'brasa',k:'lag',c:['#e0883a','#f6d08a','#b25f1f'],hp:22,at:8,sp:'Sol de Telhado'},
+ jacare:{n:'Jacaré do Tietê',t:'agua',k:'jac',c:['#4f8f5a','#cfe0a0','#2f5f3a'],hp:34,at:8,sp:'Mordida do Tietê'},
+ tucano:{n:'Tucano',t:'brasa',k:'tuc',c:['#2b2b33','#f6f0e0','#111111'],hp:26,at:9,sp:'Bicão Colorido'}
+};
+const mxOf=c=>Math.round(SP[c.s].hp*(1+.15*(c.lv-1))),atOf=c=>SP[c.s].at*(1+.12*(c.lv-1));
+const mk=(s,lv)=>{const c={s,lv,xp:0};c.mx=mxOf(c);c.hp=c.mx;return c};
+
+/* Desenha a criatura (de frente) num canvas novo */
+function crit(s,sz){
+ const cv=document.createElement('canvas');cv.width=cv.height=sz;
+ const g=cv.getContext('2d'),u=sz/32,P=SP[s],[a,b,d]=P.c,k=P.k;
+ const O=(x,y,rx,ry,col,rot)=>{g.fillStyle=col;g.beginPath();g.ellipse(x*u,y*u,rx*u,ry*u,rot||0,0,7);g.fill()};
+ const Tr=(x1,y1,x2,y2,x3,y3,col)=>{g.fillStyle=col;g.beginPath();g.moveTo(x1*u,y1*u);g.lineTo(x2*u,y2*u);g.lineTo(x3*u,y3*u);g.fill()};
+ const eye=(x,y,r)=>{O(x,y,r,r*1.1,'#fff');O(x+.3,y+.4,r*.55,r*.65,'#161616');O(x-.2,y-.2,r*.2,r*.2,'#fff')};
+ O(16,29.5,11,2.4,'#0003');
+ if(['rat','lag','jac','cat','dog','sag'].includes(k)){g.strokeStyle=d;g.lineWidth=3*u;g.lineCap='round';g.beginPath();g.moveTo(24*u,25*u);const low=k=='lag'||k=='jac';g.quadraticCurveTo(31*u,(low?27:17)*u,(low?29:28)*u,(low?29:13)*u);g.stroke()}
+ if(['pomb','mosq','tuc'].includes(k)){const w=k=='mosq'?'#cfe8ffaa':d;O(6,20,4,8,w,.5);O(26,20,4,8,w,-.5)}
+ const thin=k=='mosq';
+ O(16,23,thin?5:10,7,a);O(16,24,thin?3:6,thin?5:4.6,b);
+ if(k=='tatu'){O(16,22,11.5,8,d);g.strokeStyle=b;g.lineWidth=u;for(let i=-2;i<=2;i++){g.beginPath();g.moveTo((16+i*3.5)*u,15*u);g.lineTo((16+i*3.8)*u,29*u);g.stroke()}}
+ O(16,13,k=='sapo'?10.5:8.5,k=='sapo'?6.5:7.5,a);
+ if(k=='dog'){O(8,11,3,6,d,.3);O(24,11,3,6,d,-.3)}
+ if(k=='cat'){Tr(8,10,9,2,14,7,a);Tr(24,10,23,2,18,7,a);Tr(9.5,8,10,4.5,12.5,7,'#f4b6c2');Tr(22.5,8,22,4.5,19.5,7,'#f4b6c2')}
+ if(k=='capi'||k=='sag'||k=='rat'){const r=k=='rat'?4.5:3;O(9,7,r,r,a);O(23,7,r,r,a);O(9,7,r*.55,r*.55,k=='rat'?'#f4b6c2':b);O(23,7,r*.55,r*.55,k=='rat'?'#f4b6c2':b)}
+ if(k=='sag'){O(16,5,4,2.2,d);O(16,17,6.5,4.5,b)}
+ if(['dog','cat','rat','tatu'].includes(k)){O(16,16.8,4.6,3.2,b);O(16,15.4,1.4,1,'#222')}
+ if(k=='capi'){O(16,17.2,6.5,3.8,b);O(14,16.5,.9,.9,'#222');O(18,16.5,.9,.9,'#222')}
+ if(k=='lag'){O(16,16.8,3.8,2.6,b);O(15,16,.7,.7,'#222');O(17,16,.7,.7,'#222')}
+ if(k=='jac'){O(16,17.5,8,4.2,a);O(16,19,7,2.6,b);g.fillStyle='#fff';for(let i=0;i<5;i++)Tr((10+i*3)*u/u,20,(11.5+i*3),22.4,(13+i*3),20,'#fff');eye(10.5,9,2.6);eye(21.5,9,2.6)}
+ if(k=='pomb')Tr(13,12.5,19,12.5,16,18.5,'#f2a33a');
+ if(k=='tuc'){Tr(10,12,22,12,16,26,'#f2902a');Tr(13,12,19,12,16,19,'#e63b2e')}
+ if(k=='sapo'){g.strokeStyle=d;g.lineWidth=1.4*u;g.beginPath();g.arc(16*u,14*u,6*u,.15*Math.PI,.85*Math.PI);g.stroke()}
+ if(k=='sapo'){eye(9.5,8,3.2);eye(22.5,8,3.2)}
+ else if(k=='mosq'){O(12,11,3.4,3.4,'#d4423a');O(20,11,3.4,3.4,'#d4423a');O(11,10,1,1,'#fff');O(19,10,1,1,'#fff')}
+ else if(k=='jac'){}
+ else if(k=='lag'){eye(11.5,10.5,2.2);eye(20.5,10.5,2.2)}
+ else{eye(12.3,11.2,2.4);eye(19.7,11.2,2.4)}
+ if(['dog','cat','capi','sag','rat'].includes(k)){O(9.5,15,1.8,1.1,'#ff8fa266');O(22.5,15,1.8,1.1,'#ff8fa266')}
+ if(k=='cat'){g.strokeStyle='#fff';g.lineWidth=.6*u;[[-1,0],[-1,2],[1,0],[1,2]].forEach(([s2,y])=>{g.beginPath();g.moveTo((16+s2*3)*u,(16+y)*u);g.lineTo((16+s2*9)*u,(15.5+y*1.5)*u);g.stroke()})}
+ O(11,29,3.6,1.9,d);O(21,29,3.6,1.9,d);
+ return cv;
+}
+
+/* ===== Mundo: 4 cidades do ABC ===== */
+const ZW=28,ZH=18,W=ZW*2,H=ZH*2,T=32,VW=11,VH=9;
+const ZN=['Santo André','São Caetano do Sul','São Bernardo do Campo','Mauá'];
+const GC=['#6dbb4d','#78c15f','#62b36d','#86b84a'];
+const POOL=[['pombao','ratao','sapo','mosq','tatu'],['gato','sapo','calango','pombao','ratao'],['tatu','mosq','sagui','jacare','calango'],['calango','jacare','tucano','ratao','gato']];
+const LB=[2,5,6,8];
+const reg=(x,y)=>(x>=ZW?1:0)+(y>=ZH?2:0);
+const M=[...Array(H)].map(()=>Array(W).fill('.'));
+const R=(a,b,c,d,t)=>{for(let y=b;y<=d;y++)for(let x=a;x<=c;x++)M[y][x]=t};
+for(let z=0;z<4;z++){
+ const ox=(z&1)*ZW,oy=(z>>1)*ZH,r=(a,b,c,d,t)=>R(ox+a,oy+b,ox+c,oy+d,t),p=(x,y,t)=>{M[oy+y][ox+x]=t};
+ r(0,0,ZW-1,0,'#');r(0,ZH-1,ZW-1,ZH-1,'#');r(0,0,0,ZH-1,'#');r(ZW-1,0,ZW-1,ZH-1,'#');
+ r(0,8,ZW-1,9,',');r(13,0,14,ZH-1,',');
+ [3,6,9].forEach(x=>p(x,3,'H'));p(4,6,'C');p(9,6,'L');p(12,7,'S');
+ r(16,2,25,6,'g');r(16,11,25,16,'g');r(2,12,10,16,'g');
+ r(22,13,24,14,'~');p(17,7,'#');p(22,10,'#');p(11,11,'#');p(1,10,'#');p(24,1,'#');p(2,2,'#');p(12,3,'#');
+}
+R(0,0,W-1,0,'#');R(0,H-1,W-1,H-1,'#');R(0,0,0,H-1,'#');R(W-1,0,W-1,H-1,'#');
+const BLOCK='#HCLS~';
+
+/* ===== Personagens (com corpo) ===== */
+function person(g,x,y,o,d,f){
+ const u=2,R2=(a,b,w,h,c)=>{g.fillStyle=c;g.fillRect(x+a*u,y+b*u,w*u,h*u)},l=f&1;
+ g.fillStyle='#0003';g.fillRect(x+3*u,y+14*u,10*u,2*u);
+ R2(5,11,2,3-l,o.pt);R2(9,11,2,2+l,o.pt);R2(5,14-l,2,1,'#222');R2(9,13+l,2,1,'#222');
+ R2(4,7,8,5,o.sh);R2(3,8,1,4,o.sh);R2(12,8,1,4,o.sh);R2(3,12,1,1,o.sk);R2(12,12,1,1,o.sk);R2(7,7,2,1,dk(o.sh,.8));
+ R2(5,1,6,6,o.sk);
+ if(d==1)R2(5,1,6,6,o.hr);else{R2(5,1,6,2,o.hr);R2(4,2,1,3,o.hr);R2(11,2,1,3,o.hr)}
+ if(d==0){R2(6,4,1,1,'#222');R2(9,4,1,1,'#222');R2(7,6,2,1,'#c9806b')}
+ if(d==2)R2(5,4,1,1,'#222');if(d==3)R2(10,4,1,1,'#222');
+}
+const PL={sk:'#f1c9a5',hr:'#2b1b12',sh:'#2f86d6',pt:'#2c3e63'};
+const E=[
+ {id:'mae',x:2,y:5,o:{sk:'#f1c9a5',hr:'#4a2c1a',sh:'#e0679a',pt:'#4b5d8a'}},
+ {id:'prof',x:11,y:5,o:{sk:'#e8bf9a',hr:'#d4d8de',sh:'#f6f6f6',pt:'#5a6a7a'}},
+ {id:'rival',x:18,y:8,o:{sk:'#d9a97c',hr:'#c0392b',sh:'#e8a735',pt:'#3a3a55'}},
+ ...[['#8a5a3a','#222','#7a3b2e','#3d3d3d'],['#f1c9a5','#7a3a8a','#c0527a','#4a4a66'],['#d9a97c','#f4f4f4','#f4f4f4','#2d2d2d'],['#b98a64','#444','#2a6a4a','#1f2f4f']]
+  .map((c,i)=>({id:'b'+i,x:(i&1)*ZW+21,y:(i>>1)*ZH+8,o:{sk:c[0],hr:c[1],sh:c[2],pt:c[3]}}))
+];
+const BOSS=[
+ {n:'Seu Bigode',team:[['gato',6],['caramelo',7]],intro:'Seu Bigode: Há 30 anos cuido do Paço Municipal. Mostre que merece seguir viagem!',win:['Seu Bigode: Você honrou Santo André!','Agora você pode seguir para São Caetano ou São Bernardo.']},
+ {n:'Dona Rosa',team:[['capi',8],['sapo',8],['jacare',9]],intro:'Dona Rosa: Em São Caetano, ninguém passa sem enfrentar minhas criaturas de água!',win:['Dona Rosa: Que batalha! Pode ir.','O caminho para Mauá fica a leste de São Bernardo.']},
+ {n:'Chef Tonho',team:[['caramelo',9],['calango',9],['tucano',10]],intro:'Chef Tonho: No ABC o churrasco manda! Vem pra brasa!',win:['Chef Tonho: Tá no ponto! Você mereceu.']},
+ {n:'Prefeito Zé do Trilho',team:[['jacare',11],['gato',11],['tucano',12],['caramelo',12]],intro:'Prefeito Zé do Trilho: Chegou ao fim do trilho, hein? Só passa quem me vencer!',win:['Prefeito Zé do Trilho: Mauá é sua!','🏆 Parabéns! Você é o novo Mestre do ABC!','Fim da aventura (por enquanto). Capture todas as criaturas!']}
+];
+const IT={net:{n:'Rede',p:30,d:'Captura criaturas'},gnet:{n:'Rede Forte',p:80,d:'Captura bem mais fácil'},pot:{n:'Café Cheio',p:25,d:'Cura 25 PS'}};
+
+/* ===== Tiles desenhados ===== */
+const TC={};
+function ball(g,x,y,r,c){g.fillStyle=c;g.beginPath();g.arc(x,y,r,0,7);g.fill()}
+function tile(t,r){
+ const k=t+r;if(TC[k])return TC[k];
+ const c=document.createElement('canvas');c.width=c.height=T;const g=c.getContext('2d'),gc=GC[r],Q=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};
+ if(t==','){Q(0,0,T,T,'#dcc992');Q(4,6,3,2,'#c9b57d');Q(20,20,4,2,'#c9b57d');Q(14,26,3,2,'#c9b57d')}
+ else if(t=='g'){Q(0,0,T,T,dk(gc,.82));[[3,20],[12,24],[22,18],[8,6],[19,4],[26,26]].forEach(([x,y])=>{Q(x,y,2,8,dk(gc,.6));Q(x+3,y+2,2,6,dk(gc,.66));Q(x-2,y+3,2,5,dk(gc,.72))})}
+ else if(t=='~'){Q(0,0,T,T,'#3b88c8');Q(0,0,T,3,'#5aa6e0')}
+ else{Q(0,0,T,T,gc);
+  if(t=='#'){Q(13,20,6,10,'#6b4423');ball(g,16,13,12,'#2f8a3a');ball(g,11,11,7,'#3fa34a');ball(g,21,9,6,'#52b85a')}
+  if(t=='H'){Q(3,13,26,16,'#f3e6c4');g.fillStyle='#c0443a';g.beginPath();g.moveTo(0,14);g.lineTo(16,1);g.lineTo(32,14);g.fill();Q(13,19,6,10,'#7a4a2a');Q(6,17,5,5,'#8fd0ee');Q(21,17,5,5,'#8fd0ee')}
+  if(t=='C'){Q(3,8,26,21,'#fff');Q(3,6,26,5,'#d94b4b');Q(14,14,4,11,'#d94b4b');Q(11,17,10,4,'#d94b4b');Q(13,22,6,7,'#9ec9e8')}
+  if(t=='L'){Q(3,10,26,19,'#f5e1a4');for(let i=0;i<6;i++)Q(3+i*4.33,4,4.4,8,i%2?'#fff':'#2f6fd0');Q(12,18,8,11,'#6b4423');Q(5,16,5,5,'#8fd0ee');Q(22,16,5,5,'#8fd0ee')}
+  if(t=='S'){Q(14,14,4,16,'#7a5230');Q(5,5,22,12,'#b98a52');Q(8,8,16,2,'#7a5230');Q(8,12,12,2,'#7a5230')}
+ }
+ return TC[k]=c;
+}
+
+/* ===== Estado ===== */
+let S,busy=false,dlg=null,dir=null,face=[0,1],bat=null;
+const fresh=()=>({x:4,y:7,fr:0,team:[],f:{},money:100,bag:{net:5,gnet:0,pot:2}});
+function load(){let o=null;try{o=JSON.parse(localStorage.getItem('abc_adv'))}catch(e){}S=Object.assign(fresh(),o||{});S.bag=Object.assign({net:5,gnet:0,pot:2},S.bag);S.team=S.team.filter(c=>SP[c.s]);if(BLOCK.includes(M[S.y][S.x]))S.x=4,S.y=7}
+function save(){try{localStorage.setItem('abc_adv',JSON.stringify(S))}catch(e){}}
+function resetGame(){if(confirm('Apagar o progresso e recomeçar?')){try{localStorage.removeItem('abc_adv')}catch(e){}location.reload()}}
+const healAll=()=>S.team.forEach(c=>c.hp=c.mx);
+const at=(x,y)=>E.find(n=>n.x==x&&n.y==y);
+const di=()=>face[1]==1?0:face[1]==-1?1:face[0]==-1?2:3;
+
+/* ===== Desenho ===== */
+const cv=$('c'),g=cv.getContext('2d');cv.width=VW*T;cv.height=VH*T;
+function draw(){
+ const cx=Math.max(0,Math.min(W-VW,S.x-5)),cy=Math.max(0,Math.min(H-VH,S.y-4)),t0=Math.floor(Date.now()/300);
+ for(let y=0;y<VH;y++)for(let x=0;x<VW;x++){
+  const gx=cx+x,gy=cy+y,t=M[gy][gx],px=x*T,py=y*T;
+  g.drawImage(tile(t,reg(gx,gy)),px,py);
+  if(t=='~'){g.fillStyle='#ffffff66';g.fillRect(px+4+((t0+x+y)%3)*7,py+14,8,2)}
+  if(t=='.'&&(gx*7+gy*13)%11==0){g.fillStyle='#fff';g.fillRect(px+10,py+12,3,3);g.fillStyle='#f2d03b';g.fillRect(px+11,py+13,1,1)}
+ }
+ for(const n of E){const sx=n.x-cx,sy=n.y-cy;if(sx>=0&&sx<VW&&sy>=0&&sy<VH)person(g,sx*T,sy*T,n.o,0,0)}
+ person(g,(S.x-cx)*T,(S.y-cy)*T,PL,di(),S.fr);
+ const r=reg(S.x,S.y);$('area').innerHTML='<b>'+ZN[r]+'</b> · '+(S.x%ZW<15?'Centro':'Rota');
+}
+function hud(){
+ const t=$('team');t.innerHTML='';
+ const m=document.createElement('span');m.className='pill';m.textContent='💰 R$ '+S.money;t.appendChild(m);
+ S.team.forEach(c=>{const p=document.createElement('span');p.className='pill';p.appendChild(crit(c.s,28));p.appendChild(document.createTextNode(' Nv'+c.lv+' '+c.hp+'/'+c.mx));t.appendChild(p)});
+}
+
+/* ===== Diálogo ===== */
+function say(lines,cb){dlg={l:[].concat(lines),i:0,cb};showL()}
+function showL(){const b=$('box');b.style.display='block';b.innerHTML=dlg.l[dlg.i]+'<small>toque em A ▸</small>'}
+function adv(){if(!dlg)return false;dlg.i++;if(dlg.i>=dlg.l.length){const cb=dlg.cb;dlg=null;$('box').style.display='none';cb&&cb()}else showL();return true}
+
+/* ===== Movimento ===== */
+function step(dx,dy){
+ if(dlg||busy||bat)return;face=[dx,dy];
+ const nx=S.x+dx,ny=S.y+dy;
+ if(nx<0||ny<0||nx>=W||ny>=H||BLOCK.includes(M[ny][nx])||at(nx,ny)){draw();return}
+ const r0=reg(S.x,S.y),r1=reg(nx,ny);
+ if(!S.f.starter&&nx>=14){say('A grama alta é perigosa sem um parceiro. Fale com o Prof. Tiago, perto do laboratório!');return}
+ if(r1!=r0&&!S.f['b'+r0]){say('Você precisa vencer '+BOSS[r0].n+' antes de seguir viagem.');return}
+ S.x=nx;S.y=ny;S.fr++;draw();
+ if(r1!=r0&&!S.f['v'+r1]){S.f['v'+r1]=1;save();say('📍 Chegando em '+ZN[r1]+'!');return}
+ if(!S.f.rival&&r1==0&&S.x>=15&&S.x<=17&&S.y>=8&&S.y<=9){busy=true;S.f.rival=1;say(['Caio: Ei! Você também ganhou um parceiro do Prof. Tiago? Vamos ver quem é melhor!'],()=>{busy=false;fight([mk('sapo',3),mk('mosq',3)],'Caio',()=>say('Caio: Tá bom, você levou essa. Boa sorte com o Seu Bigode!'))});return}
+ if(M[ny][nx]=='g'&&Math.random()<.17){const p=POOL[r1];fight([mk(p[rnd(p.length)],LB[r1]+rnd(3))],null)}
+}
+function act(){
+ if(adv())return;if(busy||bat)return;
+ const fx=S.x+face[0],fy=S.y+face[1],n=at(fx,fy),t=M[fy]&&M[fy][fx];
+ if(t=='C'){healAll();hud();save();say('🏥 Posto de Saúde: Seus parceiros foram curados. Volte sempre!');return}
+ if(t=='L'){shop();return}
+ if(t=='S'){say('🪧 '+ZN[reg(fx,fy)]+': siga a Rota a leste. Capture criaturas na grama alta e vença o líder da cidade para viajar.');return}
+ if(!n)return;
+ if(n.id=='mae'){healAll();hud();save();say(S.f.starter?'Mãe: Voltou! Come algo e descansa. (Seus parceiros foram curados)':'Mãe: O Prof. Tiago te chamou no laboratório. Vai lá!')}
+ else if(n.id=='prof'){
+  if(!S.f.starter)say(['Prof. Tiago: Que bom que veio! O ABC está cheio de criaturas que vivem entre nós.','Prof. Tiago: Escolha um parceiro e comece sua jornada.'],pickStarter);
+  else say('Prof. Tiago: Vença os 4 líderes do ABC: Seu Bigode, Dona Rosa, Chef Tonho e o Prefeito Zé do Trilho!')}
+ else if(n.id=='rival')say('Caio: Já nos enfrentamos. Vai lá!');
+ else if(n.id[0]=='b'){
+  const i=+n.id[1],B=BOSS[i];
+  if(S.f['b'+i])say('🏆 '+B.n+': Você já me venceu. Siga em frente!');
+  else say([B.intro],()=>fight(B.team.map(([s,l])=>mk(s,l)),B.n,()=>{S.f['b'+i]=1;S.money+=100*(i+1);save();hud();say(B.win)}));
+ }
+}
+function pickStarter(){
+ $('st').style.display='flex';const l=$('stl');l.innerHTML='';
+ [['caramelo','Equilibrado e leal'],['capi','Resistente e calma'],['sagui','Ágil e travesso']].forEach(([s,d])=>{
+  const b=document.createElement('button');b.appendChild(crit(s,56));
+  const sp=document.createElement('span');sp.innerHTML='<b>'+SP[s].n+'</b><span class="chip" style="background:'+TY[SP[s].t][1]+'">'+TY[SP[s].t][0]+'</span><br><small>'+d+'</small>';b.appendChild(sp);b.onclick=()=>starter(s);l.appendChild(b)})}
+function starter(s){$('st').style.display='none';S.team=[mk(s,3)];S.f.starter=1;hud();save();say(['Você escolheu '+SP[s].n+'! 🎉','Dica: Água vence Brasa, Brasa vence Mato e Mato vence Água. Rua é neutra.','Ande na grama alta para achar criaturas. Toque em A de frente para pessoas, placas e lojas.'])}
+
+/* ===== Loja ===== */
+function shop(){$('sh').style.display='flex';shopUI()}
+function shopUI(m){$('shm').textContent='💰 R$ '+S.money+(m?' · '+m:'');$('shl').innerHTML=Object.keys(IT).map(k=>`<button onclick="buy('${k}')"><span><b>${IT[k].n}</b> — R$ ${IT[k].p}<br><small>${IT[k].d} · você tem ${S.bag[k]}</small></span></button>`).join('');hud()}
+function buy(k){if(S.money<IT[k].p)return shopUI('dinheiro insuficiente');S.money-=IT[k].p;S.bag[k]++;save();shopUI('comprou '+IT[k].n+'!')}
+
+/* ===== Batalha ===== */
+function fight(foes,trainer,done){
+ bat={foes,fi:0,trainer,done,mi:0,lock:false,prize:0};busy=true;$('bt').style.display='flex';
+ bat.mi=S.team.findIndex(c=>c.hp>0);
+ bsay(trainer?trainer+' quer lutar!':'Uma criatura selvagem apareceu!');bui();
+}
+const F=()=>bat.foes[bat.fi],Me=()=>S.team[bat.mi];
+const bsay=t=>{$('log').textContent=t};
+function card(el,c){
+ el.innerHTML='';el.appendChild(crit(c.s,80));
+ const p=Math.max(0,c.hp/c.mx*100),d=document.createElement('div');d.className='nm';
+ d.innerHTML=`<b>${SP[c.s].n}</b> Nv${c.lv}<span class="chip" style="background:${TY[SP[c.s].t][1]}">${TY[SP[c.s].t][0]}</span><div class="bar"><i style="width:${p}%;background:${p<30?'#e0524a':p<60?'#e3b341':'#58c26a'}"></i></div><small>${Math.max(0,c.hp)}/${c.mx} PS</small>`;
+ el.appendChild(d)}
+function bui(){
+ card($('foe'),F());card($('me'),Me());
+ const l=bat.lock,w=!!bat.trainer,b=S.bag,sp=SP[Me().s],al=S.team.filter(c=>c.hp>0).length;
+ $('mv').innerHTML=`<button ${l?'disabled':''} onclick="mv(0)">Atacar</button><button ${l?'disabled':''} onclick="mv(1)">${sp.sp}<br><small style="color:${TY[sp.t][1]}">${TY[sp.t][0]}</small></button>
+ <button ${l||w||!b.net?'disabled':''} onclick="net(0)">Rede (${b.net})</button><button ${l||w||!b.gnet?'disabled':''} onclick="net(1)">Rede Forte (${b.gnet})</button>
+ <button ${l||!b.pot?'disabled':''} onclick="cafe()">Café Cheio (${b.pot})</button><button ${l||al<2?'disabled':''} onclick="swap()">Trocar</button>
+ <button style="grid-column:1/3" ${l||w?'disabled':''} onclick="flee()">Fugir</button>`;hud()}
+function dmg(a,d,m){const ml=m?mult(SP[a.s].t,SP[d.s].t):1;return{x:Math.max(1,Math.round(atOf(a)*(m?1.6:1)*ml*(.85+Math.random()*.3))),m:ml}}
+async function mv(m){
+ if(bat.lock)return;bat.lock=true;bui();const a=Me(),d=F();
+ if(m&&Math.random()<.2)bsay(SP[a.s].n+' errou '+SP[a.s].sp+'!');
+ else{const r=dmg(a,d,m);d.hp-=r.x;bsay(SP[a.s].n+' usou '+(m?SP[a.s].sp:'Ataque')+'! (-'+r.x+')'+eff(r.m))}
+ bui();await sleep(950);
+ if(d.hp<=0){await foeDown();return}
+ await foeTurn();
+}
+async function foeTurn(){
+ const a=F(),d=Me(),m=Math.random()<.3;
+ if(m&&Math.random()<.2)bsay(SP[a.s].n+' errou!');
+ else{const r=dmg(a,d,m);d.hp-=r.x;bsay((bat.trainer?'':'Selvagem ')+SP[a.s].n+' usou '+(m?SP[a.s].sp:'Ataque')+'! (-'+r.x+')'+eff(r.m))}
+ bui();await sleep(950);
+ if(d.hp<=0){await meDown();return}
+ bat.lock=false;bui();bsay('O que fazer?');
+}
+async function foeDown(){
+ const d=F();bsay(SP[d.s].n+' foi derrotado!');await sleep(900);
+ bat.prize+=d.lv*(bat.trainer?12:4);
+ const a=Me();a.xp+=d.lv*9;let up=0;
+ while(a.xp>=a.lv*10){a.xp-=a.lv*10;a.lv++;const o=a.mx;a.mx=mxOf(a);a.hp=Math.min(a.mx,a.hp+(a.mx-o)+3);up=1}
+ if(up){bsay(SP[a.s].n+' subiu para o nível '+a.lv+'! 🎉');bui();await sleep(1100)}
+ if(bat.fi+1<bat.foes.length){bat.fi++;bsay(bat.trainer+' enviou '+SP[F().s].n+'!');bat.lock=false;bui();return}
+ S.money+=bat.prize;bsay('Você ganhou R$ '+bat.prize+'!');await sleep(900);endBat(true)}
+async function meDown(){
+ bsay(SP[Me().s].n+' desmaiou!');await sleep(1000);
+ const n=S.team.findIndex(c=>c.hp>0);
+ if(n<0){bsay('Todos os parceiros desmaiaram… Você foi levado ao Posto de Saúde.');await sleep(1500);healAll();const r=reg(S.x,S.y);S.x=(r&1)*ZW+4;S.y=(r>>1)*ZH+7;endBat(false);return}
+ bat.mi=n;bat.lock=false;bui();bsay(SP[Me().s].n+' entrou na luta!')}
+function swap(){if(bat.lock)return;const o=S.team.map((c,i)=>i).filter(i=>i!=bat.mi&&S.team[i].hp>0);if(!o.length)return;bat.mi=o[0];bat.lock=true;bsay('Você trocou para '+SP[Me().s].n+'!');bui();sleep(800).then(foeTurn)}
+async function cafe(){if(bat.lock||!S.bag.pot)return;bat.lock=true;S.bag.pot--;const a=Me();a.hp=Math.min(a.mx,a.hp+25);bsay('Você deu um Café Cheio para '+SP[a.s].n+'! (+25 PS)');bui();await sleep(900);await foeTurn()}
+async function net(s){
+ if(bat.lock)return;const k=s?'gnet':'net';if(!S.bag[k])return;bat.lock=true;S.bag[k]--;bui();const d=F();bsay('Você lançou '+(s?'a Rede Forte':'uma rede')+'! 🕸️');await sleep(1000);
+ const p=Math.min(.95,(.25+(1-d.hp/d.mx)*.65)*(s?1.45:1));
+ if(Math.random()<p){bsay('Capturou '+SP[d.s].n+'! 🎉');await sleep(1100);if(S.team.length<6)S.team.push(d);else bsay('Time cheio: '+SP[d.s].n+' foi solto de volta.');await sleep(600);endBat(true,1)}
+ else{bsay(SP[d.s].n+' escapou da rede!');await sleep(800);await foeTurn()}}
+async function flee(){if(bat.lock)return;bat.lock=true;bui();if(Math.random()<.6){bsay('Você fugiu!');await sleep(800);endBat(true,1)}else{bsay('Não conseguiu fugir!');await sleep(800);await foeTurn()}}
+function endBat(win,quiet){const cb=bat.done;bat=null;busy=false;$('bt').style.display='none';save();hud();draw();if(win&&cb&&!quiet)cb()}
+
+/* ===== Entrada ===== */
+document.querySelectorAll('[data-d]').forEach(b=>{
+ const d=b.dataset.d.split(',').map(Number);
+ b.addEventListener('pointerdown',e=>{e.preventDefault();dir=d;step(d[0],d[1])});
+ ['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,()=>{if(dir===d)dir=null}));
+});
+$('bA').addEventListener('pointerdown',e=>{e.preventDefault();act()});
+const KM={ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1],ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0]};
+addEventListener('keydown',e=>{const k=KM[e.key];if(k){e.preventDefault();if(!dir){dir=k;step(k[0],k[1])}}else if(e.key==' '||e.key=='Enter'||e.key=='e'){e.preventDefault();act()}});
+addEventListener('keyup',e=>{if(KM[e.key])dir=null});
+setInterval(()=>{if(dir)step(dir[0],dir[1])},150);
+setInterval(()=>{if(!bat)draw()},300);
+
+load();hud();draw();
+if(!S.f.starter)say(['Bem-vindo a Santo André, no ABC paulista! 🌆','Use as setas para andar e A para conversar. Fale com sua mãe e depois com o Prof. Tiago.']);
+</script>
+</body>
+</html>
