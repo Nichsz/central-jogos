@@ -19,7 +19,7 @@ button:hover{background:#1c3b47}button:active{transform:scale(.94)}button:disabl
 #tb{display:flex;gap:6px;height:42px}#tb button{width:42px;font-size:18px;padding:0}
 #ban{position:fixed;z-index:6;top:26%;left:0;right:0;text-align:center;font-size:clamp(26px,6vw,48px);font-weight:800;color:var(--gold);text-shadow:0 3px 0 #000,0 0 26px #000;pointer-events:none;opacity:0;letter-spacing:.04em}
 #ban small{display:block;font-size:.4em;color:#fff;letter-spacing:.3em;text-transform:uppercase}
-#ban.on{animation:ban 2.8s ease}
+#ban.on{animation:ban 4s ease}
 #pad{position:fixed;z-index:5;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:flex-end;padding:12px max(18px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));pointer-events:none}
 #pad>*{pointer-events:auto}
 .dp{display:grid;grid-template-columns:repeat(3,60px);grid-template-rows:repeat(3,60px);gap:3px;opacity:.8}.dp button{font-size:22px;border-radius:18px}
@@ -79,7 +79,7 @@ input{width:100%;font:inherit;font-size:18px;padding:12px;border-radius:12px;bor
 .mv{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mv{grid-template-columns:repeat(4,1fr)}@media(max-width:620px){.mv{grid-template-columns:1fr 1fr}}.mv button{padding:9px 4px;font-size:14px;font-weight:700}
 @keyframes pop{from{transform:scale(.6);opacity:0}}@keyframes fi{from{opacity:0}}@keyframes up{from{transform:translate(-50%,20px);opacity:0}}
 @keyframes bl{50%{opacity:.2}}@keyframes fl{50%{transform:translateY(-6px)}}
-@keyframes ban{0%{opacity:0;transform:translateY(-24px) scale(.9)}15%,78%{opacity:1;transform:none}100%{opacity:0;transform:translateY(12px)}}
+@keyframes ban{0%{opacity:0;transform:translateY(-24px) scale(.9)}10%,82%{opacity:1;transform:none}100%{opacity:0;transform:translateY(12px)}}
 @keyframes wp{0%{clip-path:circle(0)}55%{clip-path:circle(150%)}100%{clip-path:circle(150%);opacity:0}}
 @keyframes hit{0%,100%{filter:none}20%{transform:translateX(-12px);filter:brightness(3)}45%{transform:translateX(12px)}70%{transform:translateX(-7px);filter:brightness(3)}}
 @keyframes lf{50%{transform:translate(-60px,50px)}}@keyframes lm{50%{transform:translate(60px,-50px)}}
@@ -356,7 +356,7 @@ const pc=()=>[0,1,2,3].filter(i=>S.f['b'+i]).length;
 
 /* ===== Desenho animado ===== */
 const cv=$('c'),g=cv.getContext('2d'),lb=$('lb'),lg=lb.getContext('2d'),LBL={posto:['POSTO DE SAÚDE',24,11,'#fff'],loja:['MERCADINHO DO ZÉ',17,12,'#fff'],lab:['LABORATÓRIO',56,12,'#244'],qg:['CONSÓRCIO',88,11,'#ffcf6a']};let ZZ=2,pl={x:0,y:0},cam={x:0,y:0,i:1},parts=[],last=0;
-function rs(){const Z=Math.max(2,Math.min(4,Math.round(innerHeight/330)));cv.width=Math.ceil(innerWidth/Z);cv.height=Math.ceil(innerHeight/Z);cv.style.width=cv.width*Z+'px';cv.style.height=cv.height*Z+'px';ZZ=Z;const d=window.devicePixelRatio||1;lb.width=Math.round(innerWidth*d);lb.height=Math.round(innerHeight*d)}
+function rs(){const d=window.devicePixelRatio||1,Z=Math.max(2,Math.round(Math.max(2,Math.round(innerHeight/330))*d));cv.width=Math.ceil(innerWidth*d/Z);cv.height=Math.ceil(innerHeight*d/Z);cv.style.width=cv.width*Z/d+'px';cv.style.height=cv.height*Z/d+'px';ZZ=Z/d;lb.width=Math.round(innerWidth*d);lb.height=Math.round(innerHeight*d)}
 addEventListener('resize',rs);rs();
 const moving=()=>Math.abs(pl.x-S.x*T)+Math.abs(pl.y-S.y*T)>1;
 function frame(ts){
@@ -366,7 +366,7 @@ function frame(ts){
  if(!moving()){pl.x=tx;pl.y=ty;if(pend){const p=pend;pend=null;p()}else if(!busy&&!dlg){if(qd){const d=qd;qd=null;step(d[0],d[1])}else if(dir&&performance.now()-dirT>150)step(dir[0],dir[1])}}
  const gx=pl.x+T/2-cv.width/2,gy=pl.y+T/2-cv.height/2,mx=Math.max(0,W*T-cv.width),my=Math.max(0,H*T-cv.height);
  const cx0=Math.max(0,Math.min(mx,gx)),cy0=Math.max(0,Math.min(my,gy));
- if(cam.i){cam.x=cx0;cam.y=cy0;cam.i=0}else{cam.x+=(cx0-cam.x)*Math.min(1,dt*9);cam.y+=(cy0-cam.y)*Math.min(1,dt*9)}
+ cam.x=cx0;cam.y=cy0;cam.i=0
  draw(ts/1000)}
 function draw(t){
  const sk=shk>0?shk*8:0,cx=Math.round(cam.x+(Math.random()-.5)*sk),cy=Math.round(cam.y+(Math.random()-.5)*sk),x0=Math.floor(cx/T),y0=Math.floor(cy/T),x1=Math.min(W-1,Math.floor((cx+cv.width)/T)),y1=Math.min(H-1,Math.floor((cy+cv.height)/T));
@@ -392,7 +392,7 @@ function draw(t){
  {const s=ZZ*lb.width/innerWidth;lg.setTransform(1,0,0,1,0,0);lg.clearRect(0,0,lb.width,lb.height);lg.setTransform(s,0,0,s,0,0);lg.textAlign='center';for(const b of BD){const L=LBL[b.t];if(!L)continue;const px=b.x*T-cx+b.w*T/2,py=b.y*T-cy+L[1];if(px<-90||px>cv.width+90||py<-40||py>cv.height+40)continue;lg.font='bold '+L[2]+'px "Trebuchet MS",sans-serif';lg.fillStyle=L[3];lg.fillText(L[0],px,py)}}
  const r=reg(S.x,S.y);if(r!=cur){const first=cur<0;cur=r;music(S.f.starter||!first?r:r);if(!first||S.f.starter)ban(ZN[r],ZS[r]);hud()}
 }
-function ban(a,b){const e=$('ban');e.innerHTML=a+'<small>'+b+'</small>';e.classList.remove('on');void e.offsetWidth;e.classList.add('on')}
+function ban(a,b){const now=performance.now();if(ban.a==a&&now-ban.t<8000)return;ban.a=a;ban.t=now;const e=$('ban');e.innerHTML=a+'<small>'+b+'</small>';e.classList.remove('on');void e.offsetWidth;e.classList.add('on')}
 function hud(){
  $('info').innerHTML='<span>📍 <b>'+ZN[cur<0?0:cur]+'</b></span><span>💰 R$ '+S.money+'</span><span>🪨 '+pc()+'/4</span>';
  const t=$('team');t.innerHTML='';S.team.forEach(c=>{const p=document.createElement('span');p.className='pill';p.appendChild(crit(c.s,30));p.appendChild(document.createTextNode(' Nv'+c.lv+' · '+c.hp+'/'+c.mx));t.appendChild(p)});
@@ -413,7 +413,7 @@ function step(dx,dy){
  if(!S.f.starter&&(M[ny][nx]=='g'||nx>=14||ny>=10)){say('A grama alta é perigosa sem um parceiro. Fale com o Prof. '+PROF+', perto do laboratório!');return}
  S.x=nx;S.y=ny;SF.step();
  pend=()=>{
-  if(r1!=r0&&!S.f['v'+r1]){S.f['v'+r1]=1;save();ban(ZN[r1],ZS[r1])}
+  if(r1!=r0&&!S.f['v'+r1]){S.f['v'+r1]=1;save()}
   if(!S.f.rival&&r1==0&&S.x>=15&&S.x<=17&&S.y>=8&&S.y<=9){busy=true;S.f.rival=1;say([S.rv+': Ei, '+S.name+'! O Prof. '+PROF+' também me escolheu pra salvar o ABC!','S.rv: Mas só um de nós vai ser o Mestre. Vamos ver quem é melhor!'.replace('S.rv',S.rv)],()=>{busy=false;fight([mk('sapo',3),mk('mosq',3)],S.rv,()=>say(S.rv+': Tá bom, você levou essa. Mas na próxima eu venço! Boa sorte com o '+VIL[0]+'.'))});return}
   if(M[S.y][S.x]=='g'){for(let i=0;i<5;i++)parts.push({x:S.x*T+16,y:S.y*T+22,vx:(Math.random()-.5)*2,vy:-1-Math.random()*1.5,l:.5,c:'#8fe06a'});
    if(Math.random()<.17){const p=POOL[r1];fight([mk(p[rnd(p.length)],LB[r1]+rnd(3))],null)}}
